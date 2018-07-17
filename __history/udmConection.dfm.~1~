@@ -1,0 +1,31 @@
+object dmConection: TdmConection
+  OldCreateOrder = False
+  Height = 323
+  Width = 783
+  object GestionConnection: TFDConnection
+    Params.Strings = (
+      'DriverID=FB'
+      'CharacterSet=ISO8859_1'
+      
+        'Database=C:\Users\Jeremias\Desktop\Proyecto\Proyecto Sistema de ' +
+        'Gestion\DB\GESTION.FDB'
+      'Password=masterkey'
+      'User_Name=sysdba')
+    LoginPrompt = False
+    Left = 59
+    Top = 23
+  end
+  object SeguridadConnection: TFDConnection
+    Params.Strings = (
+      'DriverID=FB'
+      'CharacterSet=ISO8859_1'
+      
+        'Database=C:\Users\Jeremias\Desktop\Proyecto\Proyecto Sistema de ' +
+        'Gestion\DB\SUBSEG.FDB'
+      'Password=masterkey'
+      'User_Name=sysdba')
+    LoginPrompt = False
+    Left = 174
+    Top = 21
+  end
+end

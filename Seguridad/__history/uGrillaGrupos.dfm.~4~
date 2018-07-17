@@ -1,0 +1,17 @@
+inherited frmGrillaGrupos: TfrmGrillaGrupos
+  Caption = 'Grupos'
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited pnl1: TPanel
+    inherited dbnvgr1: TDBNavigator
+      Hints.Strings = ()
+      OnClick = dbnvgr1Click
+    end
+    inherited btnNuevo: TButton
+      OnClick = btnNuevoClick
+    end
+  end
+  inherited dsBase: TDataSource
+    DataSet = dmSeguridad.fdqryGrupos
+  end
+end

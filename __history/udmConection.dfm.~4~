@@ -1,0 +1,61 @@
+object dmConection: TdmConection
+  OldCreateOrder = False
+  Height = 236
+  Width = 538
+  object GestionConnection: TFDConnection
+    Params.Strings = (
+      'ConnectionDef=Gestion')
+    Connected = True
+    LoginPrompt = False
+    Left = 112
+    Top = 35
+  end
+  object SeguridadConnection: TFDConnection
+    Params.Strings = (
+      'ConnectionDef=Seguridad')
+    Connected = True
+    LoginPrompt = False
+    Left = 221
+    Top = 35
+  end
+  object Ges_Sp_proximo_id: TFDStoredProc
+    Connection = GestionConnection
+    StoredProcName = 'SP_PROXIMO_ID'
+    Left = 111
+    Top = 96
+    ParamData = <
+      item
+        Position = 1
+        Name = 'TIPO'
+        DataType = ftString
+        ParamType = ptInput
+        Size = 15
+      end
+      item
+        Position = 2
+        Name = 'VALOR'
+        DataType = ftInteger
+        ParamType = ptOutput
+      end>
+  end
+  object Seg_Sp_proximo_id: TFDStoredProc
+    Connection = SeguridadConnection
+    StoredProcName = 'SP_PROXIMO_ID'
+    Left = 218
+    Top = 95
+    ParamData = <
+      item
+        Position = 1
+        Name = 'TIPO'
+        DataType = ftString
+        ParamType = ptInput
+        Size = 15
+      end
+      item
+        Position = 2
+        Name = 'VALOR'
+        DataType = ftInteger
+        ParamType = ptOutput
+      end>
+  end
+end

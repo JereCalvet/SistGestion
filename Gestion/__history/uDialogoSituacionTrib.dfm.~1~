@@ -1,0 +1,5 @@
+inherited frmDialogoSituacionTrib: TfrmDialogoSituacionTrib
+  Caption = 'Situaci'#243'n Tributaria'
+  PixelsPerInch = 96
+  TextHeight = 13
+end

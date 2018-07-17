@@ -1,0 +1,5 @@
+inherited frmDialogoMetPago: TfrmDialogoMetPago
+  Caption = 'frmDialogoMetPago'
+  PixelsPerInch = 96
+  TextHeight = 13
+end

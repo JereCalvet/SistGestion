@@ -1,0 +1,8 @@
+inherited frmVistaprevia: TfrmVistaprevia
+  BorderStyle = bsDialog
+  Caption = 'Vista previa'
+  ClientHeight = 473
+  ClientWidth = 785
+  PixelsPerInch = 96
+  TextHeight = 13
+end

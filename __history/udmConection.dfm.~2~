@@ -1,0 +1,19 @@
+object dmConection: TdmConection
+  OldCreateOrder = False
+  Height = 236
+  Width = 538
+  object GestionConnection: TFDConnection
+    Params.Strings = (
+      'ConnectionDef=Gestion')
+    LoginPrompt = False
+    Left = 112
+    Top = 35
+  end
+  object SeguridadConnection: TFDConnection
+    Params.Strings = (
+      'ConnectionDef=Seguridad')
+    LoginPrompt = False
+    Left = 221
+    Top = 35
+  end
+end

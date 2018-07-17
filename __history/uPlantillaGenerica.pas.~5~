@@ -1,0 +1,37 @@
+unit uPlantillaGenerica;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs;
+
+type
+  TfrmPlantillaGenerica = class(TForm)
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+   Class function MostrarModal:TModalResult;
+
+var
+  frmPlantillaGenerica: TfrmPlantillaGenerica;
+
+implementation
+
+{$R *.dfm}
+
+{ TfrmPlantillaGenerica }
+
+class function TfrmPlantillaGenerica.MostrarModal: TModalResult;
+begin
+  with Create(Application) do
+    try
+      Result := showmodal
+    finally
+      Release
+    end;
+end;
+
+end.

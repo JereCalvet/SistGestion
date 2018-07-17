@@ -1,0 +1,5 @@
+inherited frmDialogoGenerico: TfrmDialogoGenerico
+  Caption = 'Dialogo Generico'
+  PixelsPerInch = 96
+  TextHeight = 13
+end

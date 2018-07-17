@@ -1,0 +1,115 @@
+unit udmSeguridad;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
+  FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.FB,
+  FireDAC.Phys.FBDef, FireDAC.VCLUI.Wait, FireDAC.Stan.Param, FireDAC.DatS,
+  FireDAC.DApt.Intf, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client, FireDAC.Phys.IBBase, FireDAC.Comp.UI,
+  FireDAC.Stan.StorageBin;
+
+type
+  TdmSeguridad = class(TDataModule)
+    SeguridadConnection: TFDConnection;
+    fdqryGrupos: TFDQuery;
+    fdqryGrup_opc: TFDQuery;
+    fdqryOpciones: TFDQuery;
+    fdqryUsuarios: TFDQuery;
+    fdqryUsu_grup: TFDQuery;
+    fdqryGruposID_GRUPO: TIntegerField;
+    fdqryGruposNOMBRE: TStringField;
+    fdqryOpcionesID_OPCION: TIntegerField;
+    fdqryOpcionesNOMBRE: TStringField;
+    fdqryOpcionesAGRUPA: TStringField;
+    fdqryUsuariosID_USUARIO: TIntegerField;
+    fdqryUsuariosNOMBRE: TStringField;
+    fdqryUsuariosLOGIN: TStringField;
+    fdqryUsuariosPASSWORD: TStringField;
+    fdqryGrup_opcID_GRUP: TIntegerField;
+    fdqryGrup_opcID_OPC: TIntegerField;
+    fdqryUsu_grupID_USU: TIntegerField;
+    fdqryUsu_grupID_GRUP: TIntegerField;
+    fdqryLogin: TFDQuery;
+    fdqryLoginAGRUPA: TStringField;
+    FDGUIxWaitCursor: TFDGUIxWaitCursor;
+    FDPhysFBDriverLink: TFDPhysFBDriverLink;
+    fdmtblGrupoAux: TFDMemTable;
+    procedure fdqryUsuariosAfterPost(DataSet: TDataSet);
+    procedure fdqryUsuariosBeforePost(DataSet: TDataSet);
+    procedure fdqryUsuariosReconcileError(DataSet: TFDDataSet; E: EFDException;
+      UpdateKind: TFDDatSRowState; var Action: TFDDAptReconcileAction);
+    procedure fdqryGruposAfterPost(DataSet: TDataSet);
+    procedure fdqryGruposReconcileError(DataSet: TFDDataSet; E: EFDException;
+      UpdateKind: TFDDatSRowState; var Action: TFDDAptReconcileAction);
+    procedure fdqryOpcionesReconcileError(DataSet: TFDDataSet; E: EFDException;
+      UpdateKind: TFDDatSRowState; var Action: TFDDAptReconcileAction);
+    procedure fdqryOpcionesAfterPost(DataSet: TDataSet);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    function PuedeEjecutar(Opcion:string):boolean;
+  end;
+
+var
+  dmSeguridad: TdmSeguridad;
+
+implementation
+
+{%CLASSGROUP 'Vcl.Controls.TControl'}
+
+{$R *.dfm}
+
+procedure TdmSeguridad.fdqryGruposAfterPost(DataSet: TDataSet);
+begin
+  fdqryGrupos.Refresh;
+end;
+
+procedure TdmSeguridad.fdqryGruposReconcileError(DataSet: TFDDataSet;
+  E: EFDException; UpdateKind: TFDDatSRowState;
+  var Action: TFDDAptReconcileAction);
+begin
+  ApplicationShowException(e);
+  Abort;
+end;
+
+procedure TdmSeguridad.fdqryOpcionesAfterPost(DataSet: TDataSet);
+begin
+  fdqryOpciones.Refresh;
+end;
+
+procedure TdmSeguridad.fdqryOpcionesReconcileError(DataSet: TFDDataSet;
+  E: EFDException; UpdateKind: TFDDatSRowState;
+  var Action: TFDDAptReconcileAction);
+begin
+  ApplicationShowException(e);
+  Abort;
+end;
+
+procedure TdmSeguridad.fdqryUsuariosAfterPost(DataSet: TDataSet);
+begin
+  fdqryUsuarios.Refresh;
+end;
+
+procedure TdmSeguridad.fdqryUsuariosBeforePost(DataSet: TDataSet);
+begin
+  //VERIFICAR DATOS INPUT
+end;
+
+procedure TdmSeguridad.fdqryUsuariosReconcileError(DataSet: TFDDataSet;
+  E: EFDException; UpdateKind: TFDDatSRowState;
+  var Action: TFDDAptReconcileAction);
+begin
+  ApplicationShowException(e);
+  Abort;
+end;
+
+function TdmSeguridad.PuedeEjecutar(Opcion: string): boolean;
+begin
+  Result := fdqryLogin.Locate('AGRUPA', Opcion, []);
+end;
+
+end.

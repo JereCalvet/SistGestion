@@ -1,0 +1,10 @@
+inherited frmDialogoOpciones: TfrmDialogoOpciones
+  Caption = 'Opci'#243'n'
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited tbc1: TTabControl
+    Tabs.Strings = (
+      'Opci'#243'n')
+    TabIndex = 0
+  end
+end

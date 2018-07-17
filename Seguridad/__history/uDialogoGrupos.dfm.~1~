@@ -1,0 +1,5 @@
+inherited frmDialogoGrupos: TfrmDialogoGrupos
+  Caption = 'Grupo'
+  PixelsPerInch = 96
+  TextHeight = 13
+end

@@ -1,0 +1,144 @@
+unit uGrillaPlanPago;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uDialogoGenerico, Data.DB, Vcl.ComCtrls,
+  Vcl.StdCtrls, Vcl.Buttons, Vcl.DBCtrls, Vcl.Grids, Vcl.DBGrids, cxGraphics,
+  cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit,
+  dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMetropolis, dxSkinMetropolisDark, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinOffice2013DarkGray,
+  dxSkinOffice2013LightGray, dxSkinOffice2013White, dxSkinOffice2016Colorful,
+  dxSkinOffice2016Dark, dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic,
+  dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
+  dxSkinSummer2008, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters,
+  dxSkinValentine, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
+  dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar,
+  cxDBEdit, dxGDIPlusClasses, Vcl.ExtCtrls;
+
+type
+  TfrmGrillaPlanPago = class(TfrmDialogoGenerico)
+    dbgrd1: TDBGrid;
+    lblFecha: TLabel;
+    lblTarjeta: TLabel;
+    lblArancel: TLabel;
+    edtArancel: TEdit;
+    dsqryDinamico: TDataSource;
+    cbb1: TComboBox;
+    lbl4: TLabel;
+    dbtxtFECHA_ACTUALIZACION: TDBText;
+    imgEliminar: TImage;
+    imgAgregar: TImage;
+    procedure FormShow(Sender: TObject);
+    procedure cbb1Change(Sender: TObject);
+    procedure dbgrd1DblClick(Sender: TObject);
+    procedure btnAceptarClick(Sender: TObject);
+    procedure imgAgregarClick(Sender: TObject);
+    procedure imgEliminarClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmGrillaPlanPago: TfrmGrillaPlanPago;
+
+implementation
+
+uses
+  udmGestion;
+
+{$R *.dfm}
+
+procedure TfrmGrillaPlanPago.btnAceptarClick(Sender: TObject);
+begin
+  with dmGestion do
+    begin
+      dsBase.DataSet.First;
+      while not fdqryPlanes_pago.Eof do
+        begin
+          dsBase.DataSet.Edit;
+          fdqryPlanes_pagoRETENCION.Value := StrToFloat(edtArancel.Text);
+          fdqryPlanes_pagoFECHA_ACTUALIZACION.Value := Now;
+          fdqryPlanes_pago.FieldByName('FK_IDMETODOPAGO').Value := fdqryDinamico.FieldByName('IDMETODO_PAGO').Value;
+          dsBase.DataSet.Post;
+          dsBase.DataSet.Next;
+        end;
+    end;
+  Close;
+ // inherited;
+end;
+
+//si estoy agregado cuotas y coeficientes. cuando termino, cambio el combobox, para seguir editando los planes de pago de otro metodo de pago. fecha retencion no se postea
+
+procedure TfrmGrillaPlanPago.cbb1Change(Sender: TObject);
+begin
+  inherited;
+  with dmGestion do       // filtra el nro de cuota y el coeficiente segun tarjeta
+    begin
+      fdqryPlanes_pago.Filtered := False;
+      fdqryDinamico.Locate('NOMBRE',cbb1.Items[cbb1.ItemIndex],[]);
+      fdqryPlanes_pago.Filter := 'FK_IDMETODOPAGO = '+ QuotedStr(fdqryDinamico.FieldByName('IDMETODO_PAGO').Value);
+      fdqryPlanes_pago.Filtered := True;
+      if fdqryDinamico.FieldByName('TIPO').Value <> 'C' then
+           dbgrd1.Enabled := False
+      else
+           dbgrd1.Enabled := True;
+      dsBase.DataSet.Open;
+     // dsBase.DataSet.Insert;
+      edtArancel.Text := fdqryPlanes_pagoRETENCION.AsString;
+    end
+end;
+
+procedure TfrmGrillaPlanPago.dbgrd1DblClick(Sender: TObject);
+begin
+  inherited;
+  if (dmGestion.fdqryDinamico.FieldByName('TIPO').Value = 'C') and (dsBase.DataSet.Active) then
+     dsBase.DataSet.Edit;
+end;
+
+procedure TfrmGrillaPlanPago.FormShow(Sender: TObject);
+begin
+ // inherited;
+  dsBase.DataSet.Close;
+  dsqryDinamico.DataSet.Close;
+  with dmGestion do                                                          //trae los metodos de pago que no sean efectivo y carga el combobox
+    begin
+      fdqryDinamico.SQL.Clear;
+      fdqryDinamico.SQL.Text := 'SELECT * '+
+                                'FROM METODOS_PAGO '+
+                                'WHERE TIPO <> ''E'' ';
+      dsqryDinamico.DataSet.Open;
+      while not fdqryDinamico.Eof do
+        begin
+          cbb1.Items.Add(fdqryDinamico.FieldByName('NOMBRE').Value);
+          dsqryDinamico.DataSet.Next;
+        end
+    end;
+end;
+
+procedure TfrmGrillaPlanPago.imgAgregarClick(Sender: TObject);
+begin
+  inherited;
+  if (dmGestion.fdqryDinamico.FieldByName('TIPO').Value = 'C') and (dsBase.DataSet.Active) then
+      dsBase.DataSet.Insert;
+
+end;
+
+procedure TfrmGrillaPlanPago.imgEliminarClick(Sender: TObject);
+begin
+  inherited;
+  if (dmGestion.fdqryDinamico.FieldByName('TIPO').Value = 'C') and (dsBase.DataSet.Active) then
+     dsBase.DataSet.Delete;
+end;
+
+end.

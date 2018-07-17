@@ -1,0 +1,97 @@
+inherited frmGrillaClientes: TfrmGrillaClientes
+  Caption = 'Clientes'
+  ClientHeight = 501
+  ClientWidth = 791
+  ExplicitWidth = 807
+  ExplicitHeight = 539
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited pnl1: TPanel
+    Width = 791
+    ExplicitWidth = 791
+    inherited dbnvgr1: TDBNavigator
+      Hints.Strings = ()
+      OnClick = dbnvgr1Click
+    end
+  end
+  inherited pnl2: TPanel
+    Width = 791
+    Height = 356
+    ExplicitWidth = 791
+    ExplicitHeight = 356
+    inherited dbgrd1: TDBGrid
+      Width = 789
+      Height = 354
+      Columns = <
+        item
+          Expanded = False
+          FieldName = 'ID_CLIENTE'
+          Visible = False
+        end
+        item
+          Expanded = False
+          FieldName = 'NOMBRECOMP'
+          Width = 168
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'LookupSituacionTrib'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'DNI'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'CUIT'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'NOMBRE'
+          Visible = False
+        end
+        item
+          Expanded = False
+          FieldName = 'APELLIDO'
+          Visible = False
+        end
+        item
+          Expanded = False
+          FieldName = 'FK_SITUACIONTRIB'
+          Visible = False
+        end
+        item
+          Expanded = False
+          FieldName = 'DOMICILIO'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'LOCALIDAD'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'PROVINCIA'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'TELEFONO'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'MAIL'
+          Visible = True
+        end>
+    end
+  end
+  inherited dsBase: TDataSource
+    DataSet = dmGestion.fdqryClientes
+  end
+end

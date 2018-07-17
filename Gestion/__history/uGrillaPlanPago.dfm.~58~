@@ -1,0 +1,138 @@
+inherited frmGrillaPlanPago: TfrmGrillaPlanPago
+  Caption = 'Planes de pago'
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited pnl1: TPanel
+    object lblTarjeta: TLabel [0]
+      Left = 373
+      Top = 24
+      Width = 39
+      Height = 13
+      Caption = 'Tarjeta:'
+    end
+    object lblFecha: TLabel [1]
+      Left = 88
+      Top = 24
+      Width = 109
+      Height = 13
+      Caption = 'Fecha de Actualizaci'#243'n'
+    end
+    object lblArancel: TLabel [2]
+      Left = 373
+      Top = 56
+      Width = 43
+      Height = 13
+      Caption = 'Arancel: '
+    end
+    object dbtxtFECHA_ACTUALIZACION: TDBText [3]
+      Left = 112
+      Top = 56
+      Width = 153
+      Height = 13
+      DataField = 'FECHA_ACTUALIZACION'
+      DataSource = dsBase
+    end
+    inherited dbnvgr1: TDBNavigator
+      Left = 15
+      Top = 0
+      Width = 200
+      Hints.Strings = ()
+      Visible = False
+      OnClick = dbnvgr1Click
+      ExplicitLeft = 15
+      ExplicitTop = 0
+      ExplicitWidth = 200
+    end
+    inherited btnNuevo: TButton
+      Top = 96
+      ExplicitTop = 96
+    end
+    inherited btnEliminar: TButton
+      Left = 477
+      Top = 96
+      ExplicitLeft = 477
+      ExplicitTop = 96
+    end
+    inherited btnExportar: TButton
+      Left = 342
+      Top = 96
+      ExplicitLeft = 342
+      ExplicitTop = 96
+    end
+    inherited btnSalir: TButton
+      Left = 604
+      Top = 96
+      ExplicitLeft = 604
+      ExplicitTop = 96
+    end
+    inherited btnEditar: TButton
+      Left = 207
+      Top = 96
+      ExplicitLeft = 207
+      ExplicitTop = 96
+    end
+    object cbb1: TComboBox
+      Left = 477
+      Top = 21
+      Width = 251
+      Height = 21
+      TabOrder = 6
+      OnChange = cbb1Change
+    end
+    object edtArancel: TEdit
+      Left = 477
+      Top = 53
+      Width = 59
+      Height = 21
+      Hint = '%'
+      HelpType = htKeyword
+      Alignment = taRightJustify
+      TabOrder = 7
+      TextHint = '%'
+    end
+  end
+  inherited pnl2: TPanel
+    inherited dbgrd1: TDBGrid
+      Columns = <
+        item
+          Expanded = False
+          FieldName = 'IDPLAN_PAGO'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'NROCUOTA'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'RETENCION'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'COEFICIENTE'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'FECHA_ACTUALIZACION'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'FK_IDMETODOPAGO'
+          Visible = True
+        end>
+    end
+  end
+  inherited dsBase: TDataSource
+    DataSet = dmGestion.fdqryPlanes_pago
+    Left = 16
+  end
+  object dsqryDinamico: TDataSource
+    DataSet = dmGestion.fdqryDinamico
+    Left = 64
+    Top = 16
+  end
+end

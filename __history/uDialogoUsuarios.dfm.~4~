@@ -1,0 +1,9 @@
+inherited frmDialogoUsuarios: TfrmDialogoUsuarios
+  Caption = 'Usuario'
+  ExplicitTop = -17
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited dsBase: TDataSource
+    DataSet = dmSeguridad.fdqryUsuarios
+  end
+end

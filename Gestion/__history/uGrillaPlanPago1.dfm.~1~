@@ -1,0 +1,189 @@
+inherited frmGrillaPlanPago: TfrmGrillaPlanPago
+  Caption = 'Planes de pago'
+  ClientHeight = 470
+  ExplicitHeight = 508
+  PixelsPerInch = 96
+  TextHeight = 13
+  object lblFecha: TLabel [0]
+    Left = 144
+    Top = 32
+    Width = 109
+    Height = 13
+    Caption = 'Fecha de Actualizaci'#243'n'
+  end
+  object lblTarjeta: TLabel [1]
+    Left = 384
+    Top = 32
+    Width = 39
+    Height = 13
+    Caption = 'Tarjeta:'
+  end
+  object lblArancel: TLabel [2]
+    Left = 384
+    Top = 64
+    Width = 43
+    Height = 13
+    Caption = 'Arancel: '
+  end
+  object lbl4: TLabel [3]
+    Left = 288
+    Top = 441
+    Width = 162
+    Height = 13
+    Caption = 'borrar metodo de pago de la grilla'
+  end
+  object dbtxtFECHA_ACTUALIZACION: TDBText [4]
+    Left = 168
+    Top = 64
+    Width = 153
+    Height = 13
+    DataField = 'FECHA_ACTUALIZACION'
+    DataSource = dsBase
+  end
+  object imgEliminar: TImage [5]
+    Left = 67
+    Top = 98
+    Width = 32
+    Height = 32
+    Picture.Data = {
+      0B546478504E47496D61676589504E470D0A1A0A0000000D4948445200000020
+      000000200806000000737A7AF40000000473424954080808087C086488000000
+      097048597300000B1300000B1301009A9C180000017E494441545885C5D74D4A
+      234118C6F15F1A048D46EF30137569F0082E1DEF3530E205861157E20974E71D
+      FCC0AD6E43C4858371200ECC2C2A8DDA2465DAEA74FFE15D7417D4F3D6E7FB54
+      CBECAC620F3BD8C21774C66DBF71874B9CE374FCAF123671843FF837633CE310
+      EB29C26D1CE06F09E162BC601F4B65C5377093205C8C2B746715DFC67D85E279
+      0CD09B65E4F3107F9BC4D4995856EDB4C79663E29E38A8413C8F1F45F14D69BB
+      BD6CBC282CC5518DE279FCCAC5D794BB64AA8A213A19BE61B1B82635D0C66E26
+      DCED4DB1930985A529B6E0417CAD5289F53D686184854807AD0A1298C6284BEC
+      3C994C85C6E1133C66829389917ADE63DC66828D6A8ACB4CF0704D714E309BCF
+      9AB98A57F24D7832E7914EE2184FF9C7BA5022EB1AFD085F8B19EDD798C0F749
+      53D2C6750DE21722D5B72B18C77989F785175594DE9C92E82B5179BB827BAD72
+      DA3F1C799125C1BDA69C8E91B0E1921C57573090C312C243FC34E1A8152953EB
+      3BD8F5FE79BE366E7BC4ADD7E7F99937974C8CFF8D98F5A76952A1BB00000000
+      49454E44AE426082}
+    OnClick = imgEliminarClick
+  end
+  object imgAgregar: TImage [6]
+    Left = 29
+    Top = 98
+    Width = 32
+    Height = 32
+    Picture.Data = {
+      0B546478504E47496D61676589504E470D0A1A0A0000000D4948445200000020
+      000000200806000000737A7AF40000000473424954080808087C086488000000
+      097048597300000B1300000B1301009A9C1800000186494441545885C5D7C14A
+      234110C6F15F0604CD6EF41D76E37A547C048FEA7B0986BC80289EC427D09BEF
+      B02A5EF52A8A07C528C405F7D019D4268E696726F3873A24C3D4575DDD5355DD
+      3239F3D8C41A96F10B9DD1B3075CE11427381AFD57094BD8C7335E27B427EC61
+      B18C701B7DFC4B108EED053DCCA58AFFC14509E1D8CED09D547C15B7158AE776
+      839549565E87F8FB203ECDC40FD5A6BD683BC69E89FE14C473DB8EC597A49FF6
+      9894775F445BB1FF8D559409E015BBF98B0BD28A4C55010CD0C9B081D9310EEB
+      A68DF54CA8ED4DB196098DA52996E14EDA5EA752E4FBA68521660A1CB42A08E0
+      33865949E7A5C95438387C83FB4C98648A285B078AB8CC8431AA294E3361866B
+      8A13C2B0F9A49952FC333F848735ACEE2B0EF098FF58145AE4B43230C4EFD841
+      2FD14919DB1A979236CEA720FE5741F7ED0A83635DE2D7C28DAA90959A82B896
+      D079BBC2F45A65DABF5C79CC9C30BDA67E1DF169DF5272E2EA0A03E420417880
+      1D633EB598945EDFC1BA8FD7F385D1B37B5C7ABB9E1F7B57648AF80FDF3DDDBF
+      BEF461E20000000049454E44AE426082}
+    OnClick = imgAgregarClick
+  end
+  inherited btnAceptar: TBitBtn
+    Top = 421
+    Caption = 'Guardar'
+    TabOrder = 1
+    ExplicitTop = 421
+  end
+  inherited btnSalir: TBitBtn
+    Top = 421
+    TabOrder = 2
+    ExplicitTop = 421
+  end
+  inherited tbc1: TTabControl
+    Left = 25
+    Top = 8
+    Width = 15
+    Height = 15
+    Enabled = False
+    TabOrder = 0
+    Visible = False
+    ExplicitLeft = 25
+    ExplicitTop = 8
+    ExplicitWidth = 15
+    ExplicitHeight = 15
+  end
+  object edtArancel: TEdit [10]
+    Left = 680
+    Top = 61
+    Width = 59
+    Height = 21
+    Hint = '%'
+    HelpType = htKeyword
+    Alignment = taRightJustify
+    TabOrder = 3
+    TextHint = '%'
+  end
+  object cbb1: TComboBox [11]
+    Left = 488
+    Top = 29
+    Width = 251
+    Height = 21
+    TabOrder = 4
+    OnChange = cbb1Change
+  end
+  object dbgrd1: TDBGrid [12]
+    Left = 25
+    Top = 136
+    Width = 714
+    Height = 265
+    DataSource = dsBase
+    TabOrder = 5
+    TitleFont.Charset = DEFAULT_CHARSET
+    TitleFont.Color = clWindowText
+    TitleFont.Height = -11
+    TitleFont.Name = 'Tahoma'
+    TitleFont.Style = []
+    OnDblClick = dbgrd1DblClick
+    Columns = <
+      item
+        Expanded = False
+        FieldName = 'IDPLAN_PAGO'
+        Visible = False
+      end
+      item
+        Expanded = False
+        FieldName = 'NROCUOTA'
+        Width = 81
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'RETENCION'
+        Visible = False
+      end
+      item
+        Expanded = False
+        FieldName = 'COEFICIENTE'
+        Width = 89
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'FECHA_ACTUALIZACION'
+        Visible = False
+      end
+      item
+        Expanded = False
+        FieldName = 'FK_IDMETODOPAGO'
+        Visible = False
+      end>
+  end
+  inherited dsBase: TDataSource
+    DataSet = dmGestion.fdqryPlanes_pago
+  end
+  object dsqryDinamico: TDataSource
+    DataSet = dmGestion.fdqryDinamico
+    Left = 80
+    Top = 8
+  end
+end

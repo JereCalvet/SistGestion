@@ -1,0 +1,6 @@
+inherited DialogoUsuarios: TDialogoUsuarios
+  Caption = 'Usuario'
+  ExplicitTop = -38
+  PixelsPerInch = 96
+  TextHeight = 13
+end

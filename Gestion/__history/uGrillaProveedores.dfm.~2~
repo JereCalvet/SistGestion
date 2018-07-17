@@ -1,0 +1,83 @@
+inherited frmGrillaProveedores: TfrmGrillaProveedores
+  Caption = 'Proveedores'
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited pnl1: TPanel
+    inherited dbnvgr1: TDBNavigator
+      Hints.Strings = ()
+    end
+  end
+  inherited pnl2: TPanel
+    inherited dbgrd1: TDBGrid
+      Columns = <
+        item
+          Expanded = False
+          FieldName = 'ID_PROVEEDOR'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'NOMBRE'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'APELLIDO'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'DOMICILIO'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'LOCALIDAD'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'PROVINCIA'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'DNI'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'CUIT'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'TELEFONO'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'MAIL'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'FK_SITUACIONTRIB'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'NOMBRECOMP'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'LookupSituacionTrib'
+          Visible = True
+        end>
+    end
+  end
+  inherited dsBase: TDataSource
+    DataSet = dmGestion.fdqryProveedores
+  end
+end

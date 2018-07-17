@@ -1,0 +1,87 @@
+inherited frmGrillaGenerica: TfrmGrillaGenerica
+  Caption = 'GrillaGenerica'
+  PixelsPerInch = 96
+  TextHeight = 13
+  object pnl1: TPanel
+    Left = 0
+    Top = 0
+    Width = 775
+    Height = 145
+    Align = alTop
+    TabOrder = 0
+    object dbnvgr1: TDBNavigator
+      Left = 223
+      Top = 104
+      Width = 330
+      Height = 25
+      DataSource = ds
+      TabOrder = 0
+    end
+    object btnNuevo: TButton
+      Left = 88
+      Top = 48
+      Width = 83
+      Height = 33
+      Caption = 'Nuevo'
+      TabOrder = 1
+    end
+    object btnEliminar: TButton
+      Left = 493
+      Top = 48
+      Width = 83
+      Height = 33
+      Caption = 'Eliminar'
+      TabOrder = 2
+    end
+    object btnExportar: TButton
+      Left = 358
+      Top = 48
+      Width = 83
+      Height = 33
+      Caption = 'Exportar'
+      TabOrder = 3
+    end
+    object btnSalir: TButton
+      Left = 628
+      Top = 48
+      Width = 83
+      Height = 33
+      Caption = 'Salir'
+      TabOrder = 4
+    end
+    object btnEditar: TButton
+      Left = 223
+      Top = 48
+      Width = 83
+      Height = 33
+      Caption = 'Editar'
+      TabOrder = 5
+    end
+  end
+  object pnl2: TPanel
+    Left = 0
+    Top = 145
+    Width = 775
+    Height = 318
+    Align = alClient
+    TabOrder = 1
+    object dbgrd1: TDBGrid
+      Left = 1
+      Top = 1
+      Width = 773
+      Height = 316
+      Align = alClient
+      DataSource = ds
+      TabOrder = 0
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+    end
+  end
+  object ds: TDataSource
+    Left = 32
+    Top = 16
+  end
+end

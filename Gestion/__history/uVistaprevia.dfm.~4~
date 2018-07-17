@@ -1,0 +1,197 @@
+inherited frmVistaprevia: TfrmVistaprevia
+  BorderStyle = bsDialog
+  Caption = 'Vista previa'
+  ClientHeight = 344
+  ClientWidth = 547
+  OnShow = FormShow
+  ExplicitWidth = 553
+  ExplicitHeight = 372
+  PixelsPerInch = 96
+  TextHeight = 13
+  object grp1: TGroupBox
+    Left = -2
+    Top = 8
+    Width = 539
+    Height = 283
+    Caption = 'Vista previa'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 0
+    object lbl1: TLabel
+      Left = 24
+      Top = 91
+      Width = 41
+      Height = 13
+      Caption = 'Nombre:'
+      Enabled = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object strngrdMuestra: TStringGrid
+      Left = 21
+      Top = 128
+      Width = 500
+      Height = 129
+      ColCount = 4
+      Enabled = False
+      RowCount = 4
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 0
+      ColWidths = (
+        64
+        64
+        64
+        64)
+      RowHeights = (
+        24
+        24
+        24
+        24)
+    end
+    object chkMuestra1: TCheckBox
+      Left = 24
+      Top = 24
+      Width = 97
+      Height = 17
+      Caption = 'Opci'#243'n 1'
+      Enabled = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 1
+    end
+    object chkMuestra2: TCheckBox
+      Left = 24
+      Top = 56
+      Width = 97
+      Height = 17
+      Caption = 'Opci'#243'n 2'
+      Enabled = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 2
+    end
+    object edt1: TEdit
+      Left = 127
+      Top = 88
+      Width = 145
+      Height = 21
+      Enabled = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 3
+      TextHint = 'Muesta'
+    end
+    object rbMuestra1: TRadioButton
+      Left = 312
+      Top = 24
+      Width = 113
+      Height = 17
+      Caption = 'Test1'
+      Enabled = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 4
+    end
+    object rbMuestra2: TRadioButton
+      Left = 407
+      Top = 24
+      Width = 113
+      Height = 17
+      Caption = 'Test 2'
+      Enabled = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 5
+    end
+    object cbbMuestra: TComboBox
+      Left = 127
+      Top = 29
+      Width = 145
+      Height = 21
+      Enabled = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 6
+      Text = '&'
+      Items.Strings = (
+        '%'
+        '$'
+        '#')
+    end
+    object btnMuestra2: TButton
+      Left = 294
+      Top = 86
+      Width = 75
+      Height = 25
+      Caption = 'Insertar'
+      Enabled = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 7
+    end
+    object btnMuestra1: TButton
+      Left = 400
+      Top = 86
+      Width = 75
+      Height = 25
+      Caption = 'Borrar'
+      Enabled = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 8
+    end
+  end
+  object btnAceptar: TButton
+    Left = 227
+    Top = 304
+    Width = 93
+    Height = 32
+    Caption = 'Cerrar'
+    TabOrder = 1
+  end
+end

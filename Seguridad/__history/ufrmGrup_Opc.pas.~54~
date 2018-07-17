@@ -1,0 +1,112 @@
+unit ufrmGrup_Opc;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uPlantillaGenerica, Data.DB,
+  Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids, System.ImageList, Vcl.ImgList,
+  Vcl.ExtCtrls, Vcl.Imaging.pngimage;
+
+type
+  TfrmGrup_Opc = class(TfrmPlantillaGenerica)
+    dsGrupo: TDataSource;
+    dsOpcion: TDataSource;
+    dsGrup_Opc: TDataSource;
+    dbgrdGrup_Opc: TDBGrid;
+    dbgrdOpcion: TDBGrid;
+    dbgrdGrupo: TDBGrid;
+    btnSalir: TButton;
+    btnActualizar: TButton;
+    imgTick: TImage;
+    imgCross: TImage;
+    btn1: TButton;
+    procedure btnSalirClick(Sender: TObject);
+    procedure btnActualizarClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormShow(Sender: TObject);
+    procedure dbgrdOpcionDblClick(Sender: TObject);
+    procedure dbgrdOpcionDrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmGrup_Opc: TfrmGrup_Opc;
+
+implementation
+
+uses
+  udmSeguridad;
+
+{$R *.dfm}
+
+procedure TfrmGrup_Opc.btnActualizarClick(Sender: TObject);
+begin
+  inherited;
+  with dmSeguridad do
+    begin
+      fdqryUsuarios.Open();
+      fdqryLogin.Active := false;
+      fdqryLogin.Params.ParamByName('USUARIO').Value := fdqryUsuariosID_USUARIO.Value;
+      fdqryLogin.Active := True;
+    end;
+end;
+
+procedure TfrmGrup_Opc.btnSalirClick(Sender: TObject);
+begin
+  inherited;
+  Close;
+end;
+
+procedure TfrmGrup_Opc.dbgrdOpcionDblClick(Sender: TObject);  // con doble click asigna opciones a un grupo o la borra en caso de existir
+begin
+  inherited;
+  with dmSeguridad do
+    if (fdqryGrup_opc.Locate('ID_GRUP; ID_OPC', VarArrayOf([fdqryGruposID_GRUPO.Value , fdqryOpcionesID_OPCION.Value]), [])) then
+        fdqryGrup_opc.Delete
+    else
+       begin
+        fdqryGrup_opc.Insert;
+        fdqryGrup_opcID_OPC.Value := fdqryOpcionesID_OPCION.Value;
+        fdqryGrup_opcID_GRUP.Value := fdqryGruposID_GRUPO.Value;
+        fdqryGrup_opc.Post
+       end;
+
+    dbgrdOpcion.Refresh;
+end;
+
+procedure TfrmGrup_Opc.dbgrdOpcionDrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
+begin
+  inherited;
+  with dmSeguridad do
+    begin
+      if Column.Title.Caption = 'Estado' then
+         if fdqryGrup_opc.Locate('ID_GRUP; ID_OPC', VarArrayOf([fdqryGruposID_GRUPO.Value , fdqryOpcionesID_OPCION.Value]), []) then
+            dbgrdOpcion.Canvas.Draw(round((Rect.Left+Rect.Right-imgTick.Width)/2), Rect.Top, imgTick.Picture.Graphic)
+         else
+            dbgrdOpcion.Canvas.Draw(round((Rect.Left+Rect.Right-imgCross.Width)/2), Rect.Top, imgCross.Picture.Graphic);
+    end;
+end;
+
+procedure TfrmGrup_Opc.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  inherited;
+  dsGrupo.DataSet.Close;
+  dsOpcion.DataSet.Close;
+  dsGrup_Opc.DataSet.Close;
+end;
+
+procedure TfrmGrup_Opc.FormShow(Sender: TObject);
+begin
+  inherited;
+  dsGrupo.DataSet.Open;
+  dsOpcion.DataSet.Open;
+  dsGrup_Opc.DataSet.Open;
+end;
+
+end.

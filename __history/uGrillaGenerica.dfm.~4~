@@ -1,0 +1,47 @@
+inherited frmGrillaGenerica: TfrmGrillaGenerica
+  Caption = 'GrillaGenerica'
+  PixelsPerInch = 96
+  TextHeight = 13
+  object pnl1: TPanel
+    Left = 0
+    Top = 0
+    Width = 775
+    Height = 145
+    Align = alTop
+    TabOrder = 0
+    object dbnvgr1: TDBNavigator
+      Left = 208
+      Top = 96
+      Width = 330
+      Height = 25
+      DataSource = ds
+      TabOrder = 0
+    end
+  end
+  object pnl2: TPanel
+    Left = 0
+    Top = 145
+    Width = 775
+    Height = 318
+    Align = alClient
+    TabOrder = 1
+    object dbgrd1: TDBGrid
+      Left = 1
+      Top = 1
+      Width = 773
+      Height = 316
+      Align = alClient
+      DataSource = ds
+      TabOrder = 0
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+    end
+  end
+  object ds: TDataSource
+    Left = 32
+    Top = 16
+  end
+end

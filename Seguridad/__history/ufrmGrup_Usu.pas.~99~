@@ -1,0 +1,149 @@
+unit ufrmGrup_Usu;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uPlantillaGenerica, Data.DB,
+  Vcl.ExtCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls;
+
+type
+  TfrmGrup_Usu = class(TfrmPlantillaGenerica)
+    dsUsuario: TDataSource;
+    dsUsu_Grup: TDataSource;
+    dsGrupAux: TDataSource;
+    dbgrdUsuario: TDBGrid;
+    dbgrdUsu_grup: TDBGrid;
+    dbgrdGrupAux: TDBGrid;
+    btnSalir: TButton;
+    lbl1: TLabel;
+    lbl2: TLabel;
+    lbl3: TLabel;
+    lbl4: TLabel;
+    procedure btnSalirClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure dbgrdGrupAuxDblClick(Sender: TObject);
+    procedure dbgrdUsu_grupDblClick(Sender: TObject);
+    procedure dsUsuarioDataChange(Sender: TObject; Field: TField);
+  private
+    procedure RefrescaDatos;
+    procedure CopiaTablaMemoria;
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmGrup_Usu: TfrmGrup_Usu;
+
+implementation
+
+uses
+  udmSeguridad;
+
+{$R *.dfm}
+
+procedure TfrmGrup_Usu.btnSalirClick(Sender: TObject);
+begin
+  inherited;
+  Close;
+end;
+
+procedure TfrmGrup_Usu.CopiaTablaMemoria;
+begin
+  with dmSeguridad do      //abro qryGrupos para poder copiar en la tabla de memoria, copio los campos persistentes y cambio el nombre de muestra
+    begin
+       fdqryGrupos.Open;
+       fdmtblGrupoAux.FieldDefs := fdqryGrupos.FieldDefs;
+       fdmtblGrupoAux.Open;
+       fdmtblGrupoAux.CopyDataSet(fdqryGrupos);
+       fdmtblGrupoAux.First;
+       fdmtblGrupoAux.FieldByName('ID_GRUPO').Visible := False;
+       fdmtblGrupoAux.FieldByName('NOMBRE').DisplayLabel := 'Nombre';
+    end;
+end;
+
+procedure TfrmGrup_Usu.dbgrdGrupAuxDblClick(Sender: TObject);    //alta en usugrup - baja aux
+begin
+  inherited;
+ // ShowMessage(IntToStr(dmSeguridad.fdmtblGrupoAux.RecordCount));
+  with dmSeguridad do
+    begin
+       if not fdmtblGrupoAux.RecordCount = 0  then
+             begin
+                fdqryUsu_grup.Insert;
+                fdqryUsu_grupID_USU.Value := fdqryUsuariosID_USUARIO.Value;
+                fdqryUsu_grupID_GRUP.Value := fdmtblGrupoAux.FieldByName('ID_GRUPO').Value;
+                fdqryUsu_grup.Post;
+                fdmtblGrupoAux.Delete;
+             end
+    end;
+end;
+
+procedure TfrmGrup_Usu.dbgrdUsu_grupDblClick(Sender: TObject); //alta aux - baja usu_grup
+begin
+  inherited;
+  with dmSeguridad do
+    begin
+       if not(fdqryUsu_grup.RecordCount = 0) then      //verifica que no este vacio (que el usuario tenga al menos un grupo asignado)
+          if(fdqryUsu_grup.RecordCount > 1) then       //verifica que el usuario pertenezca a mas de un grupo
+             begin
+               fdmtblGrupoAux.Insert;
+               fdmtblGrupoAux.FieldByName('ID_GRUPO').Value := fdqryUsu_grupID_GRUP.Value;
+               fdmtblGrupoAux.FieldByName('NOMBRE').Value := fdqryUsu_grup.FieldByName('Descripcion').Value;
+               fdmtblGrupoAux.Post;
+               fdqryUsu_grup.Delete;
+             end
+          else
+             ShowMessage('El usuario debe pertenecer al menos a un grupo.');
+    end;
+end;
+
+procedure TfrmGrup_Usu.dsUsuarioDataChange(Sender: TObject; Field: TField);
+begin
+  inherited;
+  with DMSeguridad do
+    begin
+      fdqryUsu_grup.Filtered := False;
+      fdqryUsu_grup.Filter := 'ID_USU =' + fdqryUsuariosID_USUARIO.AsString;
+      fdqryUsu_grup.Filtered := True;
+      refrescaDatos;
+    end;
+end;
+
+procedure TfrmGrup_Usu.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  inherited;
+  dsUsuario.DataSet.Close;
+  dsUsu_Grup.DataSet.Close;
+  dsGrupAux.DataSet.Close;
+end;
+
+procedure TfrmGrup_Usu.FormShow(Sender: TObject);
+begin
+  inherited;
+  dsUsuario.DataSet.Open;
+  dsUsu_Grup.DataSet.Open;
+  CopiaTablaMemoria;
+  dsGrupAux.DataSet.Open;
+  RefrescaDatos;
+end;
+
+procedure TfrmGrup_Usu.RefrescaDatos;
+begin
+  with dmSeguridad do
+    begin
+        fdmtblGrupoAux.Close;
+        CopiaTablaMemoria;
+        fdmtblGrupoAux.Open;
+        while not fdqryUsu_grup.Eof do
+          if fdmtblGrupoAux.Locate('ID_GRUPO', fdqryUsu_grupID_GRUP.Value, []) then
+             begin
+                fdmtblGrupoAux.Delete;
+                fdqryUsu_grup.Next
+             end
+    end;
+end;
+
+end.

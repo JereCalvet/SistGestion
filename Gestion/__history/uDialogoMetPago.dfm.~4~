@@ -1,0 +1,60 @@
+inherited frmDialogoMetPago: TfrmDialogoMetPago
+  Caption = 'M'#233'todo de pago'
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited tbc1: TTabControl
+    object lbl1: TLabel
+      Left = 44
+      Top = 24
+      Width = 88
+      Height = 13
+      Caption = 'IDMETODO_PAGO'
+      FocusControl = cxDBSpinEdit1
+      Visible = False
+    end
+    object lblNombre: TLabel
+      Left = 64
+      Top = 112
+      Width = 37
+      Height = 13
+      Caption = 'Nombre'
+      FocusControl = cxDBTextEditNombre
+    end
+    object lblTipo: TLabel
+      Left = 64
+      Top = 152
+      Width = 20
+      Height = 13
+      Caption = 'Tipo'
+      FocusControl = cxDBTextEditTipo
+    end
+    object cxDBSpinEdit1: TcxDBSpinEdit
+      Left = 44
+      Top = 40
+      DataBinding.DataField = 'IDMETODO_PAGO'
+      DataBinding.DataSource = dsBase
+      TabOrder = 0
+      Visible = False
+      Width = 121
+    end
+    object cxDBTextEditNombre: TcxDBTextEdit
+      Left = 64
+      Top = 128
+      DataBinding.DataField = 'NOMBRE'
+      DataBinding.DataSource = dsBase
+      TabOrder = 1
+      Width = 121
+    end
+    object cxDBTextEditTipo: TcxDBTextEdit
+      Left = 64
+      Top = 168
+      DataBinding.DataField = 'TIPO'
+      DataBinding.DataSource = dsBase
+      TabOrder = 2
+      Width = 121
+    end
+  end
+  inherited dsBase: TDataSource
+    DataSet = dmGestion.fdqryMetodos_pago
+  end
+end

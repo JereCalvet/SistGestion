@@ -1,0 +1,37 @@
+unit uVistaprevia;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uPlantillaGenerica, Vcl.StdCtrls,
+  Vcl.Grids;
+
+type
+  TfrmVistaprevia = class(TfrmPlantillaGenerica)
+    grp1: TGroupBox;
+    lbl1: TLabel;
+    strngrdMuestra: TStringGrid;
+    chkMuestra1: TCheckBox;
+    chkMuestra2: TCheckBox;
+    edt1: TEdit;
+    rbMuestra1: TRadioButton;
+    rbMuestra2: TRadioButton;
+    cbbMuestra: TComboBox;
+    btnMuestra2: TButton;
+    btnMuestra1: TButton;
+    btnAceptar: TButton;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmVistaprevia: TfrmVistaprevia;
+
+implementation
+
+{$R *.dfm}
+
+end.

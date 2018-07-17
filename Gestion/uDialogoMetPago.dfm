@@ -1,0 +1,79 @@
+inherited frmDialogoMetPago: TfrmDialogoMetPago
+  Caption = 'M'#233'todo de pago'
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited tbc1: TTabControl
+    object lbl1: TLabel
+      Left = 44
+      Top = 24
+      Width = 88
+      Height = 13
+      Caption = 'IDMETODO_PAGO'
+      FocusControl = cxDBSpinEdit1
+      Visible = False
+    end
+    object lblNombre: TLabel
+      Left = 140
+      Top = 144
+      Width = 37
+      Height = 13
+      Caption = 'Nombre'
+      FocusControl = cxDBTextEditNombre
+    end
+    object lblRetencion: TLabel
+      Left = 140
+      Top = 192
+      Width = 48
+      Height = 13
+      Caption = 'Retenci'#243'n'
+      FocusControl = cxDBCurrencyEditRetencion
+    end
+    object cxDBSpinEdit1: TcxDBSpinEdit
+      Left = 44
+      Top = 40
+      DataBinding.DataField = 'IDMETODO_PAGO'
+      DataBinding.DataSource = dsBase
+      TabOrder = 0
+      Visible = False
+      Width = 121
+    end
+    object cxDBTextEditNombre: TcxDBTextEdit
+      Left = 140
+      Top = 160
+      DataBinding.DataField = 'NOMBRE'
+      DataBinding.DataSource = dsBase
+      TabOrder = 1
+      Width = 261
+    end
+    object dbrgrpTIPO: TDBRadioGroup
+      Left = 465
+      Top = 72
+      Width = 185
+      Height = 181
+      Caption = 'Tipo:'
+      DataField = 'TIPO'
+      DataSource = dsBase
+      Items.Strings = (
+        'Cr'#233'dito'
+        'D'#233'bito'
+        'Efectivo')
+      TabOrder = 2
+      Values.Strings = (
+        'C'
+        'D'
+        'E')
+      OnClick = dbrgrpTIPOClick
+    end
+    object cxDBCurrencyEditRetencion: TcxDBCurrencyEdit
+      Left = 140
+      Top = 208
+      DataBinding.DataField = 'RETENCION'
+      DataBinding.DataSource = dsBase
+      TabOrder = 3
+      Width = 121
+    end
+  end
+  inherited dsBase: TDataSource
+    DataSet = dmGestion.fdqryMetodos_pago
+  end
+end

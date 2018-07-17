@@ -1,0 +1,43 @@
+inherited frmGrillaDepositos: TfrmGrillaDepositos
+  Caption = 'Dep'#243'sitos'
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited pnl1: TPanel
+    inherited dbnvgr1: TDBNavigator
+      Hints.Strings = ()
+    end
+  end
+  inherited pnl2: TPanel
+    inherited dbgrd1: TDBGrid
+      Columns = <
+        item
+          Expanded = False
+          FieldName = 'NUMERO'
+          Visible = False
+        end
+        item
+          Expanded = False
+          FieldName = 'NOMBRE'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'DOMICILIO'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'FK_IDSUCURSAL'
+          Visible = False
+        end
+        item
+          Expanded = False
+          FieldName = 'lookupNomSuc'
+          Visible = True
+        end>
+    end
+  end
+  inherited dsBase: TDataSource
+    DataSet = dmGestion.fdqryDepositos
+  end
+end

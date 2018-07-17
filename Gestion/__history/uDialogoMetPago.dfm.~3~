@@ -1,0 +1,8 @@
+inherited frmDialogoMetPago: TfrmDialogoMetPago
+  Caption = 'M'#233'todo de pago'
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited dsBase: TDataSource
+    DataSet = dmGestion.fdqryMetodos_pago
+  end
+end
