@@ -1,0 +1,79 @@
+inherited frmGrillaFactura: TfrmGrillaFactura
+  Caption = 'Ventas'
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited pnl1: TPanel
+    inherited dbnvgr1: TDBNavigator
+      Hints.Strings = ()
+    end
+  end
+  inherited pnl2: TPanel
+    inherited dbgrd1: TDBGrid
+      Columns = <
+        item
+          Expanded = False
+          FieldName = 'FECHA'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'lookupCliente'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'NRO_FACTURA'
+          Width = 119
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'TOTAL'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'TIPO'
+          Visible = False
+        end
+        item
+          Expanded = False
+          FieldName = 'HORA'
+          Visible = False
+        end
+        item
+          Expanded = False
+          FieldName = 'DESCUENTO'
+          Visible = False
+        end
+        item
+          Expanded = False
+          FieldName = 'RECARGO'
+          Visible = False
+        end
+        item
+          Expanded = False
+          FieldName = 'NRO_COMPROBANTE'
+          Visible = False
+        end
+        item
+          Expanded = False
+          FieldName = 'SUBTOTAL'
+          Visible = False
+        end
+        item
+          Expanded = False
+          FieldName = 'FK_IDCLIENTE'
+          Visible = False
+        end
+        item
+          Expanded = False
+          FieldName = 'FK_IDPUNTO_VENTA'
+          Visible = False
+        end>
+    end
+  end
+  inherited dsBase: TDataSource
+    DataSet = dmGestion.fdqryVentas
+  end
+end

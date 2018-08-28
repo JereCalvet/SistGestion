@@ -18,7 +18,7 @@ inherited frmDialogoDepositos: TfrmDialogoDepositos
       Width = 37
       Height = 13
       Caption = 'Nombre'
-      FocusControl = cxDBTextEdit1
+      FocusControl = cxdbtxtdtNOMBRE
     end
     object lbl3: TLabel
       Left = 24
@@ -26,7 +26,7 @@ inherited frmDialogoDepositos: TfrmDialogoDepositos
       Width = 40
       Height = 13
       Caption = 'Domicilio'
-      FocusControl = cxDBTextEdit2
+      FocusControl = cxdbtxtdtDOMICILIO
     end
     object lbl4: TLabel
       Left = 176
@@ -49,39 +49,44 @@ inherited frmDialogoDepositos: TfrmDialogoDepositos
       Left = 24
       Top = 32
       DataBinding.DataField = 'NUMERO'
-      TabOrder = 0
+      DataBinding.DataSource = dsBase
+      TabOrder = 4
       Visible = False
       Width = 121
     end
-    object cxDBTextEdit1: TcxDBTextEdit
+    object cxdbtxtdtNOMBRE: TcxDBTextEdit
       Left = 24
       Top = 109
       DataBinding.DataField = 'NOMBRE'
-      TabOrder = 1
+      DataBinding.DataSource = dsBase
+      TabOrder = 0
       Width = 185
     end
-    object cxDBTextEdit2: TcxDBTextEdit
+    object cxdbtxtdtDOMICILIO: TcxDBTextEdit
       Left = 24
       Top = 152
       DataBinding.DataField = 'DOMICILIO'
-      TabOrder = 2
+      DataBinding.DataSource = dsBase
+      TabOrder = 1
       Width = 305
     end
     object cxDBSpinEdit2: TcxDBSpinEdit
       Left = 176
       Top = 32
       DataBinding.DataField = 'FK_IDSUCURSAL'
+      DataBinding.DataSource = dsBase
       TabOrder = 3
       Visible = False
       Width = 121
     end
     object dblkcbblookupNomSuc: TDBLookupComboBox
       Left = 384
-      Top = 109
+      Top = 112
       Width = 305
       Height = 21
       DataField = 'lookupNomSuc'
-      TabOrder = 4
+      DataSource = dsBase
+      TabOrder = 2
     end
   end
   inherited dsBase: TDataSource

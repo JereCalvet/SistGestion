@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uPlantillaGenerica, Vcl.ExtCtrls,
   Vcl.WinXCtrls, System.Actions, Vcl.ActnList, System.ImageList, Vcl.ImgList,
   Vcl.CategoryButtons, Vcl.Imaging.pngimage, Vcl.StdCtrls, Vcl.ComCtrls,
-  Vcl.Grids, Vcl.Themes, Vcl.Samples.Spin, Vcl.FileCtrl;
+  Vcl.Grids, Vcl.Themes, Vcl.Samples.Spin, Vcl.FileCtrl, Data.DB, Vcl.DBCtrls, System.IniFiles, System.IOUtils;
 
 type
   TfrmConfiguracion = class(TfrmPlantillaGenerica)
@@ -37,7 +37,6 @@ type
     cbbMuestra: TComboBox;
     btnMuestra2: TButton;
     btnMuestra1: TButton;
-    cbb: TComboBox;
     pnlCopiaSeg: TPanel;
     btnAceptarCopiaSeg: TButton;
     btnCancelarCopiaSeg: TButton;
@@ -56,6 +55,11 @@ type
     btnAceptarFact: TButton;
     btnCancelarFact: TButton;
     grpFact: TGroupBox;
+    dsSucursales: TDataSource;
+    lblSucursal: TLabel;
+    dblkcbbFacturacion: TDBLookupComboBox;
+    cbbApariencia: TComboBox;
+    pnlDefecto: TPanel;
     procedure imgMenuClick(Sender: TObject);
     procedure SVClosed(Sender: TObject);
     procedure catMenuItemsCategoryCollapase(Sender: TObject;
@@ -63,7 +67,6 @@ type
     procedure SVOpening(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure cbbChange(Sender: TObject);
     procedure btnCancelarApacienciaClick(Sender: TObject);
     procedure btnAceptarApacienciaClick(Sender: TObject);
     procedure btnPathClick(Sender: TObject);
@@ -71,8 +74,11 @@ type
     procedure actCopiaSegExecute(Sender: TObject);
     procedure actImpExecute(Sender: TObject);
     procedure actFactExecute(Sender: TObject);
+    procedure cbbAparienciaChange(Sender: TObject);
+    procedure btnAceptarFactClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure btnAceptarCopiaSegClick(Sender: TObject);
   private
-      Defecto: string;     //guarda skin default
     { Private declarations }
   public
     { Public declarations }
@@ -83,48 +89,106 @@ var
 
 implementation
 
+uses
+  udmGestion;
+
 
 {$R *.dfm}
 
-procedure TfrmConfiguracion.actAparienciaExecute(Sender: TObject);
+procedure TfrmConfiguracion.actAparienciaExecute(Sender: TObject);    //cambio el panel
 begin
   inherited;
   pnlApariencia.Visible := True;
   pnlCopiaSeg.Visible := False;
   pnlImpre.Visible:= False;
   pnlFact.Visible:= False;
+  pnlDefecto.Visible := False;
 end;
 
-procedure TfrmConfiguracion.actCopiaSegExecute(Sender: TObject);
+procedure TfrmConfiguracion.actCopiaSegExecute(Sender: TObject);   //cambio el panel, creo carpeta DB default y cargo config
+var
+  Ini : TIniFile;
 begin
   inherited;
   pnlCopiaSeg.Visible := True;
   pnlApariencia.Visible := False;
   pnlImpre.Visible:= False;
   pnlFact.Visible:= False;
+  pnlDefecto.Visible := False;
+  if not DirectoryExists(TPath.GetDocumentsPath + PathDelim + 'Gestion' + PathDelim + 'Base de datos') then
+     CreateDir(TPath.GetDocumentsPath + PathDelim + 'Gestion' + PathDelim + 'Base de datos');
+
+  Ini := Tinifile.Create(dmGestion.CarpetaGestion_IniPath);
+  try
+    case Ini.ReadBool('Copia de seguridad','Automatica', chkAutmatica.Checked = False) of
+      True : chkAutmatica.Checked := True;
+      False: chkAutmatica.Checked := False;
+    end;
+    seDias.Value := Ini.ReadInteger('Copia de seguridad','Intervalo', 0);
+    edtPath.Text := Ini.ReadString('Copia de seguridad', 'Path', '');
+  finally
+    Ini.Free;
+  end;
 end;
 
-procedure TfrmConfiguracion.actFactExecute(Sender: TObject);
+procedure TfrmConfiguracion.actFactExecute(Sender: TObject);  //cambio el panel y cargo sucursal default
+var
+  Ini : TIniFile;
+  IDSucurDefault : Integer;
 begin
   inherited;
   pnlFact.Visible:= True;
   pnlImpre.Visible:= False;
   pnlCopiaSeg.Visible := False;
   pnlApariencia.Visible := False;
+  pnlDefecto.Visible := False;
+
+  Ini := Tinifile.Create(dmGestion.CarpetaGestion_IniPath);
+  try
+    IDSucurDefault := Ini.ReadInteger('Sucursal','ID', 1); //carga la sucursal del archivo INI y por defecto carga la 1
+    dblkcbbFacturacion.KeyValue := IDSucurDefault;
+  finally
+    Ini.Free;
+  end;
 end;
 
-procedure TfrmConfiguracion.actImpExecute(Sender: TObject);
+procedure TfrmConfiguracion.actImpExecute(Sender: TObject);  //cambio el panel
 begin
   inherited;
   pnlImpre.Visible:= True;
   pnlFact.Visible:= False;
   pnlCopiaSeg.Visible := False;
   pnlApariencia.Visible := False;
+  pnlDefecto.Visible := False;
 end;
 
-procedure TfrmConfiguracion.btnAceptarApacienciaClick(Sender: TObject);
+procedure TfrmConfiguracion.btnAceptarApacienciaClick(Sender: TObject); //guardo el estilo en el archivo ini
+ var
+  Ini : TIniFile;
 begin
   inherited;
+  Ini := Tinifile.Create(dmGestion.CarpetaGestion_IniPath);
+  try
+    Ini.WriteString('Estilo','Nombre', cbbApariencia.Text);
+  finally
+    Ini.Free;
+  end;
+  Close;
+end;
+
+procedure TfrmConfiguracion.btnAceptarCopiaSegClick(Sender: TObject);  //guardo la configuracion del back-up en el archivo ini
+ var
+  Ini : TIniFile;
+begin
+  inherited;
+  Ini := Tinifile.Create(dmGestion.CarpetaGestion_IniPath);
+  try
+    ini.WriteBool('Copia de seguridad','Automatica', chkAutmatica.Checked);
+    Ini.WriteInteger('Copia de seguridad','Intervalo', seDias.Value);
+    Ini.WriteString('Copia de seguridad', 'Path', edtPath.Text);
+  finally
+    Ini.Free;
+  end;
   Close;
 end;
 
@@ -134,9 +198,31 @@ begin
   Close;
 end;
 
+procedure TfrmConfiguracion.btnAceptarFactClick(Sender: TObject); //guardo datos de la sucursal "default"
+ var
+  Ini : TIniFile;
+begin
+  inherited;
+  Ini := Tinifile.Create(dmGestion.CarpetaGestion_IniPath);
+  try
+     with dmGestion do
+      begin
+        if dblkcbbFacturacion.KeyValue <> null then
+          begin
+           Ini.WriteInteger('Sucursal','ID', intgrfldSucursalesID_SUCURSAL.Value);
+           Ini.WriteString('Sucursal', 'Nombre comercial', strngfldSucursalesNOMBRE_COMERCIAL.Value);
+          end;
+      end;
+  finally
+    Ini.Free;
+  end;
+  Close;
+end;
+
 procedure TfrmConfiguracion.btnPathClick(Sender: TObject); // abre el cuadro de dialogo de windows para seleccionar una carpeta, si el windows es mas viejo que winvista, usa el default de delphi.
  var
-  Carpeta: string;
+  Carpeta, PathDefault: string;
+  Ini : TIniFile;
 begin
   inherited;
   if Win32MajorVersion >= 6 then
@@ -145,7 +231,18 @@ begin
         Title := 'Seleccione la carpeta destino';
         Options := [fdoPickFolders, fdoPathMustExist, fdoForceFileSystem]; // YMMV
         OkButtonLabel := 'Seleccionar';
-        DefaultFolder := GetCurrentDir;
+
+        Ini := Tinifile.Create(dmGestion.CarpetaGestion_IniPath);        //leo el path del archivo ini o uso el defecto
+        try
+          PathDefault := Ini.ReadString('Copia de seguridad', 'Path', '');
+          if PathDefault <> '' then
+             DefaultFolder := PathDefault
+          else
+             DefaultFolder := TPath.GetDocumentsPath + PathDelim + 'Gestion' + PathDelim + 'Base de datos';
+        finally
+          Ini.Free;
+        end;
+
        // FileName := Carpeta;
         if Execute then
            edtPath.Text := FileName;
@@ -164,10 +261,17 @@ begin
   catMenuItems.Categories[0].Collapsed := False;
 end;
 
-procedure TfrmConfiguracion.cbbChange(Sender: TObject);
+procedure TfrmConfiguracion.cbbAparienciaChange(Sender: TObject);      //aplico estilos
 begin
   inherited;
-  TStyleManager.SetStyle(cbb.Text);
+   TStyleManager.SetStyle(cbbApariencia.Text);
+end;
+
+procedure TfrmConfiguracion.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  inherited;
+  dsSucursales.DataSet.Close;
 end;
 
 procedure TfrmConfiguracion.FormCreate(Sender: TObject);   //  cargo el combobox con los estilos
@@ -176,14 +280,14 @@ procedure TfrmConfiguracion.FormCreate(Sender: TObject);   //  cargo el combobox
 begin
   inherited;
   for StyleName in TStyleManager.StyleNames do
-      cbb.Items.Add(StyleName);
-  Defecto := TStyleManager.ActiveStyle.Name;
-  cbb.ItemIndex := cbb.Items.IndexOf(TStyleManager.ActiveStyle.Name);
+      cbbApariencia.Items.Add(StyleName);
+  cbbApariencia.ItemIndex := cbbApariencia.Items.IndexOf(TStyleManager.ActiveStyle.Name);
 end;
 
-procedure TfrmConfiguracion.FormShow(Sender: TObject);  //cargo la grilla con datos
+procedure TfrmConfiguracion.FormShow(Sender: TObject);  //cargo la grilla con datos de muestra
 begin
   inherited;
+  dsSucursales.DataSet.Open;
   strngrdMuestra.Cells[0,0]:= 'Cliente';
   strngrdMuestra.Cells[0,1]:= 'Microsoft';
   strngrdMuestra.Cells[0,2]:= 'Apple';
@@ -193,9 +297,9 @@ begin
   strngrdMuestra.Cells[1,2]:= 'Manzana';
   strngrdMuestra.Cells[1,3]:= 'DB';
   strngrdMuestra.Cells[2,0]:= 'Telefono';
-  strngrdMuestra.Cells[2,1]:= '113456';
-  strngrdMuestra.Cells[2,2]:= '4874561';
-  strngrdMuestra.Cells[2,3]:= '156879';
+  strngrdMuestra.Cells[2,1]:= '011-3456';
+  strngrdMuestra.Cells[2,2]:= '023-4874';
+  strngrdMuestra.Cells[2,3]:= '184-1568';
   strngrdMuestra.Cells[3,0]:= 'Saldo';
   strngrdMuestra.Cells[3,1]:= '$40,23';
   strngrdMuestra.Cells[3,2]:= '$27,19';

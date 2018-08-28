@@ -2,21 +2,26 @@ inherited frmDialogoArticulos: TfrmDialogoArticulos
   Caption = 'Art'#237'culo'
   PixelsPerInch = 96
   TextHeight = 13
-  inherited tbc1: TTabControl
+  inherited btnAceptar: TBitBtn
+    Default = False
+    TabOrder = 2
+  end
+  inherited tbc1: TTabControl [1]
     Width = 10
     Height = 8
+    TabOrder = 0
     Visible = False
     ExplicitWidth = 10
     ExplicitHeight = 8
   end
-  object pgc1: TPageControl [3]
+  object pgc1: TPageControl [2]
     Left = 23
     Top = 57
     Width = 714
     Height = 353
-    ActivePage = tsGeneral
+    ActivePage = tsValores
     MultiLine = True
-    TabOrder = 3
+    TabOrder = 1
     object tsGeneral: TTabSheet
       Caption = 'General'
       Font.Charset = DEFAULT_CHARSET
@@ -95,10 +100,6 @@ inherited frmDialogoArticulos: TfrmDialogoArticulos
     object tsValores: TTabSheet
       Caption = 'Valores'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlCosto: TPanel
         Left = 0
         Top = 0
@@ -120,16 +121,6 @@ inherited frmDialogoArticulos: TfrmDialogoArticulos
           Height = 13
           Caption = 'Costo'
         end
-        object cxDBCurrencyEditCosto: TcxDBCurrencyEdit
-          Left = 260
-          Top = 20
-          DataBinding.DataField = 'COSTO'
-          DataBinding.DataSource = dsBase
-          Properties.UseDisplayFormatWhenEditing = True
-          Properties.ValidationOptions = [evoShowErrorIcon]
-          TabOrder = 0
-          Width = 121
-        end
         object edtMargen: TEdit
           Left = 260
           Top = 63
@@ -142,6 +133,15 @@ inherited frmDialogoArticulos: TfrmDialogoArticulos
           TabOrder = 1
           TextHint = '%'
           OnKeyUp = edtMargenKeyUp
+        end
+        object dbedtCOSTO: TDBEdit
+          Left = 260
+          Top = 20
+          Width = 121
+          Height = 21
+          DataField = 'COSTO'
+          DataSource = dsBase
+          TabOrder = 0
         end
       end
       object pnlPrecio: TPanel
@@ -167,17 +167,6 @@ inherited frmDialogoArticulos: TfrmDialogoArticulos
           Height = 13
           Caption = 'Al'#237'cuota'
         end
-        object cxCurrencyEditPrecio: TcxCurrencyEdit
-          Left = 172
-          Top = 36
-          EditValue = 0c
-          Properties.Alignment.Horz = taRightJustify
-          Properties.UseDisplayFormatWhenEditing = True
-          Properties.ValidationOptions = [evoShowErrorIcon]
-          TabOrder = 0
-          OnKeyUp = cxCurrencyEditPrecioKeyUp
-          Width = 209
-        end
         object cbbAlicuota: TComboBox
           Left = 470
           Top = 36
@@ -189,6 +178,15 @@ inherited frmDialogoArticulos: TfrmDialogoArticulos
             'IVA Tasa normal: 21%'
             'IVA Tasa reducida: 10,5%'
             'IVA Tasa especial: 27%')
+        end
+        object dbedtPRECIO: TDBEdit
+          Left = 256
+          Top = 37
+          Width = 125
+          Height = 21
+          DataField = 'PRECIO'
+          DataSource = dsBase
+          TabOrder = 0
         end
       end
       object pnlAlicuota: TPanel
@@ -257,7 +255,7 @@ inherited frmDialogoArticulos: TfrmDialogoArticulos
           EditValue = 0c
           Enabled = False
           Properties.Alignment.Horz = taCenter
-          TabOrder = 2
+          TabOrder = 3
           Width = 133
         end
         object cxCurrencyEditIVA10: TcxCurrencyEdit
@@ -266,7 +264,7 @@ inherited frmDialogoArticulos: TfrmDialogoArticulos
           EditValue = 0c
           Enabled = False
           Properties.Alignment.Horz = taCenter
-          TabOrder = 3
+          TabOrder = 2
           Width = 133
         end
       end
@@ -274,10 +272,6 @@ inherited frmDialogoArticulos: TfrmDialogoArticulos
     object tsStock: TTabSheet
       Caption = 'Stock'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lblID_PROVEEDOR: TLabel
         Left = 32
         Top = 24
@@ -305,9 +299,9 @@ inherited frmDialogoArticulos: TfrmDialogoArticulos
       object lblStockMin: TLabel
         Left = 32
         Top = 150
-        Width = 26
+        Width = 61
         Height = 13
-        Caption = 'Stock'
+        Caption = 'Stock minimo'
       end
       object lblDeposito: TLabel
         Left = 400
@@ -316,6 +310,13 @@ inherited frmDialogoArticulos: TfrmDialogoArticulos
         Height = 13
         Caption = 'Deposito'
         FocusControl = dblkcbblookupProveedor
+      end
+      object lblInstruccion: TLabel
+        Left = 32
+        Top = 43
+        Width = 220
+        Height = 13
+        Caption = 'Seleccione un deposito para consultar el stock'
       end
       object cxDBSpinEdit1: TcxDBSpinEdit
         Left = 32
@@ -335,35 +336,54 @@ inherited frmDialogoArticulos: TfrmDialogoArticulos
         DataSource = dsBase
         TabOrder = 1
       end
-      object edtDeposito: TEdit
-        Left = 400
-        Top = 123
-        Width = 121
-        Height = 21
-        TabOrder = 2
-        Text = 'edtDeposito'
-      end
-      object edtStock: TEdit
-        Left = 32
-        Top = 123
-        Width = 121
-        Height = 21
-        Enabled = False
-        TabOrder = 3
-        Text = 'aca va el stock'
-      end
       object edtStockMin: TEdit
         Left = 32
         Top = 169
         Width = 121
-        Height = 38
+        Height = 21
         Enabled = False
+        TabOrder = 3
+        Text = 'Proximamente'
+      end
+      object dbedtStock: TDBEdit
+        Left = 32
+        Top = 123
+        Width = 121
+        Height = 21
+        ReadOnly = True
+        TabOrder = 2
+      end
+      object dblklstDeposito: TDBLookupListBox
+        Left = 400
+        Top = 123
+        Width = 285
+        Height = 147
+        KeyField = 'NUMERO'
+        ListField = 'NOMBRE'
+        ListSource = dsDeposito
         TabOrder = 4
-        Text = 'Stock Minimo'
+        OnEnter = dblklstDepositoEnter
       end
     end
   end
+  inherited btnSalir: TBitBtn [3]
+    Left = 454
+    TabOrder = 3
+    ExplicitLeft = 454
+  end
   inherited dsBase: TDataSource
     DataSet = dmGestion.fdqryArticulos
+    OnDataChange = dsBaseDataChange
+  end
+  object dsDinamico: TDataSource
+    DataSet = dmGestion.fdqryDinamico
+    Left = 88
+    Top = 8
+  end
+  object dsDeposito: TDataSource
+    DataSet = dmGestion.fdqryDepositos
+    OnDataChange = dsDepositoDataChange
+    Left = 152
+    Top = 8
   end
 end

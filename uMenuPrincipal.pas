@@ -40,6 +40,9 @@ type
     actArticulos: TAction;
     actMetPag: TAction;
     actPlanPago: TAction;
+    actSucursales: TAction;
+    actDepositos: TAction;
+    btn1: TButton;
     procedure actOpcionesExecute(Sender: TObject);
     procedure actUsuariosExecute(Sender: TObject);
     procedure actGruposExecute(Sender: TObject);
@@ -54,6 +57,9 @@ type
     procedure actMetPagExecute(Sender: TObject);
     procedure actPlanPagoExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure actSucursalesExecute(Sender: TObject);
+    procedure actDepositosExecute(Sender: TObject);
+    procedure btn1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -66,7 +72,7 @@ var
 implementation
 
 uses
-  uLogin, uGrillaUsuarios, uGrillaGrupos, udmSeguridad, uGrillaOpciones, ufrmGrup_Usu, ufrmGrup_Opc, uConfiguracion, uGrillaClientes, uGrillaSituacionTrib, uGrillaProveedores, uGrillaArticulos, uGrillaMetPago, uGrillaPlanPago;
+  uLogin, uGrillaUsuarios, uGrillaGrupos, udmSeguridad, uGrillaOpciones, ufrmGrup_Usu, ufrmGrup_Opc, uConfiguracion, uGrillaClientes, uGrillaSituacionTrib, uGrillaProveedores, uGrillaArticulos, uGrillaMetPago, uGrillaPlanPago, uGrillaSucursales, uGrillaDepositos, uDialogoFactura;
 
 {$R *.dfm}
 
@@ -86,6 +92,12 @@ procedure TfrmMenuPrincipal.actConfiguracionExecute(Sender: TObject);
 begin
   inherited;
   TfrmConfiguracion.MostrarModal;
+end;
+
+procedure TfrmMenuPrincipal.actDepositosExecute(Sender: TObject);
+begin
+  inherited;
+  TfrmGrillaDepositos.MostrarModal;
 end;
 
 procedure TfrmMenuPrincipal.actGruposExecute(Sender: TObject);
@@ -143,10 +155,22 @@ begin
   TfrmGrillaSituacionTrib.MostrarModal;
 end;
 
+procedure TfrmMenuPrincipal.actSucursalesExecute(Sender: TObject);
+begin
+  inherited;
+  TfrmGrillaSucursal.MostrarModal;
+end;
+
 procedure TfrmMenuPrincipal.actUsuariosExecute(Sender: TObject);
 begin
   inherited;
    TfrmGrillaUsuarios.MostrarModal;
+end;
+
+procedure TfrmMenuPrincipal.btn1Click(Sender: TObject);
+begin
+  inherited;
+  TfrmDialogoFactura.MostrarModal;
 end;
 
 procedure TfrmMenuPrincipal.FormCreate(Sender: TObject);

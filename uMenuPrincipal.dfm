@@ -14,14 +14,27 @@ inherited frmMenuPrincipal: TfrmMenuPrincipal
     Color = clMenuBar
     ColorMap.DisabledFontColor = 7171437
     ColorMap.HighlightColor = clWhite
+    ColorMap.BtnFrameColor = 12477460
     ColorMap.BtnSelectedFont = clBlack
     ColorMap.UnusedColor = clWhite
+    EdgeBorders = [ebBottom]
+    EdgeInner = esNone
+    EdgeOuter = esRaised
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clBlack
     Font.Height = -12
     Font.Name = 'Segoe UI'
     Font.Style = []
     Spacing = 0
+  end
+  object btn1: TButton
+    Left = 208
+    Top = 184
+    Width = 75
+    Height = 25
+    Caption = 'btn1'
+    TabOrder = 1
+    OnClick = btn1Click
   end
   object actmgrPermisos: TActionManager
     ActionBars = <
@@ -86,12 +99,26 @@ inherited frmMenuPrincipal: TfrmMenuPrincipal
                 Caption = '&Sitruaci'#243'n tributaria'
               end
               item
+                Caption = '-'
+              end
+              item
                 Action = actMetPag
                 Caption = '&M'#233'todos de pago'
               end
               item
                 Action = actPlanPago
                 Caption = '&Planes de Pago'
+              end
+              item
+                Caption = '-'
+              end
+              item
+                Action = actSucursales
+                Caption = 'S&ucursales'
+              end
+              item
+                Action = actDepositos
+                Caption = '&Depositos'
               end>
             Caption = 'Co&nfiguraci'#243'n'
           end>
@@ -165,6 +192,16 @@ inherited frmMenuPrincipal: TfrmMenuPrincipal
       Category = 'Configuracion'
       Caption = 'Planes de Pago'
       OnExecute = actPlanPagoExecute
+    end
+    object actSucursales: TAction
+      Category = 'Configuracion'
+      Caption = 'Sucursales'
+      OnExecute = actSucursalesExecute
+    end
+    object actDepositos: TAction
+      Category = 'Configuracion'
+      Caption = 'Depositos'
+      OnExecute = actDepositosExecute
     end
   end
 end

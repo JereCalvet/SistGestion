@@ -34,11 +34,16 @@ uses
   uDialogoPlanPago in 'Gestion\uDialogoPlanPago.pas' {frmDialogoPlanPago},
   uGrillaVentas in 'Gestion\uGrillaVentas.pas' {frmGrillaVentas},
   uGrillaDepositos in 'Gestion\uGrillaDepositos.pas' {frmGrillaDepositos},
-  uDialogoDepositos in 'Gestion\uDialogoDepositos.pas' {frmDialogoDepositos};
+  uDialogoDepositos in 'Gestion\uDialogoDepositos.pas' {frmDialogoDepositos},
+  uGrillaSucursales in 'Gestion\uGrillaSucursales.pas' {frmGrillaSucursal},
+  uDialogoSucursal in 'Gestion\uDialogoSucursal.pas' {frmDialogoSucursal},
+  uDialogoFactura in 'Gestion\uDialogoFactura.pas' {frmDialogoFactura},
+  uGrillaFactura in 'Gestion\uGrillaFactura.pas' {frmGrillaFactura};
 
 {$R *.res}
 
 begin
+  TStyleManager.TrySetStyle('Amakrits');
   Application.CreateForm(TdmGestion, dmGestion);
   Application.CreateForm(TdmSeguridad, dmSeguridad);
   Application.CreateForm(TfrmMenuPrincipal, frmMenuPrincipal);

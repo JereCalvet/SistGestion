@@ -1,0 +1,15 @@
+inherited frmGrillaSucursal: TfrmGrillaSucursal
+  Caption = 'Sucursales'
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited pnl1: TPanel
+    inherited dbnvgr1: TDBNavigator
+      Hints.Strings = ()
+      OnClick = dbnvgr1Click
+    end
+    inherited btnNuevo: TButton
+      Left = 96
+      ExplicitLeft = 96
+    end
+  end
+end

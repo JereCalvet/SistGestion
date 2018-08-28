@@ -5,6 +5,7 @@ inherited frmGrillaArticulos: TfrmGrillaArticulos
   inherited pnl1: TPanel
     inherited dbnvgr1: TDBNavigator
       Hints.Strings = ()
+      Visible = False
       OnClick = dbnvgr1Click
     end
   end
@@ -35,6 +36,11 @@ inherited frmGrillaArticulos: TfrmGrillaArticulos
         end
         item
           Expanded = False
+          FieldName = 'COSTO'
+          Visible = True
+        end
+        item
+          Expanded = False
           FieldName = 'lookupProveedor'
           Width = 106
           Visible = True
@@ -43,11 +49,6 @@ inherited frmGrillaArticulos: TfrmGrillaArticulos
           Expanded = False
           FieldName = 'DESCRIPCION'
           Width = 210
-          Visible = True
-        end
-        item
-          Expanded = False
-          FieldName = 'COSTO'
           Visible = True
         end
         item

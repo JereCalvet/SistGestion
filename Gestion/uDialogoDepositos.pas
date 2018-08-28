@@ -28,9 +28,9 @@ type
     lbl1: TLabel;
     cxDBSpinEdit1: TcxDBSpinEdit;
     lbl2: TLabel;
-    cxDBTextEdit1: TcxDBTextEdit;
+    cxdbtxtdtNOMBRE: TcxDBTextEdit;
     lbl3: TLabel;
-    cxDBTextEdit2: TcxDBTextEdit;
+    cxdbtxtdtDOMICILIO: TcxDBTextEdit;
     lbl4: TLabel;
     cxDBSpinEdit2: TcxDBSpinEdit;
     lbl5: TLabel;

@@ -47,13 +47,13 @@ begin
   if Button = nbInsert then
       begin
         DSBASE.DataSet.Insert;
-        TfrmGrillaArticulos.MostrarModal
+        TfrmDialogoArticulos.MostrarModal
       end;
 
   if Button = nbEdit then
       begin
         DSBASE.DataSet.Edit;
-        TfrmGrillaArticulos.MostrarModal
+        TfrmDialogoArticulos.MostrarModal
       end;
 end;
 

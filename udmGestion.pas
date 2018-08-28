@@ -8,7 +8,7 @@ uses
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, FireDAC.UI.Intf, FireDAC.Stan.Def,
   FireDAC.Stan.Pool, FireDAC.Phys, FireDAC.Phys.FB, FireDAC.Phys.FBDef,
-  FireDAC.VCLUI.Wait, FireDAC.Phys.IBBase, FireDAC.Comp.UI;
+  FireDAC.VCLUI.Wait, FireDAC.Phys.IBBase, FireDAC.Comp.UI, System.IniFiles, System.IOUtils, Vcl.Themes;
 
 type
   TdmGestion = class(TDataModule)
@@ -53,7 +53,6 @@ type
     strngfldArticulosDESCRIPCION: TStringField;
     bcdfldArticulosCOSTO: TBCDField;
     bcdfldArticulosPRECIO: TBCDField;
-    fdqryArticulosIVA: TSmallintField;
     intgrfldArticulosFK_IDPROVEEDOR: TIntegerField;
     strngfldArticuloslookupProveedor: TStringField;
     spProximo_id_ART: TFDStoredProc;
@@ -114,6 +113,28 @@ type
     intgrfldSucursalesFK_SITUACIONTRIB: TIntegerField;
     strngfldSucursaleslookupSitTrib: TStringField;
     strngfldDepositoslookupNomSuc: TStringField;
+    fdqryMovimientos: TFDQuery;
+    intgrfldMovimientosIDMOVIMIENTO: TIntegerField;
+    strngfldMovimientosFK_NRO_FACTURA_C: TStringField;
+    intgrfldMovimientosFK_IDPROVEEDOR: TIntegerField;
+    strngfldMovimientosFK_NRO_FACTURA_V: TStringField;
+    intgrfldMovimientosFK_NUM_DEPOSITO: TIntegerField;
+    strngfldMovimientosFK_COD_ART: TStringField;
+    strngfldMovimientosTIPO: TStringField;
+    bcdfldMovimientosPRECIO_UNITARIO: TBCDField;
+    intgrfldMovimientosCANTIDAD: TIntegerField;
+    strngfldMovimientosLookupDescripArt: TStringField;
+    fdqryMetpago_Ventas: TFDQuery;
+    intgrfldMetpago_VentasFK_IDMETPAGO: TIntegerField;
+    strngfldMetpago_VentasFK_NRO_FACTURA_V: TStringField;
+    bcdfldMetpago_VentasMONTO: TBCDField;
+    strngfldMetpago_VentaslookupMetPag: TStringField;
+    crncyfldMovimientosImporte: TCurrencyField;
+    crncyfldArticulosIVA: TCurrencyField;
+    fdqryStock: TFDQuery;
+    strngfldStockFK_CODIGO: TStringField;
+    intgrfldStockFK_NUMERO: TIntegerField;
+    intgrfldStockCANTIDAD: TIntegerField;
     procedure fdqryClientesCalcFields(DataSet: TDataSet);
     procedure fdqryArticulosNewRecord(DataSet: TDataSet);
     procedure fdqryArticulosBeforePost(DataSet: TDataSet);
@@ -141,9 +162,13 @@ type
     procedure fdqryMD_MetPagReconcileError(DataSet: TFDDataSet; E: EFDException;
       UpdateKind: TFDDatSRowState; var Action: TFDDAptReconcileAction);
     procedure smlntfldMDPlanPagoNROCUOTAValidate(Sender: TField);
+    procedure fdqryMovimientosCalcFields(DataSet: TDataSet);
+    procedure fdqryMovimientosNewRecord(DataSet: TDataSet);
+    procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
   public
+    function CarpetaGestion_IniPath: string; //creo carpeta gestion en mis doc y obtengo el path
     { Public declarations }
   end;
 
@@ -157,9 +182,35 @@ implementation
 
 {$R *.dfm}
 
+function TdmGestion.CarpetaGestion_IniPath: string;
+begin
+  if not DirectoryExists(TPath.GetDocumentsPath + PathDelim + 'Gestion') then
+     CreateDir(TPath.GetDocumentsPath + PathDelim + 'Gestion');
+  Result :=  TPath.Combine(TPath.GetDocumentsPath,'Gestion\Gestion.ini');
+end;
+
+procedure TdmGestion.DataModuleCreate(Sender: TObject);     //Creo carpeta y leo la configuracion del archivo ini
+var
+  Ini : TIniFile;
+  Estilo: string;
+begin
+  Ini := Tinifile.Create(CarpetaGestion_IniPath);
+  try
+    Estilo := Ini.ReadString('Estilo','Nombre', '<None>');          //leo estilo
+    if Estilo <> '<None>' then                   //si no hay estilo guardado incia default
+       try                                      //intenta aplicarlo o carga "Windows"
+         TStyleManager.SetStyle(Estilo);
+       except
+         TStyleManager.SetStyle('Windows');
+       end;
+  finally
+    Ini.Free;
+  end;
+end;
+
 procedure TdmGestion.fdqryArticulosBeforePost(DataSet: TDataSet); //obtengo el codigo desde la db con un procedimiento almacenado que rellenar el string con ceros a la izq
 begin
- if fdqryArticulos.State = dsInsert then
+  if fdqryArticulos.State = dsInsert then
      begin
        spProximo_id_ART.ParamByName('TIPO').Value := 'ARTICULO';
        spProximo_id_ART.ExecProc;
@@ -245,6 +296,21 @@ procedure TdmGestion.fdqryMetodos_pagoReconcileError(DataSet: TFDDataSet;
 begin
    ApplicationShowException(e);
    Abort;
+end;
+
+procedure TdmGestion.fdqryMovimientosCalcFields(DataSet: TDataSet);
+begin
+  with fdqryMovimientos do
+    begin
+      if not(FieldByName('PRECIO_UNITARIO').IsNull) and not(FieldByName('CANTIDAD').IsNull) then
+          FieldByName('Importe').Value := FieldByName('PRECIO_UNITARIO').Value * FieldByName('CANTIDAD').Value;
+    end;
+end;
+
+procedure TdmGestion.fdqryMovimientosNewRecord(DataSet: TDataSet);
+begin
+   fdqryMovimientos.FieldByName('CANTIDAD').Value := 0;
+   fdqryMovimientos.FieldByName('Importe').Value := 0;
 end;
 
 procedure TdmGestion.fdqryPlanes_pagoReconcileError(DataSet: TFDDataSet;
