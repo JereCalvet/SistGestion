@@ -1,0 +1,96 @@
+unit uBusquedaGenerica;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uPlantillaGenerica, Data.DB, Vcl.Grids,
+  Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls, Vcl.WinXCtrls,
+  dxGDIPlusClasses;
+
+type
+  TfrmBusquedaGenerica = class(TfrmPlantillaGenerica)
+    pnlTop: TPanel;
+    pnlBot: TPanel;
+    pnlClient: TPanel;
+    btnAceptar: TBitBtn;
+    btnCancelar: TBitBtn;
+    dbgrd1: TDBGrid;
+    dsBase: TDataSource;
+    srchbx1: TSearchBox;
+    img1: TImage;
+    lblTitulo: TLabel;
+    procedure btnCancelarClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure dbgrd1DblClick(Sender: TObject);
+    procedure dbgrd1KeyPress(Sender: TObject; var Key: Char);
+    procedure btnAceptarClick(Sender: TObject);
+    procedure srchbx1KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmBusquedaGenerica: TfrmBusquedaGenerica;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrmBusquedaGenerica.btnAceptarClick(Sender: TObject);
+begin
+  inherited;
+  Close;
+end;
+
+procedure TfrmBusquedaGenerica.btnCancelarClick(Sender: TObject);
+begin
+  inherited;
+  Close;
+end;
+
+procedure TfrmBusquedaGenerica.dbgrd1DblClick(Sender: TObject);
+begin
+  inherited;
+  if not dsBase.DataSet.IsEmpty then  //si doble click a la grilla y seleccione cierro;
+     Close;
+end;
+
+procedure TfrmBusquedaGenerica.dbgrd1KeyPress(Sender: TObject; var Key: Char);
+begin
+  inherited;
+  case ord(Key) of
+    VK_RETURN: // si la tecla es enter y no esta vacio cierro
+    begin
+       if not dsBase.DataSet.IsEmpty then
+          Close;
+    end;
+  end;
+end;
+
+procedure TfrmBusquedaGenerica.FormShow(Sender: TObject);
+begin
+  inherited;
+  dsBase.DataSet.Open;
+end;
+
+procedure TfrmBusquedaGenerica.srchbx1KeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  inherited;
+  if Key = VK_DOWN then
+     begin
+       dbgrd1.SetFocus;
+       keybd_event(VK_DOWN, 0, 0, 0);
+     end;
+  if Key = VK_UP then
+     begin
+       dbgrd1.SetFocus;
+       keybd_event(VK_UP, 0, 0, 0);
+     end;
+end;
+
+end.

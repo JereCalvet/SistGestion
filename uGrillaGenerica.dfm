@@ -18,6 +18,7 @@ inherited frmGrillaGenerica: TfrmGrillaGenerica
       Height = 25
       DataSource = dsBase
       TabOrder = 0
+      Visible = False
     end
     object btnNuevo: TButton
       Left = 88

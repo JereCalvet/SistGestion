@@ -11,7 +11,7 @@ inherited frmConfiguracion: TfrmConfiguracion
   ExplicitHeight = 502
   PixelsPerInch = 96
   TextHeight = 13
-  object pnlCopiaSeg: TPanel
+  object pnlFact: TPanel
     Left = 200
     Top = 50
     Width = 588
@@ -19,112 +19,110 @@ inherited frmConfiguracion: TfrmConfiguracion
     Align = alClient
     Anchors = []
     BevelOuter = bvNone
-    TabOrder = 3
+    ParentBackground = False
+    TabOrder = 4
     Visible = False
-    object grpCopiaSeg: TGroupBox
-      Left = 23
-      Top = 23
-      Width = 539
-      Height = 330
-      Caption = 'Respaldo'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = [fsBold]
-      ParentFont = False
-      TabOrder = 2
-      object lblCopiaSeg: TLabel
-        Left = 24
-        Top = 109
-        Width = 50
-        Height = 13
-        Caption = 'Directorio:'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentFont = False
-      end
-      object lblDias: TLabel
-        Left = 224
-        Top = 38
-        Width = 85
-        Height = 13
-        Caption = 'Intervalo de dias:'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentFont = False
-      end
-      object chkAutmatica: TCheckBox
-        Left = 24
-        Top = 37
-        Width = 137
-        Height = 17
-        Caption = 'Creaci'#243'n autom'#225'tica'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 0
-      end
-      object seDias: TSpinEdit
-        Left = 368
-        Top = 35
-        Width = 121
-        Height = 22
-        MaxValue = 0
-        MinValue = 0
-        TabOrder = 1
-        Value = 0
-      end
-      object edtPath: TEdit
-        Left = 24
-        Top = 128
-        Width = 409
-        Height = 21
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = [fsUnderline]
-        ParentFont = False
-        TabOrder = 2
-      end
-      object btnPath: TButton
-        Left = 462
-        Top = 126
-        Width = 27
-        Height = 25
-        Caption = '...'
-        TabOrder = 3
-        OnClick = btnPathClick
-      end
-    end
-    object btnAceptarCopiaSeg: TButton
+    object btnAceptarFact: TButton
       Left = 163
       Top = 368
       Width = 75
       Height = 26
       Caption = 'Aceptar'
       TabOrder = 0
-      OnClick = btnAceptarCopiaSegClick
+      OnClick = btnAceptarFactClick
     end
-    object btnCancelarCopiaSeg: TButton
+    object grpFact: TGroupBox
+      Left = 31
+      Top = 40
+      Width = 539
+      Height = 322
+      Caption = 'Facturaci'#243'n'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 1
+      object lblSucursal: TLabel
+        Left = 24
+        Top = 38
+        Width = 123
+        Height = 13
+        Caption = 'Sucursal predeterminada:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+      end
+      object lblDeposito: TLabel
+        Left = 24
+        Top = 111
+        Width = 125
+        Height = 13
+        Caption = 'Dep'#243'sito predeterminado:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+      end
+      object dblkcbbSucursal: TDBLookupComboBox
+        Left = 24
+        Top = 61
+        Width = 240
+        Height = 21
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        KeyField = 'ID_SUCURSAL'
+        ListField = 'NOMBRE_COMERCIAL'
+        ListSource = dsSucursales
+        ParentFont = False
+        TabOrder = 0
+      end
+      object dblkcbbDeposito: TDBLookupComboBox
+        Left = 24
+        Top = 134
+        Width = 240
+        Height = 21
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        KeyField = 'NUMERO'
+        ListField = 'NOMBRE'
+        ListSource = dsDepositos
+        ParentFont = False
+        TabOrder = 1
+      end
+    end
+    object btnCancelarFact: TButton
       Left = 348
       Top = 368
       Width = 75
       Height = 26
       Caption = 'Cancelar'
-      TabOrder = 1
+      TabOrder = 2
       OnClick = btnCancelarApacienciaClick
     end
+  end
+  object pnlDefecto: TPanel
+    Left = 200
+    Top = 50
+    Width = 588
+    Height = 424
+    Align = alClient
+    Anchors = []
+    BevelOuter = bvNone
+    ParentBackground = False
+    TabOrder = 6
   end
   object pnlToolbar: TPanel
     Left = 0
@@ -221,79 +219,6 @@ inherited frmConfiguracion: TfrmConfiguracion
       SelectedButtonColor = clNone
       TabOrder = 0
       OnCategoryCollapase = catMenuItemsCategoryCollapase
-    end
-  end
-  object pnlFact: TPanel
-    Left = 200
-    Top = 50
-    Width = 588
-    Height = 424
-    Align = alClient
-    Anchors = []
-    BevelOuter = bvNone
-    ParentBackground = False
-    TabOrder = 4
-    Visible = False
-    object btnAceptarFact: TButton
-      Left = 163
-      Top = 368
-      Width = 75
-      Height = 26
-      Caption = 'Aceptar'
-      TabOrder = 0
-      OnClick = btnAceptarFactClick
-    end
-    object grpFact: TGroupBox
-      Left = 31
-      Top = 40
-      Width = 539
-      Height = 322
-      Caption = 'Facturaci'#243'n'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = [fsBold]
-      ParentFont = False
-      TabOrder = 1
-      object lblSucursal: TLabel
-        Left = 24
-        Top = 38
-        Width = 123
-        Height = 13
-        Caption = 'Sucursal predeterminada:'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentFont = False
-      end
-      object dblkcbbFacturacion: TDBLookupComboBox
-        Left = 24
-        Top = 61
-        Width = 240
-        Height = 21
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        KeyField = 'ID_SUCURSAL'
-        ListField = 'NOMBRE_COMERCIAL'
-        ListSource = dsSucursales
-        ParentFont = False
-        TabOrder = 0
-      end
-    end
-    object btnCancelarFact: TButton
-      Left = 348
-      Top = 368
-      Width = 75
-      Height = 26
-      Caption = 'Cancelar'
-      TabOrder = 2
-      OnClick = btnCancelarApacienciaClick
     end
   end
   object pnlImpre: TPanel
@@ -570,7 +495,7 @@ inherited frmConfiguracion: TfrmConfiguracion
       OnChange = cbbAparienciaChange
     end
   end
-  object pnlDefecto: TPanel
+  object pnlCopiaSeg: TPanel
     Left = 200
     Top = 50
     Width = 588
@@ -578,8 +503,112 @@ inherited frmConfiguracion: TfrmConfiguracion
     Align = alClient
     Anchors = []
     BevelOuter = bvNone
-    ParentBackground = False
-    TabOrder = 6
+    TabOrder = 3
+    Visible = False
+    object grpCopiaSeg: TGroupBox
+      Left = 23
+      Top = 23
+      Width = 539
+      Height = 330
+      Caption = 'Respaldo'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 2
+      object lblCopiaSeg: TLabel
+        Left = 24
+        Top = 109
+        Width = 50
+        Height = 13
+        Caption = 'Directorio:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+      end
+      object lblDias: TLabel
+        Left = 224
+        Top = 38
+        Width = 85
+        Height = 13
+        Caption = 'Intervalo de dias:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+      end
+      object chkAutmatica: TCheckBox
+        Left = 24
+        Top = 37
+        Width = 137
+        Height = 17
+        Caption = 'Creaci'#243'n autom'#225'tica'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 0
+      end
+      object seDias: TSpinEdit
+        Left = 368
+        Top = 35
+        Width = 121
+        Height = 22
+        MaxValue = 0
+        MinValue = 0
+        TabOrder = 1
+        Value = 0
+      end
+      object edtPath: TEdit
+        Left = 24
+        Top = 128
+        Width = 409
+        Height = 21
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsUnderline]
+        ParentFont = False
+        TabOrder = 2
+      end
+      object btnPath: TButton
+        Left = 462
+        Top = 126
+        Width = 27
+        Height = 25
+        Caption = '...'
+        TabOrder = 3
+        OnClick = btnPathClick
+      end
+    end
+    object btnAceptarCopiaSeg: TButton
+      Left = 163
+      Top = 368
+      Width = 75
+      Height = 26
+      Caption = 'Aceptar'
+      TabOrder = 0
+      OnClick = btnAceptarCopiaSegClick
+    end
+    object btnCancelarCopiaSeg: TButton
+      Left = 348
+      Top = 368
+      Width = 75
+      Height = 26
+      Caption = 'Cancelar'
+      TabOrder = 1
+      OnClick = btnCancelarApacienciaClick
+    end
   end
   object actlst1: TActionList
     Images = ilMenu
@@ -612,7 +641,7 @@ inherited frmConfiguracion: TfrmConfiguracion
     Left = 64
     Top = 274
     Bitmap = {
-      494C010104000C00740020002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010104000C00800020002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000004000000001002000000000000080
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1677,7 +1706,13 @@ inherited frmConfiguracion: TfrmConfiguracion
   end
   object dsSucursales: TDataSource
     DataSet = dmGestion.fdqrySucursales
+    OnDataChange = dsSucursalesDataChange
     Left = 720
     Top = 58
+  end
+  object dsDepositos: TDataSource
+    DataSet = dmGestion.fdqryDepositos
+    Left = 632
+    Top = 56
   end
 end

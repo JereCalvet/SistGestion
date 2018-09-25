@@ -1,0 +1,28 @@
+unit uDialogoTipoComp;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uDialogoGenerico, Data.DB, Vcl.ComCtrls,
+  Vcl.StdCtrls, Vcl.Buttons;
+
+type
+  TfrmDialogoTipoComp = class(TfrmDialogoGenerico)
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmDialogoTipoComp: TfrmDialogoTipoComp;
+
+implementation
+
+uses
+  udmGestion;
+
+{$R *.dfm}
+
+end.

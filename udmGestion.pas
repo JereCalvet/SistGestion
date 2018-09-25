@@ -80,19 +80,6 @@ type
     intgrfldMDPlanPagoFK_IDMETODOPAGO: TIntegerField;
     crncyfldMetodos_pagoRETENCION: TCurrencyField;
     crncyfldMD_MetPagRETENCION: TCurrencyField;
-    fdqryVentas: TFDQuery;
-    strngfldVentasNRO_FACTURA: TStringField;
-    strngfldVentasTIPO: TStringField;
-    dtfldVentasFECHA: TDateField;
-    fdqryVentasHORA: TTimeField;
-    crncyfldVentasDESCUENTO: TCurrencyField;
-    crncyfldVentasRECARGO: TCurrencyField;
-    strngfldVentasNRO_COMPROBANTE: TStringField;
-    bcdfldVentasSUBTOTAL: TBCDField;
-    bcdfldVentasTOTAL: TBCDField;
-    intgrfldVentasFK_IDCLIENTE: TIntegerField;
-    intgrfldVentasFK_IDPUNTO_VENTA: TIntegerField;
-    strngfldVentaslookupCliente: TStringField;
     fdqryDepositos: TFDQuery;
     intgrfldDepositosNUMERO: TIntegerField;
     strngfldDepositosNOMBRE: TStringField;
@@ -113,28 +100,56 @@ type
     intgrfldSucursalesFK_SITUACIONTRIB: TIntegerField;
     strngfldSucursaleslookupSitTrib: TStringField;
     strngfldDepositoslookupNomSuc: TStringField;
-    fdqryMovimientos: TFDQuery;
-    intgrfldMovimientosIDMOVIMIENTO: TIntegerField;
-    strngfldMovimientosFK_NRO_FACTURA_C: TStringField;
-    intgrfldMovimientosFK_IDPROVEEDOR: TIntegerField;
-    strngfldMovimientosFK_NRO_FACTURA_V: TStringField;
-    intgrfldMovimientosFK_NUM_DEPOSITO: TIntegerField;
-    strngfldMovimientosFK_COD_ART: TStringField;
-    strngfldMovimientosTIPO: TStringField;
-    bcdfldMovimientosPRECIO_UNITARIO: TBCDField;
-    intgrfldMovimientosCANTIDAD: TIntegerField;
-    strngfldMovimientosLookupDescripArt: TStringField;
     fdqryMetpago_Ventas: TFDQuery;
     intgrfldMetpago_VentasFK_IDMETPAGO: TIntegerField;
     strngfldMetpago_VentasFK_NRO_FACTURA_V: TStringField;
     bcdfldMetpago_VentasMONTO: TBCDField;
     strngfldMetpago_VentaslookupMetPag: TStringField;
-    crncyfldMovimientosImporte: TCurrencyField;
     crncyfldArticulosIVA: TCurrencyField;
     fdqryStock: TFDQuery;
     strngfldStockFK_CODIGO: TStringField;
     intgrfldStockFK_NUMERO: TIntegerField;
     intgrfldStockCANTIDAD: TIntegerField;
+    fdqryMDVentasRanged: TFDQuery;
+    strngfldMDVentasRANGEDNRO_FACTURA: TStringField;
+    dtfldMDVentasRANGEDFECHA: TDateField;
+    tmfldMDVentasRANGEDHORA: TTimeField;
+    crncyfldMDVentasRANGEDDESCUENTO: TCurrencyField;
+    crncyfldMDVentasRANGEDRECARGO: TCurrencyField;
+    strngfldMDVentasRANGEDNRO_COMPROBANTE: TStringField;
+    bcdfldMDVentasRANGEDSUBTOTAL: TBCDField;
+    bcdfldMDVentasRANGEDTOTAL: TBCDField;
+    intgrfldMDVentasRANGEDFK_IDCLIENTE: TIntegerField;
+    intgrfldMDVentasRANGEDFK_IDPUNTO_VENTA: TIntegerField;
+    fdqryMDMovimientosRanged: TFDQuery;
+    intgrfldMDMovimientosRANGEDIDMOVIMIENTO: TIntegerField;
+    strngfldMDMovimientosRANGEDFK_NRO_FACTURA_C: TStringField;
+    intgrfldMDMovimientosRANGEDFK_IDPROVEEDOR: TIntegerField;
+    strngfldMDMovimientosRANGEDFK_NRO_FACTURA_V: TStringField;
+    intgrfldMDMovimientosRANGEDFK_NUM_DEPOSITO: TIntegerField;
+    strngfldMDMovimientosRANGEDFK_COD_ART: TStringField;
+    strngfldMDMovimientosRANGEDTIPO: TStringField;
+    bcdfldMDMovimientosRANGEDPRECIO_UNITARIO: TBCDField;
+    intgrfldMDMovimientosRANGEDCANTIDAD: TIntegerField;
+    dsMDVentasRanged: TDataSource;
+    fdschmdptrVentasRanged: TFDSchemaAdapter;
+    crncyfldMDMovimientosRangedImporte: TCurrencyField;
+    strngfldMDMovimientosRangedNombreArt: TStringField;
+    strngfldMDVentasRangedlookupNomCompCliente: TStringField;
+    intgrfldMDVentasRangedTIPO: TIntegerField;
+    fdqryTipo_comprobante: TFDQuery;
+    intgrfldTipo_comprobanteID_TIPO_COMP: TIntegerField;
+    strngfldTipo_comprobanteNOMBRE: TStringField;
+    strngfldTipo_comprobanteLETRA: TStringField;
+    strngfldMDVentasRangedlookupNomTipoCompr: TStringField;
+    fdqryPuntos_venta: TFDQuery;
+    intgrfldPuntos_ventaIDPUNTOVENTA: TIntegerField;
+    strngfldPuntos_ventaTIPO: TStringField;
+    strngfldPuntos_ventaDATOS_IMP: TStringField;
+    intgrfldPuntos_ventaFK_IDCAJA: TIntegerField;
+    intgrfldPuntos_ventaFK_IDSUCURSAL: TIntegerField;
+    agrgtfldMDMovimientosRangedAGGSubTotal: TAggregateField;
+    intgrfldMDVentasRangedlookupIdPV: TIntegerField;
     procedure fdqryClientesCalcFields(DataSet: TDataSet);
     procedure fdqryArticulosNewRecord(DataSet: TDataSet);
     procedure fdqryArticulosBeforePost(DataSet: TDataSet);
@@ -162,9 +177,13 @@ type
     procedure fdqryMD_MetPagReconcileError(DataSet: TFDDataSet; E: EFDException;
       UpdateKind: TFDDatSRowState; var Action: TFDDAptReconcileAction);
     procedure smlntfldMDPlanPagoNROCUOTAValidate(Sender: TField);
-    procedure fdqryMovimientosCalcFields(DataSet: TDataSet);
-    procedure fdqryMovimientosNewRecord(DataSet: TDataSet);
     procedure DataModuleCreate(Sender: TObject);
+    procedure fdqryMDMovimientosRangedCalcFields(DataSet: TDataSet);
+    procedure fdqryMDMovimientosRangedBeforeInsert(DataSet: TDataSet);
+    procedure fdqryMDVentasRangedNewRecord(DataSet: TDataSet);
+    procedure strngfldMDMovimientosRANGEDFK_COD_ARTChange(Sender: TField);
+    procedure fdqryMDMovimientosRangedAfterPost(DataSet: TDataSet);
+    procedure fdqryMDMovimientosRangedAfterDelete(DataSet: TDataSet);
   private
     { Private declarations }
   public
@@ -218,7 +237,7 @@ begin
      end;
 end;
 
-procedure TdmGestion.fdqryArticulosNewRecord(DataSet: TDataSet);
+procedure TdmGestion.fdqryArticulosNewRecord(DataSet: TDataSet); //id temporal
 begin
   fdqryArticulos.FieldByName('CODIGO').AsString := '-1';
 end;
@@ -231,11 +250,11 @@ begin
     Abort;
 end;
 
-procedure TdmGestion.fdqryClientesCalcFields(DataSet: TDataSet); //lleno el campo nombrecompleto con info dependiendo si es una persona fisica o juridica
+procedure TdmGestion.fdqryClientesCalcFields(DataSet: TDataSet); //relleno el campo nombrecompleto con info dependiendo si es una persona fisica o juridica
 begin
   with fdqryClientes do
     begin
-      if FieldByName('DNI').Value = '' then
+      if FieldByName('DNI').IsNull then
          FieldByName('NOMBRECOMP').AsString := FieldByName('NOMBRE_COMERCIAL').AsString
       else
          FieldByName('NOMBRECOMP').AsString := FieldByName('APELLIDO').AsString+', '+FieldByName('NOMBRE').AsString
@@ -274,12 +293,56 @@ begin                                                                     //del 
          raise Exception.Create('Este número de cuota ya existe.');
 end;
 
+procedure TdmGestion.strngfldMDMovimientosRANGEDFK_COD_ARTChange(Sender: TField); //cuando el campo lookup busca un art, actualizo el precio
+begin
+  fdqryMDMovimientosRanged.FieldByName('PRECIO_UNITARIO').Value := fdqryArticulos.FieldByName('PRECIO').Value;
+end;
+
+procedure TdmGestion.fdqryMDMovimientosRangedAfterDelete(DataSet: TDataSet);
+begin
+   //uso este evento y movimientos after post para mantener actualizado el campo subtotal
+  fdqryMDVentasRanged.Edit;
+  fdqryMDVentasRanged.FieldByName('SUBTOTAL').Value := fdqryMDMovimientosRanged.FieldByName('AGGSubTotal').Value;
+  fdqryMDVentasRanged.Post;
+end;
+
+procedure TdmGestion.fdqryMDMovimientosRangedAfterPost(DataSet: TDataSet);
+begin     //uso este evento y movimientos after delete para mantener actualizado el campo subtotal
+  fdqryMDVentasRanged.Edit;
+  fdqryMDVentasRanged.FieldByName('SUBTOTAL').Value := fdqryMDMovimientosRanged.FieldByName('AGGSubTotal').Value;
+  fdqryMDVentasRanged.Post;
+end;
+
+procedure TdmGestion.fdqryMDMovimientosRangedBeforeInsert(DataSet: TDataSet); //postea factura para que tenga id (-1 temporal) y se pueda vincular la tabla detalle
+begin
+  if (fdqryMDVentasRANGED.State = dsInsert) then
+     begin
+        //fdqryPuntos_venta.First;
+        //fdqryMDVentasRanged.FieldByName('FK_IDPUNTO_VENTA').Value := fdqryPuntos_venta.FieldByName('IDPUNTOVENTA').Value;
+        fdqryMDVentasRANGED.Post;
+     end;
+end;
+
+procedure TdmGestion.fdqryMDMovimientosRangedCalcFields(DataSet: TDataSet);   //calcula precio unitario * cantidad y me da importe
+begin
+  with fdqryMDMovimientosRanged do
+    begin
+      if not(FieldByName('PRECIO_UNITARIO').IsNull) and not(FieldByName('CANTIDAD').IsNull) then
+          FieldByName('Importe').Value := FieldByName('PRECIO_UNITARIO').Value * FieldByName('CANTIDAD').Value;
+    end;
+end;
+
 procedure TdmGestion.fdqryMDPlanPagoReconcileError(DataSet: TFDDataSet;
   E: EFDException; UpdateKind: TFDDatSRowState;
   var Action: TFDDAptReconcileAction);
 begin
    ApplicationShowException(e);
    Abort;
+end;
+
+procedure TdmGestion.fdqryMDVentasRangedNewRecord(DataSet: TDataSet); //nro factura temporal
+begin
+   fdqryMDVentasRanged.FieldByName('NRO_FACTURA').Value := '-1';
 end;
 
 procedure TdmGestion.fdqryMD_MetPagReconcileError(DataSet: TFDDataSet;
@@ -296,21 +359,6 @@ procedure TdmGestion.fdqryMetodos_pagoReconcileError(DataSet: TFDDataSet;
 begin
    ApplicationShowException(e);
    Abort;
-end;
-
-procedure TdmGestion.fdqryMovimientosCalcFields(DataSet: TDataSet);
-begin
-  with fdqryMovimientos do
-    begin
-      if not(FieldByName('PRECIO_UNITARIO').IsNull) and not(FieldByName('CANTIDAD').IsNull) then
-          FieldByName('Importe').Value := FieldByName('PRECIO_UNITARIO').Value * FieldByName('CANTIDAD').Value;
-    end;
-end;
-
-procedure TdmGestion.fdqryMovimientosNewRecord(DataSet: TDataSet);
-begin
-   fdqryMovimientos.FieldByName('CANTIDAD').Value := 0;
-   fdqryMovimientos.FieldByName('Importe').Value := 0;
 end;
 
 procedure TdmGestion.fdqryPlanes_pagoReconcileError(DataSet: TFDDataSet;

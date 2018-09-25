@@ -1,0 +1,35 @@
+unit uBusqueda;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uPlantillaGenerica, Data.DB, Vcl.Grids,
+  Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls, Vcl.WinXCtrls,
+  dxGDIPlusClasses;
+
+type
+  TfrmBusqueda = class(TfrmPlantillaGenerica)
+    pnlTop: TPanel;
+    pnlBot: TPanel;
+    pnlClient: TPanel;
+    btnAceptar: TBitBtn;
+    btnCancelar: TBitBtn;
+    dbgrd1: TDBGrid;
+    dsBase: TDataSource;
+    srchbx1: TSearchBox;
+    img1: TImage;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmBusqueda: TfrmBusqueda;
+
+implementation
+
+{$R *.dfm}
+
+end.

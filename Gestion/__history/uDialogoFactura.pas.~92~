@@ -1,0 +1,190 @@
+unit uDialogoFactura;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uPlantillaGenerica, Vcl.ComCtrls,
+  Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Buttons, Data.DB, Vcl.Grids, Vcl.DBGrids,
+  cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
+  cxEdit, dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMetropolis, dxSkinMetropolisDark, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinOffice2013DarkGray,
+  dxSkinOffice2013LightGray, dxSkinOffice2013White, dxSkinOffice2016Colorful,
+  dxSkinOffice2016Dark, dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic,
+  dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
+  dxSkinSummer2008, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters,
+  dxSkinValentine, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
+  dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue, cxTextEdit, cxCurrencyEdit, cxDBEdit, cxMaskEdit,
+  cxDropDownEdit, cxCalendar, Vcl.DBCtrls, Vcl.WinXCtrls, Vcl.Mask;
+
+type
+  TfrmDialogoFactura = class(TfrmPlantillaGenerica)
+    grdpnlPrincipal: TGridPanel;
+    grdpnlBotonera: TGridPanel;
+    btnAceptar: TBitBtn;
+    btnCancelar: TBitBtn;
+    btnImprimir: TBitBtn;
+    grdpnlFactura: TGridPanel;
+    grdpnlHeader: TGridPanel;
+    grdpnlDetail: TGridPanel;
+    grdpnlFooter: TGridPanel;
+    dbgrdDetalle: TDBGrid;
+    lblDetalle: TLabel;
+    dsDetalleMovimiento: TDataSource;
+    dsMaestroVenta: TDataSource;
+    lblTotal: TLabel;
+    cxdbcrncydtTOTAL: TcxDBCurrencyEdit;
+    lblSubTotal: TLabel;
+    cxdbcrncydtSUBTOTAL: TcxDBCurrencyEdit;
+    pnlTotal: TPanel;
+    pnlSubTotal: TPanel;
+    pnlDescuento: TPanel;
+    lblDescuento: TLabel;
+    cxdbcrncydtDescuento: TcxDBCurrencyEdit;
+    pnlRecargo: TPanel;
+    lblRecargo: TLabel;
+    cxdbcrncydtRecargo: TcxDBCurrencyEdit;
+    pnlFecha: TPanel;
+    dbtxtFecha: TDBText;
+    lblCliente: TLabel;
+    lblVendedor: TLabel;
+    dbtxtVendedor: TDBText;
+    pnlVendedor: TPanel;
+    pnlCliente: TPanel;
+    pnlPV: TPanel;
+    lblPV: TLabel;
+    dbcbbPV: TDBComboBox;
+    dsMetodos_Pago: TDataSource;
+    lblMetPag: TLabel;
+    pnlMetPag: TPanel;
+    pnlTipo: TPanel;
+    lblTipo: TLabel;
+    cxdbtxtdtTIPO: TcxDBTextEdit;
+    dbcbbTIPO: TDBComboBox;
+    dsSeguridad: TDataSource;
+    dbedtCliente: TDBEdit;
+    dsCliente: TDataSource;
+    dblkcbbMet_Pago: TDBLookupComboBox;
+    grdpnlMet_Pago: TGridPanel;
+    procedure FormShow(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure dbedtClienteKeyPress(Sender: TObject; var Key: Char);
+    procedure dblkcbblookupClienteKeyPress(Sender: TObject; var Key: Char);
+    procedure btnCancelarClick(Sender: TObject);
+    procedure btnAceptarClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmDialogoFactura: TfrmDialogoFactura;
+
+implementation
+
+uses
+  udmGestion, udmSeguridad, uBusquedaCliente;
+
+{$R *.dfm}
+
+procedure TfrmDialogoFactura.btnAceptarClick(Sender: TObject);
+begin
+  inherited;
+//    if dsVentas.DataSet.Active and dsMov.DataSet.Active then
+//      with DataModule2 do
+//        begin
+//           GestionConnection.StartTransaction;
+//           try
+//              //antes de editar mov hago post en factura con nro_fact -1 (temporal)
+//              fdqryMDMovimientosRANGED.DisableControls;
+//              fdqryMDMovimientosRANGED.First;
+//              while not fdqryMDMovimientosRANGED.Eof do  //completo los datos de tabla mov
+//                begin
+//                  fdqryMDMovimientosRANGED.Edit;
+//                  fdqryMDMovimientosRANGED.FieldByName('TIPO').Value := 1; //Salida
+//                  fdqryMDMovimientosRANGED.FieldByName('FK_NUM_DEPOSITO').Value := 1;
+//                  fdqryMDMovimientosRANGED.Post;
+//                  fdqryMDMovimientosRANGED.Next;
+//                end;
+//              fdqryMDMovimientosRANGED.EnableControls;
+//
+//              if fdqryMDVentasRANGED.FieldByName('NRO_FACTURA').Value < 0 then   // busca numero de factura si el actual es -1 (es decir, si esta insertando pido numero. si esta editando no)
+//                 begin
+//                   fdqryMDVentasRANGED.Edit;
+//                   spSp_proximo_idProc.ParamByName('TIPO').Value := 'FACTURA';
+//                   spSp_proximo_idProc.ExecProc;
+//                   fdqryMDVentasRANGED.FieldByName('NRO_FACTURA').Value := spSp_proximo_idProc.ParamByName('VALOR').Value;
+//                   fdqryMDVentasRANGED.Post;
+//                 end;
+//
+//              FDSchemaAdapterRANGED.ApplyUpdates(0);
+//              FDSchemaAdapterRANGED.CommitUpdates;
+//              GestionConnection.Commit;
+//           except
+//             GestionConnection.Rollback;
+//             raise;
+//           end;
+//        end;
+end;
+
+procedure TfrmDialogoFactura.btnCancelarClick(Sender: TObject);
+begin
+  inherited;
+  Close;
+end;
+
+procedure TfrmDialogoFactura.dbedtClienteKeyPress(Sender: TObject;
+  var Key: Char);   //busco cliente
+begin
+  inherited;
+  if ord(Key) <> VK_ESCAPE then
+     begin
+        dsMaestroVenta.DataSet.Cancel;
+        Key := #0;
+        TfrmBusquedaCliente.MostrarModal;
+     end;
+end;
+
+procedure TfrmDialogoFactura.dblkcbblookupClienteKeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  inherited;
+  TfrmBusquedaCliente.MostrarModal;
+end;
+
+procedure TfrmDialogoFactura.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  inherited;
+  dsDetalleMovimiento.DataSet.Close;
+  dsMaestroVenta.DataSet.Close;
+  dsMetodos_Pago.DataSet.Close;
+  dsSeguridad.DataSet.Close;
+  dsCliente.DataSet.Close;
+end;
+
+procedure TfrmDialogoFactura.FormShow(Sender: TObject);
+begin
+  inherited;
+  dsDetalleMovimiento.DataSet.Open;
+  dsMaestroVenta.DataSet.Open;
+  dsMetodos_Pago.DataSet.Open;
+  dsSeguridad.DataSet.Open;
+  dsCliente.DataSet.Open;
+  if dblkcbbMet_Pago.KeyValue = Null then   // Muestro por defecto efectivo como metodo de pago
+    with dmGestion do
+      begin
+        if fdqryMetodos_pago.Locate('NOMBRE','Efectivo',[]) then
+           dblkcbbMet_Pago.KeyValue := fdqryMetodos_pago.FieldByName('IDMETODO_PAGO').Value;
+      end;
+end;
+
+end.

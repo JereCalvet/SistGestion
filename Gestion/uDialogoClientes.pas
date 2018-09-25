@@ -57,6 +57,7 @@ type
     cxDBTextEditRazon_social: TcxDBTextEdit;
     lblNombre_Comercial: TLabel;
     cxDBTextEditNombre_Comercial: TcxDBTextEdit;
+    lbl1: TLabel;
     procedure FormShow(Sender: TObject);
     procedure rgPersonaClick(Sender: TObject);
     procedure cxDBTextEditNombreKeyUp(Sender: TObject; var Key: Word;

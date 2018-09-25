@@ -1,0 +1,24 @@
+unit uBusqueda;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uPlantillaGenerica;
+
+type
+  TfrmBusqueda = class(TfrmPlantillaGenerica)
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmBusqueda: TfrmBusqueda;
+
+implementation
+
+{$R *.dfm}
+
+end.

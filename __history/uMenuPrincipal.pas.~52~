@@ -1,0 +1,177 @@
+unit uMenuPrincipal;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uPlantillaGenerica, Vcl.StdCtrls,
+  Vcl.ActnCtrls, Vcl.ToolWin, Vcl.ActnMan, Vcl.ActnMenus,
+  Vcl.PlatformDefaultStyleActnCtrls, System.Actions, Vcl.ActnList, cxGraphics,
+  cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit,
+  dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMetropolis, dxSkinMetropolisDark, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinOffice2013DarkGray,
+  dxSkinOffice2013LightGray, dxSkinOffice2013White, dxSkinOffice2016Colorful,
+  dxSkinOffice2016Dark, dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic,
+  dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringTime, dxSkinStardust,
+  dxSkinSummer2008, dxSkinTheAsphaltWorld, dxSkinsDefaultPainters,
+  dxSkinValentine, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
+  dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue, cxDBEdit, cxTextEdit, cxCurrencyEdit, System.StrUtils;
+
+type
+  TfrmMenuPrincipal = class(TfrmPlantillaGenerica)
+    actmgrPermisos: TActionManager;
+    actmmb1: TActionMainMenuBar;
+    actUsuarios: TAction;
+    actGrupos: TAction;
+    actOpciones: TAction;
+    actOpc_Grup: TAction;
+    actGrup_Usu: TAction;
+    actConfiguracion: TAction;
+    actClientes: TAction;
+    actSitruacionTrib: TAction;
+    actProveedores: TAction;
+    actArticulos: TAction;
+    actMetPag: TAction;
+    actPlanPago: TAction;
+    actSucursales: TAction;
+    actDepositos: TAction;
+    btn1: TButton;
+    actVentas: TAction;
+    procedure actOpcionesExecute(Sender: TObject);
+    procedure actUsuariosExecute(Sender: TObject);
+    procedure actGruposExecute(Sender: TObject);
+    procedure actmgrPermisosUpdate(Action: TBasicAction; var Handled: Boolean);
+    procedure actGrup_UsuExecute(Sender: TObject);
+    procedure actOpc_GrupExecute(Sender: TObject);
+    procedure actConfiguracionExecute(Sender: TObject);
+    procedure actClientesExecute(Sender: TObject);
+    procedure actSitruacionTribExecute(Sender: TObject);
+    procedure actProveedoresExecute(Sender: TObject);
+    procedure actArticulosExecute(Sender: TObject);
+    procedure actMetPagExecute(Sender: TObject);
+    procedure actPlanPagoExecute(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure actSucursalesExecute(Sender: TObject);
+    procedure actDepositosExecute(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmMenuPrincipal: TfrmMenuPrincipal;
+
+implementation
+
+uses
+  uLogin, uGrillaUsuarios, uGrillaGrupos, udmSeguridad, uGrillaOpciones, ufrmGrup_Usu, ufrmGrup_Opc, uConfiguracion, uGrillaClientes, uGrillaSituacionTrib, uGrillaProveedores, uGrillaArticulos, uGrillaMetPago, uGrillaPlanPago, uGrillaSucursales, uGrillaDepositos;
+
+{$R *.dfm}
+
+procedure TfrmMenuPrincipal.actArticulosExecute(Sender: TObject);
+begin
+  inherited;
+  TfrmGrillaArticulos.MostrarModal;
+end;
+
+procedure TfrmMenuPrincipal.actClientesExecute(Sender: TObject);
+begin
+  inherited;
+  TfrmGrillaClientes.MostrarModal;
+end;
+
+procedure TfrmMenuPrincipal.actConfiguracionExecute(Sender: TObject);
+begin
+  inherited;
+  TfrmConfiguracion.MostrarModal;
+end;
+
+procedure TfrmMenuPrincipal.actDepositosExecute(Sender: TObject);
+begin
+  inherited;
+  TfrmGrillaDepositos.MostrarModal;
+end;
+
+procedure TfrmMenuPrincipal.actGruposExecute(Sender: TObject);
+begin
+  inherited;
+  TfrmGrillaGrupos.MostrarModal;
+end;
+
+procedure TfrmMenuPrincipal.actGrup_UsuExecute(Sender: TObject);
+begin
+  inherited;
+  TfrmGrup_Usu.MostrarModal;
+end;
+
+procedure TfrmMenuPrincipal.actMetPagExecute(Sender: TObject);
+begin
+  inherited;
+  TfrmGrillaMetPago.MostrarModal;
+end;
+
+procedure TfrmMenuPrincipal.actmgrPermisosUpdate(Action: TBasicAction;  //Habilita o deshabilita los botones del menu segun la funcion de permisos
+  var Handled: Boolean);
+begin
+  inherited;
+  TAction(Action).Enabled := dmSeguridad.PuedeEjecutar(IntToStr(Action.Tag));
+end;
+
+procedure TfrmMenuPrincipal.actOpcionesExecute(Sender: TObject);
+begin
+  inherited;
+  TfrmGrillaOpciones.MostrarModal;
+end;
+
+procedure TfrmMenuPrincipal.actOpc_GrupExecute(Sender: TObject);
+begin
+  inherited;
+  TfrmGrup_Opc.MostrarModal;
+end;
+
+procedure TfrmMenuPrincipal.actPlanPagoExecute(Sender: TObject);
+begin
+  inherited;
+  TfrmGrillaPlanPago.MostrarModal;
+end;
+
+procedure TfrmMenuPrincipal.actProveedoresExecute(Sender: TObject);
+begin
+  inherited;
+  TfrmGrillaProveedores.MostrarModal;
+end;
+
+procedure TfrmMenuPrincipal.actSitruacionTribExecute(Sender: TObject);
+begin
+  inherited;
+  TfrmGrillaSituacionTrib.MostrarModal;
+end;
+
+procedure TfrmMenuPrincipal.actSucursalesExecute(Sender: TObject);
+begin
+  inherited;
+  TfrmGrillaSucursal.MostrarModal;
+end;
+
+procedure TfrmMenuPrincipal.actUsuariosExecute(Sender: TObject);
+begin
+  inherited;
+   TfrmGrillaUsuarios.MostrarModal;
+end;
+
+procedure TfrmMenuPrincipal.FormCreate(Sender: TObject);
+begin
+  inherited;
+  Left:=(Screen.Width-Width)  div 2;
+  Top:=(Screen.Height-Height) div 2;
+end;
+
+end.

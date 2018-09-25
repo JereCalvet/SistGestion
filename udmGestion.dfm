@@ -13,9 +13,11 @@ object dmGestion: TdmGestion
     UpdateOptions.KeyFields = 'ID_CLIENTE'
     UpdateOptions.AutoIncFields = 'ID_CLIENTE'
     SQL.Strings = (
-      'SELECT * FROM CLIENTES')
+      'SELECT * FROM CLIENTES'
+      'ORDER BY ID_CLIENTE'
+      '')
     Left = 76
-    Top = 89
+    Top = 137
     object intgrfldClientesID_CLIENTE: TIntegerField
       AutoGenerateValue = arAutoInc
       FieldName = 'ID_CLIENTE'
@@ -125,8 +127,8 @@ object dmGestion: TdmGestion
     UpdateOptions.AutoIncFields = 'ID_SITUACIONTRIB'
     SQL.Strings = (
       'SELECT * FROM SITUACIONES_TRIBUTARIAS')
-    Left = 207
-    Top = 93
+    Left = 79
+    Top = 197
     object intgrfldSituaciones_tributariasTableID_SITUACIONTRIB: TIntegerField
       AutoGenerateValue = arAutoInc
       FieldName = 'ID_SITUACIONTRIB'
@@ -145,8 +147,8 @@ object dmGestion: TdmGestion
       'ConnectionDef=Gestion')
     Connected = True
     LoginPrompt = False
-    Left = 39
-    Top = 10
+    Left = 31
+    Top = 18
   end
   object fdqryProveedores: TFDQuery
     Active = True
@@ -158,8 +160,8 @@ object dmGestion: TdmGestion
     UpdateOptions.AutoIncFields = 'ID_PROVEEDOR'
     SQL.Strings = (
       'SELECT * FROM PROVEEDORES')
-    Left = 343
-    Top = 91
+    Left = 167
+    Top = 139
     object intgrfldProveedoresID_PROVEEDOR: TIntegerField
       AutoGenerateValue = arAutoInc
       FieldName = 'ID_PROVEEDOR'
@@ -227,17 +229,18 @@ object dmGestion: TdmGestion
   object FDGUIxWaitCursor1: TFDGUIxWaitCursor
     Provider = 'Forms'
     ScreenCursor = gcrDefault
-    Left = 552
-    Top = 104
+    Left = 592
+    Top = 48
   end
   object FDPhysFBDriverLink1: TFDPhysFBDriverLink
     VendorLib = 
       'C:\Users\Jeremias\Desktop\Proyecto\Proyecto Sistema de Gestion\S' +
       'oftware\fbclient.dll'
-    Left = 560
-    Top = 184
+    Left = 488
+    Top = 48
   end
   object fdqryArticulos: TFDQuery
+    Active = True
     BeforePost = fdqryArticulosBeforePost
     OnNewRecord = fdqryArticulosNewRecord
     OnReconcileError = fdqryArticulosReconcileError
@@ -245,10 +248,9 @@ object dmGestion: TdmGestion
     UpdateOptions.AssignedValues = [uvGeneratorName]
     SQL.Strings = (
       'SELECT * FROM ARTICULOS')
-    Left = 79
-    Top = 178
+    Left = 71
+    Top = 74
     object strngfldArticulosCODIGO: TStringField
-      AutoGenerateValue = arDefault
       DisplayLabel = 'C'#243'digo'
       FieldName = 'CODIGO'
       Origin = 'CODIGO'
@@ -318,8 +320,8 @@ object dmGestion: TdmGestion
   object spProximo_id_ART: TFDStoredProc
     Connection = GestionConnection
     StoredProcName = 'SP_PROXIMO_ID'
-    Left = 178
-    Top = 188
+    Left = 162
+    Top = 76
     ParamData = <
       item
         Position = 1
@@ -347,8 +349,8 @@ object dmGestion: TdmGestion
     UpdateOptions.AutoIncFields = 'IDMETODO_PAGO'
     SQL.Strings = (
       'SELECT * FROM METODOS_PAGO')
-    Left = 75
-    Top = 253
+    Left = 67
+    Top = 261
     object intgrfldMetodos_pagoIDMETODO_PAGO: TIntegerField
       AutoGenerateValue = arAutoInc
       FieldName = 'IDMETODO_PAGO'
@@ -388,8 +390,8 @@ object dmGestion: TdmGestion
     SQL.Strings = (
       'SELECT * FROM PLANES_PAGO'
       'ORDER BY NROCUOTA ASCENDING;')
-    Left = 70
-    Top = 322
+    Left = 62
+    Top = 330
     object intgrfldPlanes_pagoIDPLAN_PAGO: TIntegerField
       AutoGenerateValue = arAutoInc
       FieldName = 'IDPLAN_PAGO'
@@ -426,8 +428,8 @@ object dmGestion: TdmGestion
   end
   object fdqryDinamico: TFDQuery
     Connection = GestionConnection
-    Left = 568
-    Top = 320
+    Left = 680
+    Top = 48
   end
   object fdqryMD_MetPag: TFDQuery
     OnReconcileError = fdqryMD_MetPagReconcileError
@@ -439,8 +441,8 @@ object dmGestion: TdmGestion
     SQL.Strings = (
       'SELECT * FROM {id METODOS_PAGO}'
       'WHERE TIPO = '#39'C'#39)
-    Left = 173
-    Top = 251
+    Left = 181
+    Top = 267
     object intgrfldMD_MetPagIDMETODO_PAGO: TIntegerField
       AutoGenerateValue = arAutoInc
       DisplayWidth = 4
@@ -486,8 +488,8 @@ object dmGestion: TdmGestion
       'WHERE FK_IDMETODOPAGO = :IDMETODO_PAGO'
       'ORDER BY NROCUOTA ASCENDING;'
       '')
-    Left = 171
-    Top = 321
+    Left = 179
+    Top = 329
     ParamData = <
       item
         Name = 'IDMETODO_PAGO'
@@ -530,100 +532,8 @@ object dmGestion: TdmGestion
   end
   object dsMD_MetPag_PlanPag: TDataSource
     DataSet = fdqryMD_MetPag
-    Left = 272
-    Top = 248
-  end
-  object fdqryVentas: TFDQuery
-    CachedUpdates = True
-    Connection = GestionConnection
-    SQL.Strings = (
-      'SELECT * FROM VENTAS')
-    Left = 69
-    Top = 391
-    object strngfldVentasNRO_FACTURA: TStringField
-      DisplayLabel = 'Factura'
-      FieldName = 'NRO_FACTURA'
-      Origin = 'NRO_FACTURA'
-      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
-      Required = True
-      Size = 14
-    end
-    object strngfldVentasTIPO: TStringField
-      DisplayLabel = 'Tipo'
-      FieldName = 'TIPO'
-      Origin = 'TIPO'
-      Size = 1
-    end
-    object dtfldVentasFECHA: TDateField
-      DisplayLabel = 'Fecha'
-      FieldName = 'FECHA'
-      Origin = 'FECHA'
-    end
-    object fdqryVentasHORA: TTimeField
-      DisplayLabel = 'Hora'
-      FieldName = 'HORA'
-      Origin = 'HORA'
-    end
-    object crncyfldVentasDESCUENTO: TCurrencyField
-      DefaultExpression = '0'
-      DisplayLabel = 'Descuento'
-      FieldName = 'DESCUENTO'
-      Origin = 'DESCUENTO'
-      DisplayFormat = '##0.00 %'
-      currency = False
-    end
-    object crncyfldVentasRECARGO: TCurrencyField
-      DefaultExpression = '0'
-      DisplayLabel = 'Recargo'
-      FieldName = 'RECARGO'
-      Origin = 'RECARGO'
-      DisplayFormat = '##0.00 %'
-      currency = False
-    end
-    object strngfldVentasNRO_COMPROBANTE: TStringField
-      DisplayLabel = 'Comprobante (posnet)'
-      FieldName = 'NRO_COMPROBANTE'
-      Origin = 'NRO_COMPROBANTE'
-      Size = 10
-    end
-    object bcdfldVentasSUBTOTAL: TBCDField
-      DefaultExpression = '0'
-      DisplayLabel = 'SubTotal'
-      FieldName = 'SUBTOTAL'
-      Origin = 'SUBTOTAL'
-      currency = True
-      Precision = 18
-      Size = 2
-    end
-    object bcdfldVentasTOTAL: TBCDField
-      DefaultExpression = '0'
-      DisplayLabel = 'Total'
-      FieldName = 'TOTAL'
-      Origin = 'TOTAL'
-      currency = True
-      Precision = 18
-      Size = 2
-    end
-    object intgrfldVentasFK_IDCLIENTE: TIntegerField
-      FieldName = 'FK_IDCLIENTE'
-      Origin = 'FK_IDCLIENTE'
-    end
-    object intgrfldVentasFK_IDPUNTO_VENTA: TIntegerField
-      FieldName = 'FK_IDPUNTO_VENTA'
-      Origin = 'FK_IDPUNTO_VENTA'
-    end
-    object strngfldVentaslookupCliente: TStringField
-      DisplayLabel = 'Cliente'
-      DisplayWidth = 52
-      FieldKind = fkLookup
-      FieldName = 'lookupCliente'
-      LookupDataSet = fdqryClientes
-      LookupKeyFields = 'ID_CLIENTE'
-      LookupResultField = 'NOMBRECOMP'
-      KeyFields = 'FK_IDCLIENTE'
-      Size = 50
-      Lookup = True
-    end
+    Left = 296
+    Top = 272
   end
   object fdqryDepositos: TFDQuery
     Connection = GestionConnection
@@ -633,8 +543,8 @@ object dmGestion: TdmGestion
     UpdateOptions.AutoIncFields = 'NUMERO'
     SQL.Strings = (
       'SELECT * FROM DEPOSITOS')
-    Left = 345
-    Top = 36
+    Left = 249
+    Top = 76
     object intgrfldDepositosNUMERO: TIntegerField
       AutoGenerateValue = arAutoInc
       DisplayLabel = 'Numero'
@@ -672,7 +582,6 @@ object dmGestion: TdmGestion
     end
   end
   object fdqrySucursales: TFDQuery
-    Active = True
     Connection = GestionConnection
     UpdateOptions.AssignedValues = [uvGeneratorName]
     UpdateOptions.GeneratorName = 'GEN_IDSUCURSAL'
@@ -680,8 +589,8 @@ object dmGestion: TdmGestion
     UpdateOptions.AutoIncFields = 'ID_SUCURSAL'
     SQL.Strings = (
       'SELECT * FROM SUCURSALES')
-    Left = 445
-    Top = 38
+    Left = 397
+    Top = 78
     object intgrfldSucursalesID_SUCURSAL: TIntegerField
       AutoGenerateValue = arAutoInc
       FieldName = 'ID_SUCURSAL'
@@ -762,97 +671,13 @@ object dmGestion: TdmGestion
       Lookup = True
     end
   end
-  object fdqryMovimientos: TFDQuery
-    OnCalcFields = fdqryMovimientosCalcFields
-    OnNewRecord = fdqryMovimientosNewRecord
-    CachedUpdates = True
-    Connection = GestionConnection
-    UpdateOptions.AssignedValues = [uvGeneratorName]
-    UpdateOptions.GeneratorName = 'GEN_IDMOVIMIENTO'
-    UpdateOptions.KeyFields = 'IDMOVIMIENTO'
-    UpdateOptions.AutoIncFields = 'IDMOVIMIENTO'
-    SQL.Strings = (
-      'SELECT * FROM MOVIMIENTOS')
-    Left = 170
-    Top = 388
-    object intgrfldMovimientosIDMOVIMIENTO: TIntegerField
-      AutoGenerateValue = arAutoInc
-      FieldName = 'IDMOVIMIENTO'
-      Origin = 'IDMOVIMIENTO'
-      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
-      Required = True
-    end
-    object strngfldMovimientosFK_NRO_FACTURA_C: TStringField
-      FieldName = 'FK_NRO_FACTURA_C'
-      Origin = 'FK_NRO_FACTURA_C'
-      Size = 14
-    end
-    object intgrfldMovimientosFK_IDPROVEEDOR: TIntegerField
-      FieldName = 'FK_IDPROVEEDOR'
-      Origin = 'FK_IDPROVEEDOR'
-    end
-    object strngfldMovimientosFK_NRO_FACTURA_V: TStringField
-      FieldName = 'FK_NRO_FACTURA_V'
-      Origin = 'FK_NRO_FACTURA_V'
-      Size = 14
-    end
-    object intgrfldMovimientosFK_NUM_DEPOSITO: TIntegerField
-      FieldName = 'FK_NUM_DEPOSITO'
-      Origin = 'FK_NUM_DEPOSITO'
-    end
-    object strngfldMovimientosFK_COD_ART: TStringField
-      DisplayLabel = 'C'#243'digo'
-      FieldName = 'FK_COD_ART'
-      Origin = 'FK_COD_ART'
-      Size = 10
-    end
-    object strngfldMovimientosTIPO: TStringField
-      FieldName = 'TIPO'
-      Origin = 'TIPO'
-      Size = 1
-    end
-    object bcdfldMovimientosPRECIO_UNITARIO: TBCDField
-      Alignment = taCenter
-      DisplayLabel = 'Precio unitario'
-      FieldName = 'PRECIO_UNITARIO'
-      Origin = 'PRECIO_UNITARIO'
-      currency = True
-      Precision = 18
-      Size = 2
-    end
-    object intgrfldMovimientosCANTIDAD: TIntegerField
-      Alignment = taCenter
-      DefaultExpression = '0'
-      DisplayLabel = 'Cantidad'
-      FieldName = 'CANTIDAD'
-      Origin = 'CANTIDAD'
-    end
-    object strngfldMovimientosLookupDescripArt: TStringField
-      DisplayLabel = 'Descripci'#243'n'
-      FieldKind = fkLookup
-      FieldName = 'LookupDescripArt'
-      LookupDataSet = fdqryArticulos
-      LookupKeyFields = 'CODIGO'
-      LookupResultField = 'NOMBRE'
-      KeyFields = 'FK_COD_ART'
-      Size = 25
-      Lookup = True
-    end
-    object crncyfldMovimientosImporte: TCurrencyField
-      Alignment = taCenter
-      DefaultExpression = '0'
-      FieldKind = fkCalculated
-      FieldName = 'Importe'
-      Calculated = True
-    end
-  end
   object fdqryMetpago_Ventas: TFDQuery
     CachedUpdates = True
     Connection = GestionConnection
     SQL.Strings = (
       'SELECT * FROM METPAGO_VENTAS')
-    Left = 289
-    Top = 388
+    Left = 673
+    Top = 172
     object intgrfldMetpago_VentasFK_IDMETPAGO: TIntegerField
       FieldName = 'FK_IDMETPAGO'
       Origin = 'FK_IDMETPAGO'
@@ -887,8 +712,8 @@ object dmGestion: TdmGestion
     Connection = GestionConnection
     SQL.Strings = (
       'SELECT * FROM STOCK')
-    Left = 542
-    Top = 37
+    Left = 326
+    Top = 77
     object strngfldStockFK_CODIGO: TStringField
       FieldName = 'FK_CODIGO'
       Origin = 'FK_CODIGO'
@@ -905,6 +730,278 @@ object dmGestion: TdmGestion
     object intgrfldStockCANTIDAD: TIntegerField
       FieldName = 'CANTIDAD'
       Origin = 'CANTIDAD'
+    end
+  end
+  object fdqryMDVentasRanged: TFDQuery
+    OnNewRecord = fdqryMDVentasRangedNewRecord
+    CachedUpdates = True
+    Connection = GestionConnection
+    SchemaAdapter = fdschmdptrVentasRanged
+    SQL.Strings = (
+      'SELECT * FROM {id VENTAS}')
+    Left = 502
+    Top = 309
+    object strngfldMDVentasRANGEDNRO_FACTURA: TStringField
+      FieldName = 'NRO_FACTURA'
+      Required = True
+      Size = 14
+    end
+    object intgrfldMDVentasRangedTIPO: TIntegerField
+      FieldName = 'TIPO'
+      Origin = 'TIPO'
+    end
+    object dtfldMDVentasRANGEDFECHA: TDateField
+      FieldName = 'FECHA'
+      Origin = 'FECHA'
+    end
+    object tmfldMDVentasRANGEDHORA: TTimeField
+      FieldName = 'HORA'
+      Origin = 'HORA'
+    end
+    object crncyfldMDVentasRANGEDDESCUENTO: TCurrencyField
+      DefaultExpression = '0'#13#10
+      FieldName = 'DESCUENTO'
+      Origin = 'DESCUENTO'
+      DisplayFormat = '##0.00 %'
+      currency = False
+    end
+    object crncyfldMDVentasRANGEDRECARGO: TCurrencyField
+      DefaultExpression = '0'
+      FieldName = 'RECARGO'
+      Origin = 'RECARGO'
+      DisplayFormat = '##0.00 %'
+      currency = False
+    end
+    object strngfldMDVentasRANGEDNRO_COMPROBANTE: TStringField
+      FieldName = 'NRO_COMPROBANTE'
+      Origin = 'NRO_COMPROBANTE'
+      Size = 10
+    end
+    object bcdfldMDVentasRANGEDSUBTOTAL: TBCDField
+      DefaultExpression = '0'
+      FieldName = 'SUBTOTAL'
+      Origin = 'SUBTOTAL'
+      currency = True
+      Precision = 18
+      Size = 2
+    end
+    object bcdfldMDVentasRANGEDTOTAL: TBCDField
+      DefaultExpression = '0'
+      FieldName = 'TOTAL'
+      Origin = 'TOTAL'
+      currency = True
+      Precision = 18
+      Size = 2
+    end
+    object intgrfldMDVentasRANGEDFK_IDCLIENTE: TIntegerField
+      FieldName = 'FK_IDCLIENTE'
+      Origin = 'FK_IDCLIENTE'
+    end
+    object intgrfldMDVentasRANGEDFK_IDPUNTO_VENTA: TIntegerField
+      FieldName = 'FK_IDPUNTO_VENTA'
+      Origin = 'FK_IDPUNTO_VENTA'
+    end
+    object strngfldMDVentasRangedlookupNomCompCliente: TStringField
+      FieldKind = fkLookup
+      FieldName = 'lookupNomCompCliente'
+      LookupDataSet = fdqryClientes
+      LookupKeyFields = 'ID_CLIENTE'
+      LookupResultField = 'NOMBRECOMP'
+      KeyFields = 'FK_IDCLIENTE'
+      Size = 52
+      Lookup = True
+    end
+    object strngfldMDVentasRangedlookupNomTipoCompr: TStringField
+      FieldKind = fkLookup
+      FieldName = 'lookupNomTipoCompr'
+      LookupDataSet = fdqryTipo_comprobante
+      LookupKeyFields = 'ID_TIPO_COMP'
+      LookupResultField = 'NOMBRE'
+      KeyFields = 'TIPO'
+      Size = 25
+      Lookup = True
+    end
+    object intgrfldMDVentasRangedlookupIdPV: TIntegerField
+      FieldKind = fkLookup
+      FieldName = 'lookupIdPV'
+      LookupDataSet = fdqryPuntos_venta
+      LookupKeyFields = 'IDPUNTOVENTA'
+      LookupResultField = 'IDPUNTOVENTA'
+      KeyFields = 'FK_IDPUNTO_VENTA'
+      Lookup = True
+    end
+  end
+  object fdqryMDMovimientosRanged: TFDQuery
+    BeforeInsert = fdqryMDMovimientosRangedBeforeInsert
+    AfterPost = fdqryMDMovimientosRangedAfterPost
+    AfterDelete = fdqryMDMovimientosRangedAfterDelete
+    OnCalcFields = fdqryMDMovimientosRangedCalcFields
+    CachedUpdates = True
+    IndexFieldNames = 'FK_NRO_FACTURA_V'
+    AggregatesActive = True
+    MasterSource = dsMDVentasRanged
+    MasterFields = 'NRO_FACTURA'
+    Connection = GestionConnection
+    SchemaAdapter = fdschmdptrVentasRanged
+    FetchOptions.AssignedValues = [evDetailCascade, evDetailServerCascade]
+    FetchOptions.DetailCascade = True
+    UpdateOptions.AssignedValues = [uvGeneratorName]
+    UpdateOptions.GeneratorName = 'GEN_IDMOVIMIENTO'
+    UpdateOptions.KeyFields = 'IDMOVIMIENTO'
+    UpdateOptions.AutoIncFields = 'IDMOVIMIENTO'
+    SQL.Strings = (
+      'SELECT * FROM {id MOVIMIENTOS}')
+    Left = 505
+    Top = 368
+    object intgrfldMDMovimientosRANGEDIDMOVIMIENTO: TIntegerField
+      AutoGenerateValue = arAutoInc
+      FieldName = 'IDMOVIMIENTO'
+      Origin = 'IDMOVIMIENTO'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+    end
+    object strngfldMDMovimientosRANGEDFK_NRO_FACTURA_C: TStringField
+      FieldName = 'FK_NRO_FACTURA_C'
+      Origin = 'FK_NRO_FACTURA_C'
+      Size = 14
+    end
+    object intgrfldMDMovimientosRANGEDFK_IDPROVEEDOR: TIntegerField
+      FieldName = 'FK_IDPROVEEDOR'
+      Origin = 'FK_IDPROVEEDOR'
+    end
+    object strngfldMDMovimientosRANGEDFK_NRO_FACTURA_V: TStringField
+      FieldName = 'FK_NRO_FACTURA_V'
+      Origin = 'FK_NRO_FACTURA_V'
+      Size = 14
+    end
+    object intgrfldMDMovimientosRANGEDFK_NUM_DEPOSITO: TIntegerField
+      FieldName = 'FK_NUM_DEPOSITO'
+      Origin = 'FK_NUM_DEPOSITO'
+    end
+    object strngfldMDMovimientosRANGEDFK_COD_ART: TStringField
+      FieldName = 'FK_COD_ART'
+      Origin = 'FK_COD_ART'
+      OnChange = strngfldMDMovimientosRANGEDFK_COD_ARTChange
+      Size = 10
+    end
+    object strngfldMDMovimientosRANGEDTIPO: TStringField
+      FieldName = 'TIPO'
+      Origin = 'TIPO'
+      Size = 1
+    end
+    object bcdfldMDMovimientosRANGEDPRECIO_UNITARIO: TBCDField
+      DefaultExpression = '0'
+      FieldName = 'PRECIO_UNITARIO'
+      Origin = 'PRECIO_UNITARIO'
+      currency = True
+      Precision = 18
+      Size = 2
+    end
+    object intgrfldMDMovimientosRANGEDCANTIDAD: TIntegerField
+      DefaultExpression = '0'
+      FieldName = 'CANTIDAD'
+      Origin = 'CANTIDAD'
+    end
+    object crncyfldMDMovimientosRangedImporte: TCurrencyField
+      DefaultExpression = '0'#13#10
+      FieldKind = fkCalculated
+      FieldName = 'Importe'
+      Calculated = True
+    end
+    object strngfldMDMovimientosRangedNombreArt: TStringField
+      DisplayLabel = 'Art'#237'culo'
+      FieldKind = fkLookup
+      FieldName = 'NombreArt'
+      LookupDataSet = fdqryArticulos
+      LookupKeyFields = 'CODIGO'
+      LookupResultField = 'NOMBRE'
+      KeyFields = 'FK_COD_ART'
+      ReadOnly = True
+      Size = 25
+      Lookup = True
+    end
+    object agrgtfldMDMovimientosRangedAGGSubTotal: TAggregateField
+      FieldName = 'AGGSubTotal'
+      Active = True
+      currency = True
+      DisplayName = ''
+      Expression = 'SUM(PRECIO_UNITARIO * CANTIDAD)'
+    end
+  end
+  object dsMDVentasRanged: TDataSource
+    DataSet = fdqryMDVentasRanged
+    Left = 648
+    Top = 312
+  end
+  object fdschmdptrVentasRanged: TFDSchemaAdapter
+    Left = 648
+    Top = 368
+  end
+  object fdqryTipo_comprobante: TFDQuery
+    Active = True
+    Connection = GestionConnection
+    UpdateOptions.AssignedValues = [uvGeneratorName]
+    UpdateOptions.GeneratorName = 'GEN_ID_TIPO_COMP'
+    UpdateOptions.KeyFields = 'ID_TIPO_COMP'
+    UpdateOptions.AutoIncFields = 'ID_TIPO_COMP'
+    SQL.Strings = (
+      'SELECT * FROM TIPO_COMPROBANTE')
+    Left = 279
+    Top = 136
+    object intgrfldTipo_comprobanteID_TIPO_COMP: TIntegerField
+      AutoGenerateValue = arAutoInc
+      FieldName = 'ID_TIPO_COMP'
+      Origin = 'ID_TIPO_COMP'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+    end
+    object strngfldTipo_comprobanteNOMBRE: TStringField
+      DisplayLabel = 'Nombre de comprobante'
+      FieldName = 'NOMBRE'
+      Origin = 'NOMBRE'
+      Size = 25
+    end
+    object strngfldTipo_comprobanteLETRA: TStringField
+      DisplayLabel = 'Letra'
+      FieldName = 'LETRA'
+      Origin = 'LETRA'
+      Size = 2
+    end
+  end
+  object fdqryPuntos_venta: TFDQuery
+    Active = True
+    Connection = GestionConnection
+    UpdateOptions.AssignedValues = [uvGeneratorName]
+    UpdateOptions.GeneratorName = 'GEN_PUNTO_VENTA'
+    UpdateOptions.KeyFields = 'IDPUNTOVENTA'
+    UpdateOptions.AutoIncFields = 'IDPUNTOVENTA'
+    SQL.Strings = (
+      'SELECT * FROM PUNTOS_VENTA')
+    Left = 671
+    Top = 117
+    object intgrfldPuntos_ventaIDPUNTOVENTA: TIntegerField
+      AutoGenerateValue = arAutoInc
+      FieldName = 'IDPUNTOVENTA'
+      Origin = 'IDPUNTOVENTA'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+    end
+    object strngfldPuntos_ventaTIPO: TStringField
+      FieldName = 'TIPO'
+      Origin = 'TIPO'
+      Size = 1
+    end
+    object strngfldPuntos_ventaDATOS_IMP: TStringField
+      FieldName = 'DATOS_IMP'
+      Origin = 'DATOS_IMP'
+      Size = 80
+    end
+    object intgrfldPuntos_ventaFK_IDCAJA: TIntegerField
+      FieldName = 'FK_IDCAJA'
+      Origin = 'FK_IDCAJA'
+      Required = True
+    end
+    object intgrfldPuntos_ventaFK_IDSUCURSAL: TIntegerField
+      FieldName = 'FK_IDSUCURSAL'
+      Origin = 'FK_IDSUCURSAL'
+      Required = True
     end
   end
 end

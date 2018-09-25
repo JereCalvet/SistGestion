@@ -1,0 +1,10 @@
+inherited frmBusqueda: TfrmBusqueda
+  BorderStyle = bsDialog
+  Caption = 'Busqueda Avanzada'
+  ClientHeight = 264
+  ClientWidth = 616
+  ExplicitWidth = 622
+  ExplicitHeight = 292
+  PixelsPerInch = 96
+  TextHeight = 13
+end

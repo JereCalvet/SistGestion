@@ -57,9 +57,12 @@ type
     grpFact: TGroupBox;
     dsSucursales: TDataSource;
     lblSucursal: TLabel;
-    dblkcbbFacturacion: TDBLookupComboBox;
+    dblkcbbSucursal: TDBLookupComboBox;
     cbbApariencia: TComboBox;
     pnlDefecto: TPanel;
+    lblDeposito: TLabel;
+    dblkcbbDeposito: TDBLookupComboBox;
+    dsDepositos: TDataSource;
     procedure imgMenuClick(Sender: TObject);
     procedure SVClosed(Sender: TObject);
     procedure catMenuItemsCategoryCollapase(Sender: TObject;
@@ -78,6 +81,7 @@ type
     procedure btnAceptarFactClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnAceptarCopiaSegClick(Sender: TObject);
+    procedure dsSucursalesDataChange(Sender: TObject; Field: TField);
   private
     { Private declarations }
   public
@@ -108,14 +112,14 @@ end;
 procedure TfrmConfiguracion.actCopiaSegExecute(Sender: TObject);   //cambio el panel, creo carpeta DB default y cargo config
 var
   Ini : TIniFile;
-begin
+begin                           { TODO : verificar, si creacion automatica check(es true) -> intervalo tenga valor }
   inherited;
   pnlCopiaSeg.Visible := True;
   pnlApariencia.Visible := False;
   pnlImpre.Visible:= False;
   pnlFact.Visible:= False;
   pnlDefecto.Visible := False;
-  if not DirectoryExists(TPath.GetDocumentsPath + PathDelim + 'Gestion' + PathDelim + 'Base de datos') then
+  if not (DirectoryExists(TPath.GetDocumentsPath + PathDelim + 'Gestion' + PathDelim + 'Base de datos')) then
      CreateDir(TPath.GetDocumentsPath + PathDelim + 'Gestion' + PathDelim + 'Base de datos');
 
   Ini := Tinifile.Create(dmGestion.CarpetaGestion_IniPath);
@@ -134,7 +138,7 @@ end;
 procedure TfrmConfiguracion.actFactExecute(Sender: TObject);  //cambio el panel y cargo sucursal default
 var
   Ini : TIniFile;
-  IDSucurDefault : Integer;
+  IdSucurDefault, IdDepoDefault : Integer;
 begin
   inherited;
   pnlFact.Visible:= True;
@@ -145,8 +149,10 @@ begin
 
   Ini := Tinifile.Create(dmGestion.CarpetaGestion_IniPath);
   try
-    IDSucurDefault := Ini.ReadInteger('Sucursal','ID', 1); //carga la sucursal del archivo INI y por defecto carga la 1
-    dblkcbbFacturacion.KeyValue := IDSucurDefault;
+    IdSucurDefault := Ini.ReadInteger('Sucursal','ID', 1); //carga la sucursal del archivo INI y por defecto carga la 1
+    dblkcbbSucursal.KeyValue := IdSucurDefault;
+    IdDepoDefault := Ini.ReadInteger('Deposito', 'Numero', 1);  //carga el deposito del archivo ini y por defecto carga 1
+    dblkcbbDeposito.KeyValue := IdDepoDefault;
   finally
     Ini.Free;
   end;
@@ -198,7 +204,7 @@ begin
   Close;
 end;
 
-procedure TfrmConfiguracion.btnAceptarFactClick(Sender: TObject); //guardo datos de la sucursal "default"
+procedure TfrmConfiguracion.btnAceptarFactClick(Sender: TObject); //guardo datos de la sucursal y el deposito "default"
  var
   Ini : TIniFile;
 begin
@@ -207,10 +213,12 @@ begin
   try
      with dmGestion do
       begin
-        if dblkcbbFacturacion.KeyValue <> null then
+        if (dblkcbbSucursal.KeyValue <> null) and (dblkcbbDeposito.KeyValue <> null) then
           begin
-           Ini.WriteInteger('Sucursal','ID', intgrfldSucursalesID_SUCURSAL.Value);
-           Ini.WriteString('Sucursal', 'Nombre comercial', strngfldSucursalesNOMBRE_COMERCIAL.Value);
+            Ini.WriteInteger('Sucursal','ID', intgrfldSucursalesID_SUCURSAL.Value);
+            Ini.WriteString('Sucursal', 'Nombre comercial', strngfldSucursalesNOMBRE_COMERCIAL.Value);
+            Ini.WriteInteger('Deposito', 'Numero', intgrfldDepositosNUMERO.Value);
+            Ini.WriteString('Deposito', 'Nombre', strngfldDepositosNOMBRE.Value);
           end;
       end;
   finally
@@ -267,11 +275,27 @@ begin
    TStyleManager.SetStyle(cbbApariencia.Text);
 end;
 
+procedure TfrmConfiguracion.dsSucursalesDataChange(Sender: TObject;
+  Field: TField);
+begin
+  inherited;
+  if (dblkcbbSucursal.KeyValue <> null) then
+    with dmGestion do
+      begin
+        dsDepositos.DataSet.Close;
+        fdqryDepositos.Filtered := False;
+        fdqryDepositos.Filter := 'FK_IDSUCURSAL ='+QuotedStr(dblkcbbSucursal.KeyValue);
+        fdqryDepositos.Filtered := True;
+        dsDepositos.DataSet.Open;
+      end;
+end;
+
 procedure TfrmConfiguracion.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
   inherited;
   dsSucursales.DataSet.Close;
+  dsDepositos.DataSet.Close;
 end;
 
 procedure TfrmConfiguracion.FormCreate(Sender: TObject);   //  cargo el combobox con los estilos
@@ -288,6 +312,7 @@ procedure TfrmConfiguracion.FormShow(Sender: TObject);  //cargo la grilla con da
 begin
   inherited;
   dsSucursales.DataSet.Open;
+  dsDepositos.DataSet.Open;
   strngrdMuestra.Cells[0,0]:= 'Cliente';
   strngrdMuestra.Cells[0,1]:= 'Microsoft';
   strngrdMuestra.Cells[0,2]:= 'Apple';

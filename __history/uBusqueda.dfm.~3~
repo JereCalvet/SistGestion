@@ -1,0 +1,77 @@
+inherited frmBusqueda: TfrmBusqueda
+  BorderStyle = bsDialog
+  Caption = 'Busqueda Avanzada'
+  ClientHeight = 266
+  ClientWidth = 616
+  ExplicitWidth = 622
+  ExplicitHeight = 294
+  PixelsPerInch = 96
+  TextHeight = 13
+  object pnlTop: TPanel
+    Left = 0
+    Top = 0
+    Width = 616
+    Height = 41
+    Align = alTop
+    BevelOuter = bvNone
+    TabOrder = 0
+    Visible = False
+    ExplicitLeft = 128
+    ExplicitTop = 56
+    ExplicitWidth = 185
+  end
+  object pnlBot: TPanel
+    Left = 0
+    Top = 216
+    Width = 616
+    Height = 50
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 1
+    Visible = False
+    object btnAceptar: TBitBtn
+      Left = 120
+      Top = 8
+      Width = 89
+      Height = 35
+      Caption = 'Aceptar'
+      Kind = bkOK
+      NumGlyphs = 2
+      TabOrder = 0
+    end
+    object btnCancelar: TBitBtn
+      Left = 384
+      Top = 8
+      Width = 89
+      Height = 35
+      Caption = 'Cancelar'
+      Kind = bkCancel
+      NumGlyphs = 2
+      TabOrder = 1
+    end
+  end
+  object pnlClient: TPanel
+    Left = 0
+    Top = 41
+    Width = 616
+    Height = 175
+    Align = alClient
+    BevelOuter = bvNone
+    TabOrder = 2
+    ExplicitHeight = 171
+    object dbgrd1: TDBGrid
+      AlignWithMargins = True
+      Left = 3
+      Top = 3
+      Width = 610
+      Height = 169
+      Align = alClient
+      TabOrder = 0
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+    end
+  end
+end

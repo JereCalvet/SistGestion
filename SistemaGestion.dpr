@@ -37,8 +37,12 @@ uses
   uDialogoDepositos in 'Gestion\uDialogoDepositos.pas' {frmDialogoDepositos},
   uGrillaSucursales in 'Gestion\uGrillaSucursales.pas' {frmGrillaSucursal},
   uDialogoSucursal in 'Gestion\uDialogoSucursal.pas' {frmDialogoSucursal},
-  uDialogoFactura in 'Gestion\uDialogoFactura.pas' {frmDialogoFactura},
-  uGrillaFactura in 'Gestion\uGrillaFactura.pas' {frmGrillaFactura};
+  uDialogoFacturaVenta in 'Gestion\uDialogoFacturaVenta.pas' {frmDialogoFacturaVenta},
+  uBusquedaGenerica in 'uBusquedaGenerica.pas' {frmBusquedaGenerica},
+  uBusquedaCliente in 'Gestion\uBusquedaCliente.pas' {frmBusquedaCliente},
+  uGrillaTipoComp in 'Gestion\uGrillaTipoComp.pas' {frmGrillaTipoComp},
+  uDialogoTipoComp in 'Gestion\uDialogoTipoComp.pas' {frmDialogoTipoComp},
+  uBusquedaArticulo in 'Gestion\uBusquedaArticulo.pas' {frmBusquedaArticulo};
 
 {$R *.res}
 

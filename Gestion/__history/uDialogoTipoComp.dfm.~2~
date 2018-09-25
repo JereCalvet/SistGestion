@@ -1,0 +1,8 @@
+inherited frmDialogoTipoComp: TfrmDialogoTipoComp
+  Caption = 'Tipo de comprobante'
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited dsBase: TDataSource
+    DataSet = dmGestion.fdqryTipo_comprobante
+  end
+end

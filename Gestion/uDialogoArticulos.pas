@@ -23,7 +23,7 @@ uses
   dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, cxTextEdit, cxDBEdit, Vcl.DBCtrls, cxMaskEdit, cxSpinEdit,
   cxCurrencyEdit, Vcl.ExtCtrls, System.IniFiles, Vcl.Mask, Vcl.Grids,
-  Vcl.DBGrids;
+  Vcl.DBGrids, FireDAC.Stan.Param;
 
 type
   TfrmDialogoArticulos = class(TfrmDialogoGenerico)
@@ -72,6 +72,8 @@ type
     lblInstruccion: TLabel;
     dbedtPRECIO: TDBEdit;
     dbedtCOSTO: TDBEdit;
+    pnlDeposito: TPanel;
+    pnlProveedor: TPanel;
     procedure edtMargenKeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure btnAceptarClick(Sender: TObject);
@@ -103,6 +105,17 @@ uses
 procedure TfrmDialogoArticulos.btnAceptarClick(Sender: TObject);
 begin
   //inherited;
+   with dmGestion do      //guardo el IVA porque es un simple combobox con strings
+     begin
+        if cbbAlicuota.Items[cbbAlicuota.ItemIndex] = 'Sin IVA: 0%' then
+           fdqryArticulos.FieldByName('IVA').Value := 00.00;
+        if cbbAlicuota.Items[cbbAlicuota.ItemIndex] = 'IVA Tasa reducida: 10,5%' then
+           fdqryArticulos.FieldByName('IVA').Value := 10.50;
+        if cbbAlicuota.Items[cbbAlicuota.ItemIndex] = 'IVA Tasa normal: 21%' then
+           fdqryArticulos.FieldByName('IVA').Value := 21.00;
+        if cbbAlicuota.Items[cbbAlicuota.ItemIndex] = 'IVA Tasa especial: 27%' then
+           fdqryArticulos.FieldByName('IVA').Value := 27.00;
+     end;
    dsBase.DataSet.Post;
    Close;
 end;
@@ -233,9 +246,20 @@ begin
         dblklstDeposito.Visible := True;
         lblInstruccion.Visible := True;
 
-        with dmGestion do                      //1. abro depositos filtrado por sucursal y lo muestro en el listbox
+        with dmGestion do
           begin
-             dsDeposito.DataSet.Close;
+             //-----------------------------------------------------------------------------
+             //cargo el combobox IVA de forma manual (porque es un simple combobox con strings) [no es data control]
+             if fdqryArticulos.FieldByName('IVA').Value = 00.00 then
+                cbbAlicuota.ItemIndex := 0;
+             if fdqryArticulos.FieldByName('IVA').Value = 21.00 then
+                cbbAlicuota.ItemIndex := 1;
+             if fdqryArticulos.FieldByName('IVA').Value = 10.50 then
+                cbbAlicuota.ItemIndex := 2;
+             if fdqryArticulos.FieldByName('IVA').Value = 27.00 then
+                cbbAlicuota.ItemIndex := 3;
+             //----------------------------------------------------------------------------
+             dsDeposito.DataSet.Close;         //1. abro depositos filtrado por sucursal y lo muestro en el listbox
              fdqryDepositos.Filtered := False;
              fdqryDepositos.Filter := 'FK_IDSUCURSAL =' + QuotedStr(IntToStr(IDSucurDefault));
              fdqryDepositos.Filtered := True;

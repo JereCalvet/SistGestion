@@ -40,8 +40,8 @@ type
     btnSalir: TBitBtn;
     btnAceptar: TBitBtn;
     dblkcbbTarjeta: TDBLookupComboBox;
-    dsMaestro: TDataSource;
-    dsDetalle: TDataSource;
+    dsMaestroMet_Pag: TDataSource;
+    dsDetallePlanPago: TDataSource;
     lblCuotas: TLabel;
     dbtxtRETENCION: TDBText;
     imgAgregar: TImage;
@@ -80,8 +80,8 @@ end;
 procedure TfrmGrillaPlanPago.btnSalirClick(Sender: TObject);
 begin
   inherited;
-  dsMaestro.DataSet.Cancel;
-  dsDetalle.DataSet.Cancel;
+  dsMaestroMet_Pag.DataSet.Cancel;
+  dsDetallePlanPago.DataSet.Cancel;
   Close;
 end;
 
@@ -90,7 +90,7 @@ begin
   inherited;
   if not (dmGestion.fdqryMD_MetPag.FieldByName('IDMETODO_PAGO').Value = null) then
     begin
-       dsDetalle.DataSet.Edit;
+       dsDetallePlanPago.DataSet.Edit;
        TfrmDialogoPlanPago.MostrarModal;
     end;
 end;
@@ -98,15 +98,15 @@ end;
 procedure TfrmGrillaPlanPago.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   inherited;
-  dsMaestro.DataSet.Close;
-  dsDetalle.DataSet.Close;
+  dsMaestroMet_Pag.DataSet.Close;
+  dsDetallePlanPago.DataSet.Close;
 end;
 
 procedure TfrmGrillaPlanPago.FormShow(Sender: TObject);
 begin
   inherited;
-  dsMaestro.DataSet.Open;
-  dsDetalle.DataSet.Open;
+  dsMaestroMet_Pag.DataSet.Open;
+  dsDetallePlanPago.DataSet.Open;
   with dmGestion do
     begin
       if not fdqryMD_MetPag.IsEmpty then
@@ -125,7 +125,7 @@ begin
       raise Exception.Create('No existen metodos de pago')
   else
     begin
-       dsDetalle.DataSet.Insert;
+       dsDetallePlanPago.DataSet.Insert;
        TfrmDialogoPlanPago.MostrarModal;
     end;
 end;
@@ -133,11 +133,11 @@ end;
 procedure TfrmGrillaPlanPago.imgEliminarClick(Sender: TObject);
 begin
   inherited;
-  if not (dsDetalle.DataSet.IsEmpty) then
+  if not (dsDetallePlanPago.DataSet.IsEmpty) then
      if MessageDlg('Borrar registro?', mtConfirmation,[mbOK, mbCancel],0) = mrOk then
          with dmGestion do
             begin
-               dsDetalle.DataSet.Delete;
+               dsDetallePlanPago.DataSet.Delete;
                fdqryMDPlanPago.ApplyUpdates(0);
                fdqryMDPlanPago.CommitUpdates;
                fdqryMDPlanPago.Refresh;

@@ -19,7 +19,7 @@ inherited frmDialogoArticulos: TfrmDialogoArticulos
     Top = 57
     Width = 714
     Height = 353
-    ActivePage = tsValores
+    ActivePage = tsStock
     MultiLine = True
     TabOrder = 1
     object tsGeneral: TTabSheet
@@ -30,6 +30,10 @@ inherited frmDialogoArticulos: TfrmDialogoArticulos
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object lblCodigo: TLabel
         Left = 549
         Top = 16
@@ -100,6 +104,10 @@ inherited frmDialogoArticulos: TfrmDialogoArticulos
     object tsValores: TTabSheet
       Caption = 'Valores'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object pnlCosto: TPanel
         Left = 0
         Top = 0
@@ -272,97 +280,121 @@ inherited frmDialogoArticulos: TfrmDialogoArticulos
     object tsStock: TTabSheet
       Caption = 'Stock'
       ImageIndex = 2
-      object lblID_PROVEEDOR: TLabel
-        Left = 32
-        Top = 24
-        Width = 90
-        Height = 13
-        Caption = 'FK_IDPROVEEDOR'
-        FocusControl = cxDBSpinEdit1
-        Visible = False
-      end
-      object lblProveedor: TLabel
-        Left = 400
-        Top = 24
-        Width = 50
-        Height = 13
-        Caption = 'Proveedor'
-        FocusControl = dblkcbblookupProveedor
-      end
-      object lblStock: TLabel
-        Left = 32
-        Top = 104
-        Width = 26
-        Height = 13
-        Caption = 'Stock'
-      end
-      object lblStockMin: TLabel
-        Left = 32
-        Top = 150
-        Width = 61
-        Height = 13
-        Caption = 'Stock minimo'
-      end
-      object lblDeposito: TLabel
-        Left = 400
-        Top = 104
-        Width = 42
-        Height = 13
-        Caption = 'Deposito'
-        FocusControl = dblkcbblookupProveedor
-      end
-      object lblInstruccion: TLabel
-        Left = 32
-        Top = 43
-        Width = 220
-        Height = 13
-        Caption = 'Seleccione un deposito para consultar el stock'
-      end
-      object cxDBSpinEdit1: TcxDBSpinEdit
-        Left = 32
-        Top = 40
-        DataBinding.DataField = 'FK_IDPROVEEDOR'
-        DataBinding.DataSource = dsBase
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
+      object pnlDeposito: TPanel
+        Left = 0
+        Top = 77
+        Width = 706
+        Height = 248
+        Align = alClient
         TabOrder = 0
-        Visible = False
-        Width = 121
+        ExplicitLeft = -16
+        ExplicitTop = 18
+        ExplicitHeight = 232
+        object lblDeposito: TLabel
+          Left = 30
+          Top = 60
+          Width = 47
+          Height = 13
+          Caption = 'Depositos'
+          FocusControl = dblkcbblookupProveedor
+        end
+        object lblInstruccion: TLabel
+          Left = 30
+          Top = 27
+          Width = 220
+          Height = 13
+          Caption = 'Seleccione un deposito para consultar el stock'
+        end
+        object lblStock: TLabel
+          Left = 427
+          Top = 60
+          Width = 26
+          Height = 13
+          Caption = 'Stock'
+        end
+        object lblStockMin: TLabel
+          Left = 427
+          Top = 106
+          Width = 61
+          Height = 13
+          Caption = 'Stock minimo'
+        end
+        object dbedtStock: TDBEdit
+          Left = 427
+          Top = 79
+          Width = 121
+          Height = 21
+          ReadOnly = True
+          TabOrder = 0
+        end
+        object dblklstDeposito: TDBLookupListBox
+          Left = 30
+          Top = 79
+          Width = 285
+          Height = 147
+          KeyField = 'NUMERO'
+          ListField = 'NOMBRE'
+          ListSource = dsDeposito
+          TabOrder = 1
+          OnEnter = dblklstDepositoEnter
+        end
+        object edtStockMin: TEdit
+          Left = 427
+          Top = 125
+          Width = 121
+          Height = 21
+          Enabled = False
+          TabOrder = 2
+          Text = 'Proximamente'
+        end
       end
-      object dblkcbblookupProveedor: TDBLookupComboBox
-        Left = 400
-        Top = 43
-        Width = 285
-        Height = 21
-        DataField = 'lookupProveedor'
-        DataSource = dsBase
+      object pnlProveedor: TPanel
+        Left = 0
+        Top = 0
+        Width = 706
+        Height = 77
+        Align = alTop
         TabOrder = 1
-      end
-      object edtStockMin: TEdit
-        Left = 32
-        Top = 169
-        Width = 121
-        Height = 21
-        Enabled = False
-        TabOrder = 3
-        Text = 'Proximamente'
-      end
-      object dbedtStock: TDBEdit
-        Left = 32
-        Top = 123
-        Width = 121
-        Height = 21
-        ReadOnly = True
-        TabOrder = 2
-      end
-      object dblklstDeposito: TDBLookupListBox
-        Left = 400
-        Top = 123
-        Width = 285
-        Height = 147
-        KeyField = 'NUMERO'
-        ListField = 'NOMBRE'
-        ListSource = dsDeposito
-        TabOrder = 4
-        OnEnter = dblklstDepositoEnter
+        ExplicitTop = 248
+        object lblID_PROVEEDOR: TLabel
+          Left = 584
+          Top = 14
+          Width = 90
+          Height = 13
+          Caption = 'FK_IDPROVEEDOR'
+          FocusControl = cxDBSpinEdit1
+          Visible = False
+        end
+        object lblProveedor: TLabel
+          Left = 30
+          Top = 14
+          Width = 50
+          Height = 13
+          Caption = 'Proveedor'
+          FocusControl = dblkcbblookupProveedor
+        end
+        object dblkcbblookupProveedor: TDBLookupComboBox
+          Left = 30
+          Top = 33
+          Width = 285
+          Height = 21
+          DataField = 'lookupProveedor'
+          DataSource = dsBase
+          TabOrder = 0
+        end
+        object cxDBSpinEdit1: TcxDBSpinEdit
+          Left = 571
+          Top = 33
+          DataBinding.DataField = 'FK_IDPROVEEDOR'
+          DataBinding.DataSource = dsBase
+          TabOrder = 1
+          Visible = False
+          Width = 121
+        end
       end
     end
   end
