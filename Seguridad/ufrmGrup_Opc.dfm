@@ -3,7 +3,6 @@ inherited frmGrup_Opc: TfrmGrup_Opc
   ClientHeight = 504
   ClientWidth = 933
   OnClose = FormClose
-  OnCreate = FormCreate
   OnShow = FormShow
   ExplicitWidth = 949
   ExplicitHeight = 542
@@ -111,14 +110,6 @@ inherited frmGrup_Opc: TfrmGrup_Opc
     Proportional = True
     Visible = False
   end
-  object lbl1: TLabel
-    Left = 518
-    Top = 35
-    Width = 179
-    Height = 13
-    Caption = 'tabla invisible solo para test  ------>>'
-    Visible = False
-  end
   object lblGrupos: TLabel
     Left = 29
     Top = 65
@@ -133,31 +124,6 @@ inherited frmGrup_Opc: TfrmGrup_Opc
     Height = 13
     Caption = 'Opciones:'
   end
-  object dbgrdGrup_Opc: TDBGrid
-    Left = 748
-    Top = 8
-    Width = 155
-    Height = 336
-    DataSource = dsGrup_Opc
-    TabOrder = 0
-    TitleFont.Charset = DEFAULT_CHARSET
-    TitleFont.Color = clWindowText
-    TitleFont.Height = -11
-    TitleFont.Name = 'Tahoma'
-    TitleFont.Style = []
-    Visible = False
-    Columns = <
-      item
-        Expanded = False
-        FieldName = 'ID_GRUP'
-        Visible = True
-      end
-      item
-        Expanded = False
-        FieldName = 'ID_OPC'
-        Visible = True
-      end>
-  end
   object dbgrdOpcion: TDBGrid
     Left = 491
     Top = 84
@@ -165,7 +131,7 @@ inherited frmGrup_Opc: TfrmGrup_Opc
     Height = 336
     DataSource = dsOpcion
     Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
-    TabOrder = 1
+    TabOrder = 0
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText
     TitleFont.Height = -11
@@ -193,7 +159,7 @@ inherited frmGrup_Opc: TfrmGrup_Opc
     Height = 336
     DataSource = dsGrupo
     Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
-    TabOrder = 2
+    TabOrder = 1
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText
     TitleFont.Height = -11
@@ -212,7 +178,7 @@ inherited frmGrup_Opc: TfrmGrup_Opc
     Width = 123
     Height = 35
     Caption = 'Salir'
-    TabOrder = 3
+    TabOrder = 2
     OnClick = btnSalirClick
   end
   object btnActualizar: TButton
@@ -221,7 +187,7 @@ inherited frmGrup_Opc: TfrmGrup_Opc
     Width = 123
     Height = 35
     Caption = 'Actualizar Permisos'
-    TabOrder = 4
+    TabOrder = 3
     OnClick = btnActualizarClick
   end
   object dsGrupo: TDataSource

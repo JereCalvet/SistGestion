@@ -1,0 +1,8 @@
+inherited frmDialogoFormasPago: TfrmDialogoFormasPago
+  BorderStyle = bsDialog
+  Caption = 'Formas de pago'
+  ClientHeight = 473
+  ClientWidth = 785
+  PixelsPerInch = 96
+  TextHeight = 13
+end

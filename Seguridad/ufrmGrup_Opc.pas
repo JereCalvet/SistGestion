@@ -13,14 +13,12 @@ type
     dsGrupo: TDataSource;
     dsOpcion: TDataSource;
     dsGrup_Opc: TDataSource;
-    dbgrdGrup_Opc: TDBGrid;
     dbgrdOpcion: TDBGrid;
     dbgrdGrupo: TDBGrid;
     btnSalir: TButton;
     btnActualizar: TButton;
     imgTick: TImage;
     imgCross: TImage;
-    lbl1: TLabel;
     lblGrupos: TLabel;
     lblOpciones: TLabel;
     procedure btnSalirClick(Sender: TObject);

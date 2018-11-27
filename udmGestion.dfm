@@ -4,7 +4,6 @@ object dmGestion: TdmGestion
   Height = 474
   Width = 758
   object fdqryClientes: TFDQuery
-    Active = True
     OnCalcFields = fdqryClientesCalcFields
     OnReconcileError = fdqryClientesReconcileError
     Connection = GestionConnection
@@ -118,7 +117,6 @@ object dmGestion: TdmGestion
     end
   end
   object fdqrySituaciones_tributarias: TFDQuery
-    Active = True
     OnReconcileError = fdqrySituaciones_tributariasReconcileError
     Connection = GestionConnection
     UpdateOptions.AssignedValues = [uvGeneratorName]
@@ -151,7 +149,6 @@ object dmGestion: TdmGestion
     Top = 18
   end
   object fdqryProveedores: TFDQuery
-    Active = True
     OnReconcileError = fdqryProveedoresReconcileError
     Connection = GestionConnection
     UpdateOptions.AssignedValues = [uvGeneratorName]
@@ -240,7 +237,6 @@ object dmGestion: TdmGestion
     Top = 48
   end
   object fdqryArticulos: TFDQuery
-    Active = True
     BeforePost = fdqryArticulosBeforePost
     OnNewRecord = fdqryArticulosNewRecord
     OnReconcileError = fdqryArticulosReconcileError
@@ -295,6 +291,7 @@ object dmGestion: TdmGestion
       Size = 2
     end
     object crncyfldArticulosIVA: TCurrencyField
+      DefaultExpression = '0'
       DisplayLabel = 'I.V.A.'
       FieldName = 'IVA'
       Origin = 'IVA'
@@ -672,8 +669,25 @@ object dmGestion: TdmGestion
     end
   end
   object fdqryMetpago_Ventas: TFDQuery
+    BeforePost = fdqryMetpago_VentasBeforePost
+    OnCalcFields = fdqryMetpago_VentasCalcFields
     CachedUpdates = True
+    Aggregates = <
+      item
+        Name = 'SumMontoFinanciado'
+        Expression = 'SUM(MontoFinal)'
+        Active = True
+      end
+      item
+        Name = 'SumMonto'
+        Expression = 'SUM(MONTO)'
+        Active = True
+      end>
+    AggregatesActive = True
     Connection = GestionConnection
+    UpdateOptions.AssignedValues = [uvAutoCommitUpdates]
+    UpdateOptions.AutoCommitUpdates = True
+    UpdateOptions.KeyFields = 'FK_IDMETPAGO;FK_NRO_FACTURA_V'
     SQL.Strings = (
       'SELECT * FROM METPAGO_VENTAS')
     Left = 673
@@ -694,17 +708,45 @@ object dmGestion: TdmGestion
     object bcdfldMetpago_VentasMONTO: TBCDField
       FieldName = 'MONTO'
       Origin = 'MONTO'
+      currency = True
       Precision = 18
       Size = 2
     end
-    object strngfldMetpago_VentaslookupMetPag: TStringField
+    object smlntfldMetpago_VentasCUOTAS: TSmallintField
+      DefaultExpression = '1'
+      FieldName = 'CUOTAS'
+      Origin = 'CUOTAS'
+    end
+    object crncyfldMetpago_VentasCOEF_HISTORICO: TCurrencyField
+      FieldName = 'COEF_HISTORICO'
+      Origin = 'COEF_HISTORICO'
+      DisplayFormat = '0.0000'
+      EditFormat = '0.0000'
+      currency = False
+    end
+    object crncyfldMetpago_VentasMontoFinal: TCurrencyField
+      FieldKind = fkInternalCalc
+      FieldName = 'MontoFinal'
+    end
+    object strngfldMetpago_VentaslookupTipo: TStringField
       FieldKind = fkLookup
-      FieldName = 'lookupMetPag'
+      FieldName = 'lookupTipo'
+      LookupDataSet = fdqryMetodos_pago
+      LookupKeyFields = 'IDMETODO_PAGO'
+      LookupResultField = 'TIPO'
+      KeyFields = 'FK_IDMETPAGO'
+      Size = 1
+      Lookup = True
+    end
+    object strngfldMetpago_VentaslookupNombre: TStringField
+      DisplayWidth = 25
+      FieldKind = fkLookup
+      FieldName = 'lookupNombre'
       LookupDataSet = fdqryMetodos_pago
       LookupKeyFields = 'IDMETODO_PAGO'
       LookupResultField = 'NOMBRE'
       KeyFields = 'FK_IDMETPAGO'
-      Size = 40
+      Size = 25
       Lookup = True
     end
   end
@@ -733,8 +775,10 @@ object dmGestion: TdmGestion
     end
   end
   object fdqryMDVentasRanged: TFDQuery
+    OnCalcFields = fdqryMDVentasRangedCalcFields
     OnNewRecord = fdqryMDVentasRangedNewRecord
     CachedUpdates = True
+    AggregatesActive = True
     Connection = GestionConnection
     SchemaAdapter = fdschmdptrVentasRanged
     SQL.Strings = (
@@ -830,6 +874,11 @@ object dmGestion: TdmGestion
       KeyFields = 'FK_IDPUNTO_VENTA'
       Lookup = True
     end
+    object fltfldMDVentasRangedCalTotal: TFloatField
+      FieldKind = fkCalculated
+      FieldName = 'CalTotal'
+      Calculated = True
+    end
   end
   object fdqryMDMovimientosRanged: TFDQuery
     BeforeInsert = fdqryMDMovimientosRangedBeforeInsert
@@ -838,7 +887,6 @@ object dmGestion: TdmGestion
     OnCalcFields = fdqryMDMovimientosRangedCalcFields
     CachedUpdates = True
     IndexFieldNames = 'FK_NRO_FACTURA_V'
-    AggregatesActive = True
     MasterSource = dsMDVentasRanged
     MasterFields = 'NRO_FACTURA'
     Connection = GestionConnection
@@ -897,7 +945,7 @@ object dmGestion: TdmGestion
       Size = 2
     end
     object intgrfldMDMovimientosRANGEDCANTIDAD: TIntegerField
-      DefaultExpression = '0'
+      DefaultExpression = '1'
       FieldName = 'CANTIDAD'
       Origin = 'CANTIDAD'
     end
@@ -919,12 +967,22 @@ object dmGestion: TdmGestion
       Size = 25
       Lookup = True
     end
-    object agrgtfldMDMovimientosRangedAGGSubTotal: TAggregateField
-      FieldName = 'AGGSubTotal'
-      Active = True
-      currency = True
-      DisplayName = ''
-      Expression = 'SUM(PRECIO_UNITARIO * CANTIDAD)'
+    object fltfldMDMovimientosRangedlookupIVA: TFloatField
+      DefaultExpression = '0'
+      FieldKind = fkLookup
+      FieldName = 'lookupIVA'
+      LookupDataSet = fdqryArticulos
+      LookupKeyFields = 'CODIGO'
+      LookupResultField = 'IVA'
+      KeyFields = 'FK_COD_ART'
+      DisplayFormat = '##0.00 %'
+      Lookup = True
+    end
+    object crncyfldMDMovimientosRangedcalIVA: TCurrencyField
+      DefaultExpression = '0'
+      FieldKind = fkCalculated
+      FieldName = 'calIVA'
+      Calculated = True
     end
   end
   object dsMDVentasRanged: TDataSource
@@ -967,7 +1025,6 @@ object dmGestion: TdmGestion
     end
   end
   object fdqryPuntos_venta: TFDQuery
-    Active = True
     Connection = GestionConnection
     UpdateOptions.AssignedValues = [uvGeneratorName]
     UpdateOptions.GeneratorName = 'GEN_PUNTO_VENTA'

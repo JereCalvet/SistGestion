@@ -19,7 +19,7 @@ inherited frmDialogoArticulos: TfrmDialogoArticulos
     Top = 57
     Width = 714
     Height = 353
-    ActivePage = tsStock
+    ActivePage = tsValores
     MultiLine = True
     TabOrder = 1
     object tsGeneral: TTabSheet
@@ -30,10 +30,6 @@ inherited frmDialogoArticulos: TfrmDialogoArticulos
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lblCodigo: TLabel
         Left = 549
         Top = 16
@@ -104,10 +100,6 @@ inherited frmDialogoArticulos: TfrmDialogoArticulos
     object tsValores: TTabSheet
       Caption = 'Valores'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlCosto: TPanel
         Left = 0
         Top = 0
@@ -180,7 +172,9 @@ inherited frmDialogoArticulos: TfrmDialogoArticulos
           Top = 36
           Width = 209
           Height = 21
+          ItemIndex = 0
           TabOrder = 1
+          Text = 'Sin IVA: 0%'
           Items.Strings = (
             'Sin IVA: 0%'
             'IVA Tasa normal: 21%'
@@ -280,10 +274,6 @@ inherited frmDialogoArticulos: TfrmDialogoArticulos
     object tsStock: TTabSheet
       Caption = 'Stock'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlDeposito: TPanel
         Left = 0
         Top = 77
@@ -291,9 +281,6 @@ inherited frmDialogoArticulos: TfrmDialogoArticulos
         Height = 248
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = -16
-        ExplicitTop = 18
-        ExplicitHeight = 232
         object lblDeposito: TLabel
           Left = 30
           Top = 60
@@ -359,7 +346,6 @@ inherited frmDialogoArticulos: TfrmDialogoArticulos
         Height = 77
         Align = alTop
         TabOrder = 1
-        ExplicitTop = 248
         object lblID_PROVEEDOR: TLabel
           Left = 584
           Top = 14

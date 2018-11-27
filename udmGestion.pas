@@ -8,7 +8,7 @@ uses
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, FireDAC.UI.Intf, FireDAC.Stan.Def,
   FireDAC.Stan.Pool, FireDAC.Phys, FireDAC.Phys.FB, FireDAC.Phys.FBDef,
-  FireDAC.VCLUI.Wait, FireDAC.Phys.IBBase, FireDAC.Comp.UI, System.IniFiles, System.IOUtils, Vcl.Themes;
+  FireDAC.VCLUI.Wait, FireDAC.Phys.IBBase, FireDAC.Comp.UI, System.IniFiles, System.IOUtils, Vcl.Themes, System.Variants;
 
 type
   TdmGestion = class(TDataModule)
@@ -104,7 +104,6 @@ type
     intgrfldMetpago_VentasFK_IDMETPAGO: TIntegerField;
     strngfldMetpago_VentasFK_NRO_FACTURA_V: TStringField;
     bcdfldMetpago_VentasMONTO: TBCDField;
-    strngfldMetpago_VentaslookupMetPag: TStringField;
     crncyfldArticulosIVA: TCurrencyField;
     fdqryStock: TFDQuery;
     strngfldStockFK_CODIGO: TStringField;
@@ -148,8 +147,15 @@ type
     strngfldPuntos_ventaDATOS_IMP: TStringField;
     intgrfldPuntos_ventaFK_IDCAJA: TIntegerField;
     intgrfldPuntos_ventaFK_IDSUCURSAL: TIntegerField;
-    agrgtfldMDMovimientosRangedAGGSubTotal: TAggregateField;
     intgrfldMDVentasRangedlookupIdPV: TIntegerField;
+    fltfldMDMovimientosRangedlookupIVA: TFloatField;
+    crncyfldMDMovimientosRangedcalIVA: TCurrencyField;
+    fltfldMDVentasRangedCalTotal: TFloatField;
+    smlntfldMetpago_VentasCUOTAS: TSmallintField;
+    crncyfldMetpago_VentasMontoFinal: TCurrencyField;
+    strngfldMetpago_VentaslookupTipo: TStringField;
+    strngfldMetpago_VentaslookupNombre: TStringField;
+    crncyfldMetpago_VentasCOEF_HISTORICO: TCurrencyField;
     procedure fdqryClientesCalcFields(DataSet: TDataSet);
     procedure fdqryArticulosNewRecord(DataSet: TDataSet);
     procedure fdqryArticulosBeforePost(DataSet: TDataSet);
@@ -184,6 +190,9 @@ type
     procedure strngfldMDMovimientosRANGEDFK_COD_ARTChange(Sender: TField);
     procedure fdqryMDMovimientosRangedAfterPost(DataSet: TDataSet);
     procedure fdqryMDMovimientosRangedAfterDelete(DataSet: TDataSet);
+    procedure fdqryMDVentasRangedCalcFields(DataSet: TDataSet);
+    procedure fdqryMetpago_VentasCalcFields(DataSet: TDataSet);
+    procedure fdqryMetpago_VentasBeforePost(DataSet: TDataSet);
   private
     { Private declarations }
   public
@@ -195,6 +204,9 @@ var
   dmGestion: TdmGestion;
 
 implementation
+
+uses
+  uDialogoFacturaVenta, uDialogoVentaMultiplesMetPag;
 
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
@@ -299,36 +311,33 @@ begin
 end;
 
 procedure TdmGestion.fdqryMDMovimientosRangedAfterDelete(DataSet: TDataSet);
-begin
-   //uso este evento y movimientos after post para mantener actualizado el campo subtotal
-  fdqryMDVentasRanged.Edit;
-  fdqryMDVentasRanged.FieldByName('SUBTOTAL').Value := fdqryMDMovimientosRanged.FieldByName('AGGSubTotal').Value;
-  fdqryMDVentasRanged.Post;
+begin      // mantiene actualizado el campo subtotal
+  frmDialogoFacturaVenta.CalculoSubtotal;
 end;
 
 procedure TdmGestion.fdqryMDMovimientosRangedAfterPost(DataSet: TDataSet);
-begin     //uso este evento y movimientos after delete para mantener actualizado el campo subtotal
-  fdqryMDVentasRanged.Edit;
-  fdqryMDVentasRanged.FieldByName('SUBTOTAL').Value := fdqryMDMovimientosRanged.FieldByName('AGGSubTotal').Value;
-  fdqryMDVentasRanged.Post;
+begin     // mantiene actualizado el campo subtotal
+   frmDialogoFacturaVenta.CalculoSubtotal;
 end;
 
 procedure TdmGestion.fdqryMDMovimientosRangedBeforeInsert(DataSet: TDataSet); //postea factura para que tenga id (-1 temporal) y se pueda vincular la tabla detalle
 begin
   if (fdqryMDVentasRANGED.State = dsInsert) then
-     begin
-        //fdqryPuntos_venta.First;
-        //fdqryMDVentasRanged.FieldByName('FK_IDPUNTO_VENTA').Value := fdqryPuntos_venta.FieldByName('IDPUNTOVENTA').Value;
-        fdqryMDVentasRANGED.Post;
-     end;
+      fdqryMDVentasRANGED.Post;
 end;
 
 procedure TdmGestion.fdqryMDMovimientosRangedCalcFields(DataSet: TDataSet);   //calcula precio unitario * cantidad y me da importe
-begin
+begin                                                                         // tmb calcula iva
   with fdqryMDMovimientosRanged do
     begin
       if not(FieldByName('PRECIO_UNITARIO').IsNull) and not(FieldByName('CANTIDAD').IsNull) then
-          FieldByName('Importe').Value := FieldByName('PRECIO_UNITARIO').Value * FieldByName('CANTIDAD').Value;
+         if FieldByName('lookupIVA').IsNull then
+            FieldByName('Importe').Value := FieldByName('PRECIO_UNITARIO').Value * FieldByName('CANTIDAD').Value
+         else
+            begin
+              FieldByName('Importe').Value := ((FieldByName('lookupIVA').Value/100)+1)*(FieldByName('PRECIO_UNITARIO').Value * FieldByName('CANTIDAD').Value);
+              FieldByName('calIVA').Value := (FieldByName('lookupIVA').Value/100)*(FieldByName('PRECIO_UNITARIO').Value * FieldByName('CANTIDAD').Value);
+            end;
     end;
 end;
 
@@ -338,6 +347,11 @@ procedure TdmGestion.fdqryMDPlanPagoReconcileError(DataSet: TFDDataSet;
 begin
    ApplicationShowException(e);
    Abort;
+end;
+
+procedure TdmGestion.fdqryMDVentasRangedCalcFields(DataSet: TDataSet);
+begin
+  frmDialogoFacturaVenta.AplicoDescRecar; //resultado en campo calculado "CALTOTAL"
 end;
 
 procedure TdmGestion.fdqryMDVentasRangedNewRecord(DataSet: TDataSet); //nro factura temporal
@@ -359,6 +373,16 @@ procedure TdmGestion.fdqryMetodos_pagoReconcileError(DataSet: TFDDataSet;
 begin
    ApplicationShowException(e);
    Abort;
+end;
+
+procedure TdmGestion.fdqryMetpago_VentasBeforePost(DataSet: TDataSet);
+begin
+  fdqryMetpago_ventas.FieldByName('FK_NRO_FACTURA_V').Value := fdqryMDVentasRanged.FieldByName('NRO_FACTURA').Value;
+end;
+
+procedure TdmGestion.fdqryMetpago_VentasCalcFields(DataSet: TDataSet);
+begin
+  frmDialogoVentaMultiplesMetPag.AplicoCoeficiente;
 end;
 
 procedure TdmGestion.fdqryPlanes_pagoReconcileError(DataSet: TFDDataSet;

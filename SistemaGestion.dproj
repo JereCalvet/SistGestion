@@ -255,6 +255,10 @@
             <Form>frmBusquedaArticulo</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Gestion\uDialogoVentaMultiplesMetPag.pas">
+            <Form>frmDialogoVentaMultiplesMetPag</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="SistemaGestion.todo"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

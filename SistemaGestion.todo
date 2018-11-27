@@ -1,3 +1,6 @@
+{TODO : validar input (verificar descuento y recargo <> 0)
+
+frmfacturaventa-> procedure aplicoDescRecar}
 {TODO : tool bar subtitulo en grilla plan pago con aviso "los cambios de aplican automaticamente"}
 {TODO :leer skin defecto de DB (configuracion-apariencia)}
 {TODO : grup_opc ordenar opciones por agrupa}

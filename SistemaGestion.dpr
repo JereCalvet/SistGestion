@@ -42,7 +42,8 @@ uses
   uBusquedaCliente in 'Gestion\uBusquedaCliente.pas' {frmBusquedaCliente},
   uGrillaTipoComp in 'Gestion\uGrillaTipoComp.pas' {frmGrillaTipoComp},
   uDialogoTipoComp in 'Gestion\uDialogoTipoComp.pas' {frmDialogoTipoComp},
-  uBusquedaArticulo in 'Gestion\uBusquedaArticulo.pas' {frmBusquedaArticulo};
+  uBusquedaArticulo in 'Gestion\uBusquedaArticulo.pas' {frmBusquedaArticulo},
+  uDialogoVentaMultiplesMetPag in 'Gestion\uDialogoVentaMultiplesMetPag.pas' {frmDialogoVentaMultiplesMetPag};
 
 {$R *.res}
 
