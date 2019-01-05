@@ -338,6 +338,7 @@ object dmGestion: TdmGestion
       end>
   end
   object fdqryMetodos_pago: TFDQuery
+    Active = True
     OnReconcileError = fdqryMetodos_pagoReconcileError
     Connection = GestionConnection
     UpdateOptions.AssignedValues = [uvGeneratorName]
@@ -782,7 +783,9 @@ object dmGestion: TdmGestion
     Connection = GestionConnection
     SchemaAdapter = fdschmdptrVentasRanged
     SQL.Strings = (
-      'SELECT * FROM {id VENTAS}')
+      'SELECT * FROM {id VENTAS}'
+      'ORDER BY FECHA DESCENDING'
+      '')
     Left = 502
     Top = 309
     object strngfldMDVentasRANGEDNRO_FACTURA: TStringField

@@ -82,6 +82,7 @@ inherited frmDialogoVentaMultiplesMetPag: TfrmDialogoVentaMultiplesMetPag
       item
         Expanded = False
         FieldName = 'MONTO'
+        Width = 64
         Visible = True
       end
       item
@@ -355,10 +356,15 @@ inherited frmDialogoVentaMultiplesMetPag: TfrmDialogoVentaMultiplesMetPag
       object lblTotalPagado: TLabel
         Left = 15
         Top = 0
-        Width = 67
+        Width = 74
         Height = 13
+        Hint = 
+          'Referencia: '#13#10'*Azul: Esta justo'#13#10'*Rojo: Falta dinero'#13#10'*Verde: So' +
+          'bra dinero '
         Alignment = taRightJustify
-        Caption = 'Total pagado:'
+        Caption = 'Total asignado:'
+        ParentShowHint = False
+        ShowHint = True
       end
       object dbtxtTotalPagado: TDBText
         Left = 120
@@ -384,10 +390,10 @@ inherited frmDialogoVentaMultiplesMetPag: TfrmDialogoVentaMultiplesMetPag
       object lblTotalFinanciado: TLabel
         Left = 15
         Top = 0
-        Width = 82
+        Width = 44
         Height = 13
         Alignment = taRightJustify
-        Caption = 'Total Financiado:'
+        Caption = 'Tarjetas:'
       end
       object dbtxtTotalFinanciado: TDBText
         Left = 120
@@ -399,33 +405,6 @@ inherited frmDialogoVentaMultiplesMetPag: TfrmDialogoVentaMultiplesMetPag
         DataSource = dsMetpag_Ventas
       end
     end
-  end
-  object btn1: TButton
-    Left = 78
-    Top = 226
-    Width = 75
-    Height = 25
-    Caption = 'CalTotal'
-    TabOrder = 7
-    OnClick = btn1Click
-  end
-  object btn2: TButton
-    Left = 78
-    Top = 294
-    Width = 75
-    Height = 25
-    Caption = 'Total Financiado'
-    TabOrder = 8
-    OnClick = btn2Click
-  end
-  object btn3: TButton
-    Left = 78
-    Top = 263
-    Width = 75
-    Height = 25
-    Caption = 'Total Pagado'
-    TabOrder = 9
-    OnClick = btn3Click
   end
   object dsVentas: TDataSource
     DataSet = dmGestion.fdqryMDVentasRanged

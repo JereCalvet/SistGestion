@@ -63,7 +63,6 @@ type
     dsCliente: TDataSource;
     dblkcbbMet_Pago: TDBLookupComboBox;
     grdpnlMet_Pago: TGridPanel;
-    imgAgregar: TImage;
     grdpnlTipoComp: TGridPanel;
     lblTipoComp: TLabel;
     dblkcbblookupNomTipoCompr: TDBLookupComboBox;
@@ -84,6 +83,7 @@ type
     dsMetPag_Venta: TDataSource;
     ilMetPag: TImageList;
     dsPlanesPago: TDataSource;
+    imgAgregar: TImage;
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure dbedtClienteKeyPress(Sender: TObject; var Key: Char);
@@ -100,13 +100,15 @@ type
     procedure cxdbcrncydtRecargoKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure imgAgregarClick(Sender: TObject);
+    procedure dsMetPag_VentaDataChange(Sender: TObject; Field: TField);
+   // procedure imgAgregarClick(Sender: TObject);
   private
     { Private declarations }
     procedure PreparoGUI;
+    procedure ActualizoImgAgregarMetPagGUI;
   public
     { Public declarations }
     procedure CalculoSubtotal;
-    procedure AplicoDescRecar;
   end;
 
 var
@@ -120,29 +122,25 @@ uses
 {$R *.dfm}
 
 
-procedure TfrmDialogoFacturaVenta.AplicoDescRecar;
-var
-temp:Double;
+
+
+procedure TfrmDialogoFacturaVenta.ActualizoImgAgregarMetPagGUI;     //llamo este procedimiento cuando muestro el form y cuando actualizo los met de pago
 begin
   with dmGestion do
-    begin
-      if fdqryMDVentasRanged.FieldByName('DESCUENTO').Value  > fdqryMDVentasRanged.FieldByName('RECARGO').Value then      // si el descuento es mayor que el recargo, resto y descuento la diferencia
-        begin
-          temp := fdqryMDVentasRanged.FieldByName('DESCUENTO').Value - fdqryMDVentasRanged.FieldByName('RECARGO').Value;  //obtengo el % a descontar
-          temp := (fdqryMDVentasRanged.FieldByName('SUBTOTAL').Value *(-1))*((temp/100)-1);                               //aplico el descuento
-          temp := RoundTo(temp,-2);                                                                                       //redondeo a 2 decimales
-          fdqryMDVentasRanged.FieldByName('CALTOTAL').Value := temp;                                                      //guardo en un campo calculado
-        end;
-      if fdqryMDVentasRanged.FieldByName('DESCUENTO').Value  < fdqryMDVentasRanged.FieldByName('RECARGO').Value then     // si el recargo es mayor que el descuento, resto y recargo la diferencia
-        begin
-          temp := fdqryMDVentasRanged.FieldByName('RECARGO').Value - fdqryMDVentasRanged.FieldByName('DESCUENTO').Value;  //obtengo el % de recargo
-          temp := fdqryMDVentasRanged.FieldByName('SUBTOTAL').Value *((temp/100)+1);                                      //aplico el recargo
-          temp := RoundTo(temp,-2);                                                                                       //redondeo a 2 decimales
-          fdqryMDVentasRanged.FieldByName('CALTOTAL').Value := temp;                                                      //guardo en un campo calculado
-        end;
-      if (fdqryMDVentasRanged.FieldByName('DESCUENTO').Value = fdqryMDVentasRanged.FieldByName('RECARGO').Value) then  //si descuento y recargo son iguales. dejo el subtotal
-         fdqryMDVentasRanged.FieldByName('CALTOTAL').Value :=  fdqryMDVentasRanged.FieldByName('SUBTOTAL').Value;
-    end;
+    if fdqryMetpago_Ventas.RecordCount > 1 then   //cambio la interfaz dependiendo de la cant de metodos de pago
+      begin
+        dblkcbbMet_Pago.KeyValue := Null;        //deshabilito el combobox met pag
+        dblkcbbMet_Pago.Enabled := False;
+        imgAgregar.Picture := nil;
+        ilMetPag.GetBitmap( 1, imgAgregar.Picture.Bitmap);     //cambio el icono a una lista
+      end
+    else
+      begin
+        dblkcbbMet_Pago.Enabled := True;       //habilito el combobox metpag
+        imgAgregar.Picture := nil;
+        ilMetPag.GetBitmap( 0, imgAgregar.Picture.Bitmap);     // cambio el icono a un mas
+        dblkcbbMet_Pago.KeyValue := fdqryMetpago_Ventas.FieldByName('FK_IDMETPAGO').Value;
+      end;
 end;
 
 procedure TfrmDialogoFacturaVenta.btnAceptarClick(Sender: TObject);
@@ -177,22 +175,23 @@ begin
                fdqryMDVentasRanged.FieldByName('TOTAL').Value := fdqryMDVentasRanged.FieldByName('CALTOTAL').Value;
                fdqryMDVentasRANGED.Post;
 
-               //si rec count <= 1 sino saltear
-               fdqryMetpago_Ventas.Insert;
-               fdqryMetpago_Ventas.FieldByName('FK_IDMETPAGO').Value := fdqryMetodos_pago.FieldByName('IDMETODO_PAGO').Value;
-               fdqryMetpago_Ventas.FieldByName('FK_NRO_FACTURA_V').Value := fdqryMDVentasRANGED.FieldByName('NRO_FACTURA').Value;
-               fdqryMetpago_Ventas.FieldByName('MONTO').Value := fdqryMDVentasRanged.FieldByName('TOTAL').Value;
-               fdqryMetpago_Ventas.Post;
+//               //si rec count <= 1 sino saltear
+//               fdqryMetpago_Ventas.Insert;
+//               fdqryMetpago_Ventas.FieldByName('FK_IDMETPAGO').Value := fdqryMetodos_pago.FieldByName('IDMETODO_PAGO').Value;
+//               fdqryMetpago_Ventas.FieldByName('FK_NRO_FACTURA_V').Value := fdqryMDVentasRANGED.FieldByName('NRO_FACTURA').Value;
+//               fdqryMetpago_Ventas.FieldByName('MONTO').Value := fdqryMDVentasRanged.FieldByName('TOTAL').Value;
+//               fdqryMetpago_Ventas.Post;
              end
           else
              begin
-               fdqryMDVentasRANGED.Edit;
-               //guardar los cambios en met de pago
-               fdqryMDVentasRanged.FieldByName('TOTAL').Value := fdqryMDVentasRanged.FieldByName('CALTOTAL').Value;  //si estoy editando, tambien guardo el total
-               fdqryMDVentasRANGED.Post;
+//               fdqryMDVentasRANGED.Edit;
+//               //guardar los cambios en met de pago
+//               fdqryMDVentasRanged.FieldByName('TOTAL').Value := fdqryMDVentasRanged.FieldByName('CALTOTAL').Value;  //si estoy editando, tambien guardo el total
+//               fdqryMDVentasRANGED.Post;
              end;
 
-          fdqryMetpago_Ventas.ApplyUpdates(0);
+          //fdqryMetpago_Ventas.ApplyUpdates(0);
+          //fdqryMetpago_Ventas.CommitUpdates;
           fdschmdptrVentasRanged.ApplyUpdates(0);
           fdschmdptrVentasRanged.CommitUpdates;
           GestionConnection.Commit;
@@ -210,6 +209,7 @@ procedure TfrmDialogoFacturaVenta.btnCancelarClick(Sender: TObject);
 begin
   inherited;
   dsDetalleMovimiento.DataSet.Cancel;
+  dmGestion.fdqryMetpago_Ventas.CancelUpdates;
   dmGestion.fdschmdptrVentasRanged.CancelUpdates;
   Close;
 end;
@@ -327,6 +327,13 @@ begin
   end;
 end;
 
+procedure TfrmDialogoFacturaVenta.dsMetPag_VentaDataChange(Sender: TObject;
+  Field: TField);
+begin
+  inherited;
+  ActualizoImgAgregarMetPagGUI;
+end;
+
 procedure TfrmDialogoFacturaVenta.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
@@ -399,7 +406,6 @@ begin
        dsDeposito.DataSet.Open;
        dsMetPag_Venta.DataSet.Open;
 
-
       if dsMaestroVenta.DataSet.State = dsInsert then      //Preparo valores defecto de la factura (cuando estoy insertando)
          begin
            fdqryMDVentasRanged.FieldByName('Fecha').Value := Now;  // Muestro por defecto la fecha de hoy
@@ -427,20 +433,7 @@ begin
       if dsMaestroVenta.DataSet.State = dsEdit then
          begin
            dblkcbblookupDeposito.KeyValue := fdqryMDMovimientosRanged.FieldByName('FK_NUM_DEPOSITO').Value; //posiciono el lookup deposito con el valor de deposito en la tabla detalles
-           if fdqryMetpago_Ventas.RecordCount > 1 then   //cambio la interfaz dependiendo de la cant de metodos de pago
-              begin
-                dblkcbbMet_Pago.KeyValue := Null;        //deshabilito el combobox met pag
-                dblkcbbMet_Pago.Enabled := False;
-                imgAgregar.Picture := nil;
-                ilMetPag.GetBitmap( 1, imgAgregar.Picture.Bitmap);     //cambio el icono a una lista
-              end
-           else
-              begin
-                dblkcbbMet_Pago.Enabled := True;       //habilito el combobox metpag
-                imgAgregar.Picture := nil;
-                ilMetPag.GetBitmap( 0, imgAgregar.Picture.Bitmap);     // cambio el icono a un mas
-                dblkcbbMet_Pago.KeyValue := fdqryMetpago_Ventas.FieldByName('FK_IDMETPAGO').Value;
-              end;
+           ActualizoImgAgregarMetPagGUI;
          end;
     end;
 end;

@@ -21,7 +21,7 @@ uses
   dxSkinValentine, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
   dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, Data.DB, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, cxTextEdit,
-  cxCurrencyEdit, Vcl.DBCtrls, Vcl.Buttons, cxDBEdit, Vcl.ExtCtrls;
+  cxCurrencyEdit, Vcl.DBCtrls, Vcl.Buttons, cxDBEdit, Vcl.ExtCtrls, System.Math;
 
 type
   TfrmDialogoVentaMultiplesMetPag = class(TfrmPlantillaGenerica)
@@ -47,9 +47,6 @@ type
     dbtxtTotalPagado: TDBText;
     lblTotalFinanciado: TLabel;
     dbtxtTotalFinanciado: TDBText;
-    btn1: TButton;
-    btn2: TButton;
-    btn3: TButton;
     procedure cxCurrencyEditMontoKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure dbgrd1KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -59,15 +56,11 @@ type
     procedure btnCancelarClick(Sender: TObject);
     procedure btnAceptarClick(Sender: TObject);
     procedure dsMetpag_VentasDataChange(Sender: TObject; Field: TField);
-    procedure btn1Click(Sender: TObject);
-    procedure btn3Click(Sender: TObject);
-    procedure btn2Click(Sender: TObject);
   private
     { Private declarations }
     procedure IngresoPagoYLimpioGUI (idMetPag, Cuotas: Integer; Monto: Currency);
     procedure CalculoyMantengoDiferencia;
   public
-    procedure AplicoCoeficiente;
     { Public declarations }
   end;
 
@@ -81,42 +74,12 @@ uses
 
 {$R *.dfm}
 
-procedure TfrmDialogoVentaMultiplesMetPag.AplicoCoeficiente;    //busco el coeficiente dependiendo de la tarjeta y la cantidad de cuotas; Calcula el costo final
-begin                                                           //el procedimiento lo llmano en fdqryMetpago_VentasCalcFields
-  with dmGestion do
-    begin
-      if (fdqryMetpago_Ventas.FieldByName('lookupTIPO').Value = 'C') and (fdqryMetpago_Ventas.FieldByName('CUOTAS').Value > 1) then
-         if fdqryPlanes_pago.Locate('NROCUOTA; FK_IDMETODOPAGO', VarArrayOf([fdqryMetpago_Ventas.FieldByName('CUOTAS').Value, fdqryMetpago_Ventas.FieldByName('FK_IDMETPAGO').Value]), []) then
-            fdqryMetpago_Ventas.FieldByName('MONTOFINAL').Value := fdqryMetpago_Ventas.FieldByName('MONTO').Value * fdqryPlanes_pago.FieldByName('COEFICIENTE').Value
-         else
-            fdqryMetpago_Ventas.FieldByName('MONTOFINAL').Value := fdqryMetpago_Ventas.FieldByName('MONTO').Value
-      else
-        fdqryMetpago_Ventas.FieldByName('MONTOFINAL').Value := fdqryMetpago_Ventas.FieldByName('MONTO').Value;  // muestro un valor por defecto si no credito o es en 1 cuota
-    end;
-end;
 
-procedure TfrmDialogoVentaMultiplesMetPag.btn1Click(Sender: TObject);
-begin
-  inherited;
-  ShowMessage(FloatToStr(dmGestion.fdqryMDVentasRanged.FieldByName('CALTOTAL').Value));
-end;
-
-procedure TfrmDialogoVentaMultiplesMetPag.btn2Click(Sender: TObject);
-begin
-  inherited;
-  ShowMessage(FloatToStr(dmGestion.fdqryMetpago_Ventas.Aggregates.AggregateByName('SumMontoFinanciado').Value));
-end;
-
-procedure TfrmDialogoVentaMultiplesMetPag.btn3Click(Sender: TObject);
-begin
-  inherited;
-   ShowMessage(FloatToStr(dmGestion.fdqryMetpago_Ventas.Aggregates.AggregateByName('SumMonto').Value));
-end;
 
 procedure TfrmDialogoVentaMultiplesMetPag.btnAceptarClick(Sender: TObject);
 begin
   inherited;
-  dmGestion.fdqryMetpago_Ventas.ApplyUpdates(0);
+  //dmGestion.fdqryMetpago_Ventas.ApplyUpdates(0);
   Close;
 end;
 
@@ -146,44 +109,57 @@ end;
 procedure TfrmDialogoVentaMultiplesMetPag.btnCancelarClick(Sender: TObject);
 begin
   inherited;
-  dmGestion.fdqryMetpago_Ventas.CancelUpdates;
+  //dmGestion.fdqryMetpago_ventas.CancelUpdates;
   Close;
 end;
 
 procedure TfrmDialogoVentaMultiplesMetPag.CalculoyMantengoDiferencia;
 var
-Dif: double;
+Dif, temp: double;
 begin
   // este procedimiento mantiene el label que calcula la diferencia entre el subtotal a pagar y la sumatoria de los metodos de pagos (sin costos de financiamiento)
   if dsMetpag_Ventas.State <> dsInsert then
     with dmGestion do
       begin
          if VarIsNull(fdqryMetpago_Ventas.Aggregates.AggregateByName('SumMontoFinanciado').Value) then     //si no se ingreso ningun monto de pago muestra 0 en el label "Total Financiado"
-            dbtxtTotalFinanciado.Caption := '$ 0'
-         else
-            dbtxtTotalFinanciado.Caption := FloatToStrF(fdqryMetpago_Ventas.Aggregates.AggregateByName('SumMontoFinanciado').Value, ffCurrency, 20, 2);
-
-         if not (fdqryMetpago_Ventas.RecordCount > 0) or (fdqryMDVentasRanged.FieldByName('CALTOTAL').Value = fdqryMetpago_Ventas.Aggregates.AggregateByName('SumMonto').Value)then
-            begin  //si se ingreso algun met de pago y su monto OR el importe es = a lo pagado
-              dbtxtTotalPagado.Font.Color := clBlue;
-              dbtxtTotalPagado.Caption := '$ 0';
-            end
+            dbtxtTotalFinanciado.Caption := '$ 0,00'
          else
            begin
-             Dif := fdqryMDVentasRanged.FieldByName('CALTOTAL').Value - fdqryMetpago_Ventas.Aggregates.AggregateByName('SumMonto').Value;
-             if fdqryMDVentasRanged.FieldByName('CALTOTAL').Value > fdqryMetpago_Ventas.Aggregates.AggregateByName('SumMonto').Value then
-                begin
-                  dbtxtTotalPagado.Font.Color := clRed;   //si lo que hay que pagar es > a lo que se va pagando -> rojo (falta plata)
-                  Dif := Dif * -1;
-                  dbtxtTotalPagado.Caption := FloatToStrF(Dif, ffCurrency, 20, 2);
-                end;
-             if fdqryMDVentasRanged.FieldByName('CALTOTAL').Value < fdqryMetpago_Ventas.Aggregates.AggregateByName('SumMonto').Value then
-                begin
-                  dbtxtTotalPagado.Font.Color := clGreen; //si lo que hay que pagar es < a lo que se va pagando -> verde (sobra plata)
-                  Dif := Dif * -1;
-                  dbtxtTotalPagado.Caption := FloatToStrF(Dif, ffCurrency, 20, 2);
-                end;
+             temp := RoundTo(fdqryMetpago_Ventas.Aggregates.AggregateByName('SumMontoFinanciado').Value, -2);
+             dbtxtTotalFinanciado.Caption := FloatToStrF(temp, ffCurrency, 20, 2);
            end;
+
+
+         if not (fdqryMetpago_Ventas.RecordCount > 0) then     //si no se ingreso algun met de pago muestro lo que se debe
+            begin
+              Dif := fdqryMDVentasRanged.FieldByName('CALTOTAL').Value * -1;
+              dbtxtTotalPagado.Caption := FloatToStrF(Dif, ffCurrency, 20, 2);
+              if fdqryMDVentasRanged.FieldByName('CALTOTAL').Value <> 0 then   //si se ingresaron articulos (en rojo aparece $ -xx,xx)
+                 dbtxtTotalPagado.Font.Color := clRed
+              else                                                             //caso contrario (en azul $0,00)
+                 dbtxtTotalPagado.Font.Color := clBlue;
+            end
+         else
+            begin  //si se ingresaron metodos de pago
+              if fdqryMDVentasRanged.FieldByName('CALTOTAL').Value = fdqryMetpago_Ventas.Aggregates.AggregateByName('SumMonto').Value then
+                 begin   //si lo que se debe, con lo que se pago es igual
+                   dbtxtTotalPagado.Font.Color := clBlue;
+                   dbtxtTotalPagado.Caption := '$ 0,00';
+                 end;
+              Dif := fdqryMDVentasRanged.FieldByName('CALTOTAL').Value - fdqryMetpago_Ventas.Aggregates.AggregateByName('SumMonto').Value;
+              if fdqryMDVentasRanged.FieldByName('CALTOTAL').Value > fdqryMetpago_Ventas.Aggregates.AggregateByName('SumMonto').Value then
+                 begin
+                   dbtxtTotalPagado.Font.Color := clRed;   //si lo que hay que pagar es mayor a lo que se va pagando -> rojo (falta plata)
+                   Dif := Dif * -1;                        // multiplico *-1 para mostrar cuanto falta pagar con un signo menos adelante
+                   dbtxtTotalPagado.Caption := FloatToStrF(Dif, ffCurrency, 20, 2);
+                 end;
+              if fdqryMDVentasRanged.FieldByName('CALTOTAL').Value < fdqryMetpago_Ventas.Aggregates.AggregateByName('SumMonto').Value then
+                 begin
+                   dbtxtTotalPagado.Font.Color := clGreen; //si lo que hay que pagar es menor a lo que se va pagando -> verde (sobra plata)
+                   Dif := Dif * -1;                        //multiplico *-1 para mostrar lo que sobra en numeros positivos
+                   dbtxtTotalPagado.Caption := FloatToStrF(Dif, ffCurrency, 20, 2);
+                 end;
+            end;
       end;
 end;
 
@@ -223,8 +199,8 @@ begin
   inherited;
   with dmGestion do              // filtra tabla metpag_ventas segun Nro de Factura
     begin
-      fdqryMetpago_ventas.Close;
-      fdqryMetpago_ventas.Filtered := False;
+      //fdqryMetpago_ventas.Close;
+      //fdqryMetpago_ventas.Filtered := False;
       fdqryMetpago_ventas.Filter := 'FK_NRO_FACTURA_V = '+ QuotedStr(fdqryMDVentasRanged.FieldByName('NRO_FACTURA').Value);
       fdqryMetpago_ventas.Filtered := True;
       fdqryMetpago_ventas.Open;
@@ -258,7 +234,6 @@ begin
               fdqryMetpago_ventas.FieldByName('COEF_HISTORICO').Value := fdqryPlanes_pago.FieldByName('COEFICIENTE').Value
          end;
       fdqryMetpago_ventas.Post;
-      fdqryMetpago_Ventas.ApplyUpdates(0);
       dblkcbbMetPag.KeyValue := -1; //limpia combobox
       cxCurrencyEditMonto.Clear;   //limpia currency edt
     end;

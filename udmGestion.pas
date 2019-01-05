@@ -8,7 +8,7 @@ uses
   FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, FireDAC.UI.Intf, FireDAC.Stan.Def,
   FireDAC.Stan.Pool, FireDAC.Phys, FireDAC.Phys.FB, FireDAC.Phys.FBDef,
-  FireDAC.VCLUI.Wait, FireDAC.Phys.IBBase, FireDAC.Comp.UI, System.IniFiles, System.IOUtils, Vcl.Themes, System.Variants;
+  FireDAC.VCLUI.Wait, FireDAC.Phys.IBBase, FireDAC.Comp.UI, System.IniFiles, System.IOUtils, Vcl.Themes, System.Variants, System.Math;
 
 type
   TdmGestion = class(TDataModule)
@@ -328,7 +328,7 @@ end;
 
 procedure TdmGestion.fdqryMDMovimientosRangedCalcFields(DataSet: TDataSet);   //calcula precio unitario * cantidad y me da importe
 begin                                                                         // tmb calcula iva
-  with fdqryMDMovimientosRanged do
+  with fdqryMDMovimientosRanged do                                            // verifica que los valores no sean null y contempla el iva 0
     begin
       if not(FieldByName('PRECIO_UNITARIO').IsNull) and not(FieldByName('CANTIDAD').IsNull) then
          if FieldByName('lookupIVA').IsNull then
@@ -350,8 +350,26 @@ begin
 end;
 
 procedure TdmGestion.fdqryMDVentasRangedCalcFields(DataSet: TDataSet);
+var
+temp:Double;
 begin
-  frmDialogoFacturaVenta.AplicoDescRecar; //resultado en campo calculado "CALTOTAL"
+ // Aplico Descuento y  Recargos  -> resultado en campo calculado "CALTOTAL"
+  if fdqryMDVentasRanged.FieldByName('DESCUENTO').Value  > fdqryMDVentasRanged.FieldByName('RECARGO').Value then      // si el descuento es mayor que el recargo, resto y descuento la diferencia
+    begin
+      temp := fdqryMDVentasRanged.FieldByName('DESCUENTO').Value - fdqryMDVentasRanged.FieldByName('RECARGO').Value;  //obtengo el % a descontar
+      temp := (fdqryMDVentasRanged.FieldByName('SUBTOTAL').Value *(-1))*((temp/100)-1);                               //aplico el descuento
+      temp := RoundTo(temp,-2);                                                                                       //redondeo a 2 decimales
+      fdqryMDVentasRanged.FieldByName('CALTOTAL').Value := temp;                                                      //guardo en un campo calculado
+    end;
+  if fdqryMDVentasRanged.FieldByName('DESCUENTO').Value  < fdqryMDVentasRanged.FieldByName('RECARGO').Value then     // si el recargo es mayor que el descuento, resto y recargo la diferencia
+    begin
+      temp := fdqryMDVentasRanged.FieldByName('RECARGO').Value - fdqryMDVentasRanged.FieldByName('DESCUENTO').Value;  //obtengo el % de recargo
+      temp := fdqryMDVentasRanged.FieldByName('SUBTOTAL').Value *((temp/100)+1);                                      //aplico el recargo
+      temp := RoundTo(temp,-2);                                                                                       //redondeo a 2 decimales
+      fdqryMDVentasRanged.FieldByName('CALTOTAL').Value := temp;                                                      //guardo en un campo calculado
+    end;
+  if (fdqryMDVentasRanged.FieldByName('DESCUENTO').Value = fdqryMDVentasRanged.FieldByName('RECARGO').Value) then  //si descuento y recargo son iguales. dejo el subtotal
+     fdqryMDVentasRanged.FieldByName('CALTOTAL').Value :=  fdqryMDVentasRanged.FieldByName('SUBTOTAL').Value;
 end;
 
 procedure TdmGestion.fdqryMDVentasRangedNewRecord(DataSet: TDataSet); //nro factura temporal
@@ -382,7 +400,15 @@ end;
 
 procedure TdmGestion.fdqryMetpago_VentasCalcFields(DataSet: TDataSet);
 begin
-  frmDialogoVentaMultiplesMetPag.AplicoCoeficiente;
+   //Aplico Coeficientes
+   if (fdqryMetpago_Ventas.FieldByName('lookupTIPO').Value = 'C') and (fdqryMetpago_Ventas.FieldByName('CUOTAS').Value > 1) then
+      //aca un begin y verifique coeficiente historico sino que lo busque en plan de pago
+      if fdqryPlanes_pago.Locate('NROCUOTA; FK_IDMETODOPAGO', VarArrayOf([fdqryMetpago_Ventas.FieldByName('CUOTAS').Value, fdqryMetpago_Ventas.FieldByName('FK_IDMETPAGO').Value]), []) then
+         fdqryMetpago_Ventas.FieldByName('MONTOFINAL').Value := fdqryMetpago_Ventas.FieldByName('MONTO').Value * fdqryPlanes_pago.FieldByName('COEFICIENTE').Value
+      else
+         fdqryMetpago_Ventas.FieldByName('MONTOFINAL').Value := fdqryMetpago_Ventas.FieldByName('MONTO').Value
+   else
+      fdqryMetpago_Ventas.FieldByName('MONTOFINAL').Value := fdqryMetpago_Ventas.FieldByName('MONTO').Value;  // muestro un valor por defecto si no credito o es en 1 cuota
 end;
 
 procedure TdmGestion.fdqryPlanes_pagoReconcileError(DataSet: TFDDataSet;
