@@ -24,7 +24,7 @@ uses
   dxSkinXmas2008Blue, cxTextEdit, cxCurrencyEdit, cxDBEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.DBCtrls, Vcl.WinXCtrls, Vcl.Mask,
   dxGDIPlusClasses, cxSpinEdit, System.IniFiles, FireDAC.Stan.Param,
-  System.ImageList, Vcl.ImgList, System.Math;
+  System.ImageList, Vcl.ImgList, System.Math, Vcl.Clipbrd, Vcl.Menus;
 
 type
   TfrmDialogoFacturaVenta = class(TfrmPlantillaGenerica)
@@ -101,6 +101,10 @@ type
       Shift: TShiftState);
     procedure imgAgregarClick(Sender: TObject);
     procedure dsMetPag_VentaDataChange(Sender: TObject; Field: TField);
+    procedure cxdbcrncydtDescuentoExit(Sender: TObject);
+    procedure pnlRecargoExit(Sender: TObject);
+    procedure cxdbcrncydtRecargoExit(Sender: TObject);
+    procedure dbgrdDetalleExit(Sender: TObject);
    // procedure imgAgregarClick(Sender: TObject);
   private
     { Private declarations }
@@ -144,11 +148,49 @@ begin
 end;
 
 procedure TfrmDialogoFacturaVenta.btnAceptarClick(Sender: TObject);
+ var
+  temp : string;
+  NumCuotas: integer;
 begin
   inherited;
   //funcion chequar datos: boolean (verifique input y situacion deposito sucursal pv
   with dmGestion do
     begin
+       //-------------------------------funciones para verificar input--------------------------------------//
+       if (fdqryMetpago_Ventas.RecordCount = 0) and (dblkcbbMet_Pago.KeyValue = Null)  then    //verifica que se haya ingresado algun metodo de pago
+          raise Exception.Create('No se ingresaron métodos de pago');
+       if dblkcbblookupDeposito.KeyValue = Null then    //verifica que se haya ingresado algun metodo de pago
+          raise Exception.Create('Seleccione un deposito');
+
+        //--------------------------------------------------------------------------------------------------//
+
+       if (fdqryMetpago_Ventas.RecordCount = 0) and (dblkcbbMet_Pago.KeyValue <> Null)  then    //un solo met pag
+          if fdqryMetodos_pago.FieldByName('TIPO').Value = 'C' then                 //verifica si es tarjeta de credito
+             begin
+               temp := InputBox('Ingrese la cantidad de cuotas','Número de cuotas: ', NullAsStringValue);  //muestro un dialogo para ingresar la cant de cuotas
+               if (temp <> '') and (TryStrToInt(temp, NumCuotas)) and not (NumCuotas > 120) and (NumCuotas >= 1) then   //si el dialogo tiene algo, es entero, no es mayor de 120 y es mayor igual que 1
+                  begin
+                    fdqryMetpago_ventas.Insert;
+                    fdqryMetpago_ventas.FieldByName('FK_IDMETPAGO').Value := fdqryMetodos_pago.FieldByName('IDMETODO_PAGO').Value;
+                    fdqryMetpago_ventas.FieldByName('MONTO').Value := fdqryMDVentasRanged.FieldByName('CALTOTAL').Value;
+                    if NumCuotas > 1 then
+                       begin
+                         fdqryMetpago_ventas.FieldByName('CUOTAS').Value := NumCuotas;
+                         if fdqryPlanes_pago.Locate('NROCUOTA; FK_IDMETODOPAGO', VarArrayOf([fdqryMetpago_Ventas.FieldByName('CUOTAS').Value, fdqryMetpago_Ventas.FieldByName('FK_IDMETPAGO').Value]), []) then
+                            fdqryMetpago_ventas.FieldByName('COEF_HISTORICO').Value := fdqryPlanes_pago.FieldByName('COEFICIENTE').Value;
+                       end;
+                    fdqryMetpago_ventas.Post;
+                    //probar el mensaje de continuar aca
+                  end
+               else
+                  begin
+                    Beep;
+                    Abort;
+                  end;
+             end;
+
+
+        //-------------------------------Facturacion--------------------------------------//
        GestionConnection.StartTransaction;
        try
           //antes de editar mov hago post en factura con nro_fact -1 (temporal)
@@ -175,12 +217,16 @@ begin
                fdqryMDVentasRanged.FieldByName('TOTAL').Value := fdqryMDVentasRanged.FieldByName('CALTOTAL').Value;
                fdqryMDVentasRANGED.Post;
 
-//               //si rec count <= 1 sino saltear
-//               fdqryMetpago_Ventas.Insert;
-//               fdqryMetpago_Ventas.FieldByName('FK_IDMETPAGO').Value := fdqryMetodos_pago.FieldByName('IDMETODO_PAGO').Value;
-//               fdqryMetpago_Ventas.FieldByName('FK_NRO_FACTURA_V').Value := fdqryMDVentasRANGED.FieldByName('NRO_FACTURA').Value;
-//               fdqryMetpago_Ventas.FieldByName('MONTO').Value := fdqryMDVentasRanged.FieldByName('TOTAL').Value;
-//               fdqryMetpago_Ventas.Post;
+               while not fdqryMetpago_Ventas.Eof do           //busca metodos de pago con nro de fact -1 (si el numero de factura es -1 es porque se esta realizando una factura nueva) y actualiza el valor
+                 begin
+                   fdqryMetpago_Ventas.First;
+                   if fdqryMetpago_Ventas.FieldByName('FK_NRO_FACTURA_V').Value = -1 then
+                      begin
+                        fdqryMetpago_Ventas.Edit;
+                        fdqryMetpago_Ventas.FieldByName('FK_NRO_FACTURA_V').Value := fdqryMDVentasRANGED.FieldByName('NRO_FACTURA').Value;
+                        fdqryMetpago_Ventas.Post;
+                      end;
+                 end;
              end
           else
              begin
@@ -190,12 +236,11 @@ begin
 //               fdqryMDVentasRANGED.Post;
              end;
 
-          //fdqryMetpago_Ventas.ApplyUpdates(0);
-          //fdqryMetpago_Ventas.CommitUpdates;
+          fdqryMetpago_Ventas.ApplyUpdates(0);
+          fdqryMetpago_Ventas.CommitUpdates;
           fdschmdptrVentasRanged.ApplyUpdates(0);
           fdschmdptrVentasRanged.CommitUpdates;
           GestionConnection.Commit;
-          //mensaje de exito en la operacion
           ShowMessage('Operacion exitosa');
           Close;
        except
@@ -242,12 +287,32 @@ begin                                               //(dmGestion - fdqryMDmoviem
     end;
 end;
 
+procedure TfrmDialogoFacturaVenta.cxdbcrncydtDescuentoExit(Sender: TObject);
+begin
+  inherited;
+  with dmGestion do
+    begin
+      if dsMaestroVenta.DataSet.FieldByName('DESCUENTO').IsNull then
+         dsMaestroVenta.DataSet.FieldByName('DESCUENTO').Value := 0;
+    end;
+end;
+
 procedure TfrmDialogoFacturaVenta.cxdbcrncydtDescuentoKeyDown(Sender: TObject;
   var Key: Word; Shift: TShiftState);
 begin
   inherited;
   if Key = VK_RETURN then   //despues del enter saca el cursor del edit (sino queda parpadeando)
      dbgrdDetalle.SetFocus;
+end;
+
+procedure TfrmDialogoFacturaVenta.cxdbcrncydtRecargoExit(Sender: TObject);
+begin
+  inherited;
+   with dmGestion do
+    begin
+      if dsMaestroVenta.DataSet.FieldByName('RECARGO').IsNull then
+         dsMaestroVenta.DataSet.FieldByName('RECARGO').Value := 0;
+    end;
 end;
 
 procedure TfrmDialogoFacturaVenta.cxdbcrncydtRecargoKeyDown(Sender: TObject;
@@ -269,31 +334,56 @@ begin
      end;
 end;
 
+procedure TfrmDialogoFacturaVenta.dbgrdDetalleExit(Sender: TObject);
+begin
+  inherited;
+  if dsDetalleMovimiento.DataSet.State in [dsInsert, dsEdit] then
+     dsDetalleMovimiento.DataSet.Post;
+
+end;
+
 procedure TfrmDialogoFacturaVenta.dbgrdDetalleKeyDown(Sender: TObject;
   var Key: Word; Shift: TShiftState);
 begin
   inherited;
+ {
+   ---ESTE CODIGO GENERA PROBLEMAS PARA VERIFICAR CON SET TEXT PORQUE AL CERRAR EL ERROR CON ENTER VUELVE A APARECER EL MSJ DE ERROR
+
   if Key = VK_RETURN then          //con enter postea en detalles
     if (dsDetalleMovimiento.State = dsInsert) or (dsDetalleMovimiento.State = dsEdit) then
-       dmGestion.fdqryMDMovimientosRanged.Post;
+       dmGestion.fdqryMDMovimientosRanged.Post; }
 
   if (Key = VK_DELETE) or (Key = 08) then   //con delete borra en detalles
     if (dbgrdDetalle.Columns.Items[dbgrdDetalle.SelectedIndex].Title.Caption = dmGestion.fdqryMDMovimientosRanged.FieldByName('NombreArt').DisplayLabel) then
-       dmGestion.fdqryMDMovimientosRanged.Delete;
+       if dmGestion.fdqryMDMovimientosRanged.RecordCount > 0 then
+          dmGestion.fdqryMDMovimientosRanged.Delete;
+  if ((ssCtrl in Shift) AND (Key = ord('V'))) or ((ssShift in Shift) and (Key = VK_INSERT)) then     //no se puede pegar
+     begin
+       if Clipboard.HasFormat(CF_TEXT) then
+          ClipBoard.Clear;
+       Key := 0;
+     end;
 end;
 
 procedure TfrmDialogoFacturaVenta.dbgrdDetalleKeyPress(Sender: TObject;
   var Key: Char);
 begin
   inherited;
+  //fila articulo invoca el otro form
   if (dbgrdDetalle.Columns.Items[dbgrdDetalle.SelectedIndex].Title.Caption = dmGestion.fdqryMDMovimientosRanged.FieldByName('NombreArt').DisplayLabel) then
      begin
        if not (CharInSet(Key,[#27, #08, #127])) then    //27= esc, 08= tecla borrar, 127=tecla delete
           begin
             Key := #0;
-            TfrmBusquedaArticulo.MostrarModal;
+            TfrmBusquedaArticulo.MostrarModal;         //buscar articulo
+            keybd_event(VK_ESCAPE, 0, 0, 0);           //evita un bug grafico del dbgrid
           end;
      end;
+
+   if (dbgrdDetalle.Columns.Items[dbgrdDetalle.SelectedIndex].Title.Caption = dmGestion.fdqryMDMovimientosRanged.FieldByName('PRECIO_UNITARIO').DisplayLabel) and (TDBGrid(Sender).DataSource.DataSet.State in [dsEdit, dsInsert]) then
+      TEdit(TDBGrid(Sender).Controls[0]).MaxLength := 15;
+
+
 end;
 
 procedure TfrmDialogoFacturaVenta.dblkcbblookupNomCompClienteKeyPress(
@@ -310,7 +400,7 @@ end;
 procedure TfrmDialogoFacturaVenta.dsMaestroVentaStateChange(Sender: TObject);
 begin
   inherited;
-  case dsMaestroVenta.DataSet.State of
+  case dsDetalleMovimiento.DataSet.State of
     dsInactive: lbl1.Caption := 'inactive' ;
     dsBrowse: lbl1.Caption := 'browse';
     dsEdit: lbl1.Caption := 'edit';
@@ -375,7 +465,19 @@ end;
 procedure TfrmDialogoFacturaVenta.imgAgregarClick(Sender: TObject);
 begin
   inherited;
+  if dsDetalleMovimiento.DataSet.State in [dsEdit, dsInsert] then
+     dsDetalleMovimiento.DataSet.Post;
   tfrmDialogoVentaMultiplesMetPag.MostrarModal;
+end;
+
+procedure TfrmDialogoFacturaVenta.pnlRecargoExit(Sender: TObject);
+begin
+  inherited;
+  with dmGestion do
+    begin
+      if dsMaestroVenta.DataSet.FieldByName('RECARGO').IsNull then
+         dsMaestroVenta.DataSet.FieldByName('RECARGO').Value := 0;
+    end;
 end;
 
 procedure TfrmDialogoFacturaVenta.PreparoGUI;

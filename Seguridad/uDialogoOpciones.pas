@@ -15,6 +15,8 @@ type
     dbedtNOMBRE: TDBEdit;
     lbl3: TLabel;
     dbedtAGRUPA: TDBEdit;
+    procedure dbedtID_OPCIONContextPopup(Sender: TObject; MousePos: TPoint;
+      var Handled: Boolean);
   private
     { Private declarations }
   public
@@ -30,5 +32,12 @@ uses
   udmSeguridad;
 
 {$R *.dfm}
+
+procedure TfrmDialogoOpciones.dbedtID_OPCIONContextPopup(Sender: TObject;
+  MousePos: TPoint; var Handled: Boolean);
+begin
+  inherited;
+  Handled := True;
+end;
 
 end.

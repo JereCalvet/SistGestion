@@ -14,8 +14,10 @@ type
     procedure srchbx1InvokeSearch(Sender: TObject);
     procedure srchbx1KeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure btnCancelarClick(Sender: TObject);
   private
     RegInicial: string;
+    Cancelar: Boolean;
     { Private declarations }
   public
     { Public declarations }
@@ -31,25 +33,50 @@ uses
 
 {$R *.dfm}
 
+procedure TfrmBusquedaArticulo.btnCancelarClick(Sender: TObject);
+begin
+  Cancelar := True;
+  inherited;
+end;
+
 procedure TfrmBusquedaArticulo.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
   inherited;
    with dmGestion do
      begin
-        if not(fdqryMDMovimientosRanged.State = dsEdit) or not(fdqryMDMovimientosRanged.State = dsInsert) then
-           fdqryMDMovimientosRanged.Edit;
-        if not (fdqryArticulos.IsEmpty) then
-             fdqryMDMovimientosRanged.FieldByName('FK_COD_ART').Value := fdqryArticulos.FieldByName('CODIGO').Value
+        if (Cancelar = True) or (fdqryArticulos.IsEmpty) then    //si se apreto cancelar o la lista de articulos esta vacia
+           fdqryArticulos.Locate('CODIGO', RegInicial, [])       //devuelve el puntero articulos a su posicion original   (ej: si estaba editando y habia art nombre: arroz-> Vuelve a arroz. si se estaba insertando y no habia articulo -> mas adelante lo cancela)
         else
-           fdqryArticulos.Locate('CODIGO', RegInicial, []);       //devuelve el puntero articulos a su posicion original
+          begin                                                  //se encontro el articulo a introducir en la factura
+             fdqryMDMovimientosRanged.Edit;
+             fdqryMDMovimientosRanged.FieldByName('FK_COD_ART').Value := fdqryArticulos.FieldByName('CODIGO').Value;
+             if fdqryMDMovimientosRanged.FieldByName('FK_COD_ART').Value <> Null then           // Evita que se posteen null
+                fdqryMDMovimientosRanged.Post
+          end;
         fdqryArticulos.Filtered := False;
+        fdqryArticulos.Filter := '';
      end;
+
+     {  ---  BACK-UP de codigo por las dudas, este funcionaba ---
+           fdqryMDMovimientosRanged.Edit;
+        if (Cancelar = True) or (fdqryArticulos.IsEmpty) then
+           fdqryArticulos.Locate('CODIGO', RegInicial, [])       //devuelve el puntero articulos a su posicion original
+        else
+           fdqryMDMovimientosRanged.FieldByName('FK_COD_ART').Value := fdqryArticulos.FieldByName('CODIGO').Value;
+        fdqryArticulos.Filtered := False;
+        if fdqryMDMovimientosRanged.FieldByName('FK_COD_ART').Value <> Null then
+           fdqryMDMovimientosRanged.Post
+        else
+           fdqryMDMovimientosRanged.Cancel;
+        fdqryArticulos.Filter := '';
+     }
 end;
 
 procedure TfrmBusquedaArticulo.FormShow(Sender: TObject);
 begin
   inherited;
+  Cancelar := False;
   lblTitulo.Caption := 'Artículos';
   RegInicial := dsBase.DataSet.FieldByName('CODIGO').Value;
 end;

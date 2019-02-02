@@ -1,5 +1,10 @@
 unit uDialogoVentaMultiplesMetPag;
-
+ {
+  Para mejorar y simplicar el codigo se puede implementar en un futuro el mismo sistema de maestro-detalle
+  que esta utilizando la tabla Ventas-Movimientos.
+  Principalmente se eliminaria el filtrado y la actualizacion del id_foraneo_N°_de_factura. Ademas el
+  procedimineto calculoymantengo diferencia podria ser un campo calculado
+ }
 interface
 
 uses
@@ -21,7 +26,10 @@ uses
   dxSkinValentine, dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
   dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, Data.DB, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, cxTextEdit,
-  cxCurrencyEdit, Vcl.DBCtrls, Vcl.Buttons, cxDBEdit, Vcl.ExtCtrls, System.Math;
+  cxCurrencyEdit, Vcl.DBCtrls, Vcl.Buttons, cxDBEdit, Vcl.ExtCtrls, System.Math,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.StorageBin, FireDAC.Comp.DataSet, FireDAC.Comp.Client;
 
 type
   TfrmDialogoVentaMultiplesMetPag = class(TfrmPlantillaGenerica)
@@ -47,19 +55,22 @@ type
     dbtxtTotalPagado: TDBText;
     lblTotalFinanciado: TLabel;
     dbtxtTotalFinanciado: TDBText;
+    fdmtblMetPagAux: TFDMemTable;
+    dsMetodosPagoAux: TDataSource;
     procedure cxCurrencyEditMontoKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure dbgrd1KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure dsVentasDataChange(Sender: TObject; Field: TField);
     procedure btnAgregarClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnCancelarClick(Sender: TObject);
     procedure btnAceptarClick(Sender: TObject);
     procedure dsMetpag_VentasDataChange(Sender: TObject; Field: TField);
+    procedure btn1Click(Sender: TObject);
   private
     { Private declarations }
     procedure IngresoPagoYLimpioGUI (idMetPag, Cuotas: Integer; Monto: Currency);
     procedure CalculoyMantengoDiferencia;
+    procedure FiltroMetodosPago;
   public
     { Public declarations }
   end;
@@ -76,10 +87,15 @@ uses
 
 
 
+procedure TfrmDialogoVentaMultiplesMetPag.btn1Click(Sender: TObject);
+begin
+  inherited;
+  FiltroMetodosPago;
+end;
+
 procedure TfrmDialogoVentaMultiplesMetPag.btnAceptarClick(Sender: TObject);
 begin
   inherited;
-  //dmGestion.fdqryMetpago_Ventas.ApplyUpdates(0);
   Close;
 end;
 
@@ -94,22 +110,19 @@ begin
         if dmGestion.fdqryMetodos_pago.FieldByName('TIPO').Value = 'C' then                 //verifica si es tarjeta de credito
            begin
              temp := InputBox('Ingrese la cantidad de cuotas','Número de cuotas: ', NullAsStringValue);  //muestro in dialogo para ingresar la cant de cuotas
-             if temp <> '' then                                                                          //si el dialogo tiene algo
-                begin
-                  if TryStrToInt(temp, NumCuotas) then                                                    //verifica que sea un numero
-                     IngresoPagoYLimpioGUI(dblkcbbMetPag.KeyValue, NumCuotas, cxCurrencyEditMonto.Value);
-                end
+             if (temp <> '') and (TryStrToInt(temp, NumCuotas)) and not (NumCuotas > 120) and (NumCuotas >= 1) then   //si el dialogo tiene algo, es entero, no es mayor de 120 y es mayor igual que 1
+                IngresoPagoYLimpioGUI(dblkcbbMetPag.KeyValue, NumCuotas, cxCurrencyEditMonto.Value)
              else
-                 Beep;
+                Beep;
            end
         else
-            IngresoPagoYLimpioGUI(dblkcbbMetPag.KeyValue, 0, cxCurrencyEditMonto.Value); //si no es credito paso 0 en numero de cuotas (el procedure lo ignora)
+          IngresoPagoYLimpioGUI(dblkcbbMetPag.KeyValue, 0, cxCurrencyEditMonto.Value); //si no es credito paso 0 en numero de cuotas (el procedure lo ignora)
 end;
 
 procedure TfrmDialogoVentaMultiplesMetPag.btnCancelarClick(Sender: TObject);
 begin
   inherited;
-  //dmGestion.fdqryMetpago_ventas.CancelUpdates;
+  dmGestion.fdqryMetpago_ventas.CancelUpdates;
   Close;
 end;
 
@@ -176,14 +189,14 @@ procedure TfrmDialogoVentaMultiplesMetPag.dbgrd1KeyDown(Sender: TObject;
 begin
   inherited;
   if (Key = VK_DELETE) or (Key = 08) then   //con delete en columna met pag -> borra
-  with dmGestion do
-    begin
+   with dmGestion do
       if (dbgrd1.Columns.Items[dbgrd1.SelectedIndex].Title.Caption = fdqryMetpago_ventas.FieldByName('lookupNombre').DisplayLabel) then
-       begin
-         fdqryMetpago_ventas.Delete;
-         keybd_event(VK_ESCAPE, 0, 0, 0);
-       end;
-    end;
+         if fdqryMetpago_Ventas.RecordCount > 0 then
+            begin
+              fdqryMetpago_ventas.Delete;
+              keybd_event(VK_ESCAPE, 0, 0, 0);
+              FiltroMetodosPago;
+            end;
 end;
 
 procedure TfrmDialogoVentaMultiplesMetPag.dsMetpag_VentasDataChange(
@@ -193,17 +206,37 @@ begin
   CalculoyMantengoDiferencia;
 end;
 
-procedure TfrmDialogoVentaMultiplesMetPag.dsVentasDataChange(Sender: TObject;
-  Field: TField);
+procedure TfrmDialogoVentaMultiplesMetPag.FiltroMetodosPago;
+{este procedimiento carga los metodos de pago y filtra la tabla auxiliar de memoria -> para mantener el combobox filtrado}
+var
+ GuardoPos : TBookmark;
+ Filtro: string;
 begin
-  inherited;
-  with dmGestion do              // filtra tabla metpag_ventas segun Nro de Factura
+  with dmGestion do
     begin
-      //fdqryMetpago_ventas.Close;
-      //fdqryMetpago_ventas.Filtered := False;
-      fdqryMetpago_ventas.Filter := 'FK_NRO_FACTURA_V = '+ QuotedStr(fdqryMDVentasRanged.FieldByName('NRO_FACTURA').Value);
-      fdqryMetpago_ventas.Filtered := True;
-      fdqryMetpago_ventas.Open;
+       GuardoPos := fdqryMetpago_Ventas.GetBookmark;
+       fdqryMetpago_Ventas.DisableControls;
+       Filtro := '';
+       try
+          fdqryMetpago_Ventas.First;
+          while not fdqryMetpago_Ventas.Eof do
+             begin
+                Filtro := Filtro + IntToStr(fdqryMetpago_Ventas.FieldByName('FK_IDMETPAGO').Value) + ', ';
+                fdqryMetpago_Ventas.Next;
+             end;
+       finally
+          fdqryMetpago_Ventas.GotoBookmark(GuardoPos);
+          fdqryMetpago_Ventas.EnableControls;
+          fdqryMetpago_Ventas.FreeBookmark(GuardoPos);
+       end;
+       fdmtblMetPagAux.CopyDataSet(dmGestion.fdqryMetodos_pago, [coStructure, coRestart, coAppend]); //carga la tabla de memoria
+       fdmtblMetPagAux.Filtered := False;
+       fdmtblMetPagAux.Filter := 'IDMETODO_PAGO not IN ('+ Filtro +')';
+       if Filtro = '' then
+          fdmtblMetPagAux.Filtered := False
+       else
+          fdmtblMetPagAux.Filtered := True;
+       fdmtblMetPagAux.Open;
     end;
 end;
 
@@ -212,6 +245,9 @@ begin
   inherited;
   if not dsMetodosPago.DataSet.Active then
      dsMetodosPago.DataSet.Open;
+  FiltroMetodosPago;
+  if not dsMetodosPagoAux.DataSet.Active then
+     dsMetodosPagoAux.DataSet.Open;
   if not dsMetpag_Ventas.DataSet.Active then
      dsMetpag_Ventas.DataSet.Open;
   if not dsPlanesPago.DataSet.Active then
@@ -236,6 +272,7 @@ begin
       fdqryMetpago_ventas.Post;
       dblkcbbMetPag.KeyValue := -1; //limpia combobox
       cxCurrencyEditMonto.Clear;   //limpia currency edt
+      FiltroMetodosPago;
     end;
 end;
 

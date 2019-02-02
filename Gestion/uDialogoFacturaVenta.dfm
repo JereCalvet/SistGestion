@@ -303,13 +303,13 @@ inherited frmDialogoFacturaVenta: TfrmDialogoFacturaVenta
           end>
         RowCollection = <
           item
-            Value = 33.333333333333330000
+            Value = 33.333333333333340000
           end
           item
-            Value = 33.333333333333330000
+            Value = 33.333333333333340000
           end
           item
-            Value = 33.333333333333330000
+            Value = 33.333333333333340000
           end>
         TabOrder = 0
         DesignSize = (
@@ -839,6 +839,7 @@ inherited frmDialogoFacturaVenta: TfrmDialogoFacturaVenta
           Margins.Left = 15
           Align = alClient
           DataSource = dsDetalleMovimiento
+          ImeMode = imClose
           Options = [dgEditing, dgTitles, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
           TabOrder = 0
           TitleFont.Charset = DEFAULT_CHARSET
@@ -846,6 +847,7 @@ inherited frmDialogoFacturaVenta: TfrmDialogoFacturaVenta
           TitleFont.Height = -11
           TitleFont.Name = 'Tahoma'
           TitleFont.Style = []
+          OnExit = dbgrdDetalleExit
           OnKeyDown = dbgrdDetalleKeyDown
           OnKeyPress = dbgrdDetalleKeyPress
           Columns = <
@@ -1002,6 +1004,7 @@ inherited frmDialogoFacturaVenta: TfrmDialogoFacturaVenta
             Top = 6
             Margins.Right = 15
             Anchors = [akTop, akRight]
+            BeepOnEnter = False
             DataBinding.DataField = 'CalTotal'
             DataBinding.DataSource = dsMaestroVenta
             TabOrder = 0
@@ -1034,6 +1037,7 @@ inherited frmDialogoFacturaVenta: TfrmDialogoFacturaVenta
             Top = 5
             Margins.Right = 15
             Anchors = [akTop, akRight]
+            BeepOnEnter = False
             DataBinding.DataField = 'SUBTOTAL'
             DataBinding.DataSource = dsMaestroVenta
             TabOrder = 0
@@ -1064,9 +1068,11 @@ inherited frmDialogoFacturaVenta: TfrmDialogoFacturaVenta
             Left = 89
             Top = 6
             Anchors = [akTop, akRight]
+            BeepOnEnter = False
             DataBinding.DataField = 'DESCUENTO'
             DataBinding.DataSource = dsMaestroVenta
             TabOrder = 0
+            OnExit = cxdbcrncydtDescuentoExit
             OnKeyDown = cxdbcrncydtDescuentoKeyDown
             Width = 145
           end
@@ -1079,6 +1085,7 @@ inherited frmDialogoFacturaVenta: TfrmDialogoFacturaVenta
           Align = alClient
           BevelOuter = bvNone
           TabOrder = 3
+          OnExit = pnlRecargoExit
           DesignSize = (
             259
             42)
@@ -1094,9 +1101,11 @@ inherited frmDialogoFacturaVenta: TfrmDialogoFacturaVenta
             Left = 89
             Top = 6
             Anchors = [akTop, akRight]
+            BeepOnEnter = False
             DataBinding.DataField = 'RECARGO'
             DataBinding.DataSource = dsMaestroVenta
             TabOrder = 0
+            OnExit = cxdbcrncydtRecargoExit
             OnKeyDown = cxdbcrncydtRecargoKeyDown
             Width = 145
           end
@@ -1150,7 +1159,7 @@ inherited frmDialogoFacturaVenta: TfrmDialogoFacturaVenta
     Width = 32
     Left = 720
     Bitmap = {
-      494C010102006400800020002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102006400E40020002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000002000000001002000000000000040
       0000000000000000000000000000000000000000000000000000000000000000
       000000000000000000000000000000000000000000000000000000000000A7A7

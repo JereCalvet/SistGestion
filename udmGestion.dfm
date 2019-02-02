@@ -4,6 +4,7 @@ object dmGestion: TdmGestion
   Height = 474
   Width = 758
   object fdqryClientes: TFDQuery
+    Active = True
     OnCalcFields = fdqryClientesCalcFields
     OnReconcileError = fdqryClientesReconcileError
     Connection = GestionConnection
@@ -117,6 +118,7 @@ object dmGestion: TdmGestion
     end
   end
   object fdqrySituaciones_tributarias: TFDQuery
+    Active = True
     OnReconcileError = fdqrySituaciones_tributariasReconcileError
     Connection = GestionConnection
     UpdateOptions.AssignedValues = [uvGeneratorName]
@@ -149,6 +151,7 @@ object dmGestion: TdmGestion
     Top = 18
   end
   object fdqryProveedores: TFDQuery
+    Active = True
     OnReconcileError = fdqryProveedoresReconcileError
     Connection = GestionConnection
     UpdateOptions.AssignedValues = [uvGeneratorName]
@@ -237,6 +240,7 @@ object dmGestion: TdmGestion
     Top = 48
   end
   object fdqryArticulos: TFDQuery
+    Active = True
     BeforePost = fdqryArticulosBeforePost
     OnNewRecord = fdqryArticulosNewRecord
     OnReconcileError = fdqryArticulosReconcileError
@@ -885,6 +889,7 @@ object dmGestion: TdmGestion
   end
   object fdqryMDMovimientosRanged: TFDQuery
     BeforeInsert = fdqryMDMovimientosRangedBeforeInsert
+    BeforePost = fdqryMDMovimientosRangedBeforePost
     AfterPost = fdqryMDMovimientosRangedAfterPost
     AfterDelete = fdqryMDMovimientosRangedAfterDelete
     OnCalcFields = fdqryMDMovimientosRangedCalcFields
@@ -943,6 +948,8 @@ object dmGestion: TdmGestion
       DefaultExpression = '0'
       FieldName = 'PRECIO_UNITARIO'
       Origin = 'PRECIO_UNITARIO'
+      OnSetText = bcdfldMDMovimientosRANGEDPRECIO_UNITARIOSetText
+      OnValidate = bcdfldMDMovimientosRANGEDPRECIO_UNITARIOValidate
       currency = True
       Precision = 18
       Size = 2
@@ -951,6 +958,8 @@ object dmGestion: TdmGestion
       DefaultExpression = '1'
       FieldName = 'CANTIDAD'
       Origin = 'CANTIDAD'
+      OnSetText = intgrfldMDMovimientosRANGEDCANTIDADSetText
+      OnValidate = intgrfldMDMovimientosRANGEDCANTIDADValidate
     end
     object crncyfldMDMovimientosRangedImporte: TCurrencyField
       DefaultExpression = '0'#13#10
@@ -1028,6 +1037,7 @@ object dmGestion: TdmGestion
     end
   end
   object fdqryPuntos_venta: TFDQuery
+    Active = True
     Connection = GestionConnection
     UpdateOptions.AssignedValues = [uvGeneratorName]
     UpdateOptions.GeneratorName = 'GEN_PUNTO_VENTA'

@@ -1,6 +1,5 @@
 inherited frmDialogoOpciones: TfrmDialogoOpciones
   Caption = 'Opci'#243'n'
-  ExplicitTop = -69
   PixelsPerInch = 96
   TextHeight = 13
   inherited tbc1: TTabControl
@@ -39,6 +38,7 @@ inherited frmDialogoOpciones: TfrmDialogoOpciones
       DataField = 'ID_OPCION'
       DataSource = dsBase
       TabOrder = 0
+      OnContextPopup = dbedtID_OPCIONContextPopup
     end
     object dbedtNOMBRE: TDBEdit
       Left = 32

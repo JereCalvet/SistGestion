@@ -50,24 +50,33 @@ uses
 
 
 procedure TfrmDialogoPlanPago.btnAceptarClick(Sender: TObject);
+ var
+ GuardoPos : TBookmark;
 begin
-  //inherited;
+   //inherited;
   with dmGestion do
     begin
        fdqryMDPlanPago.Post;
-       fdqryMDPlanPago.First;
-       while not fdqryMDPlanPago.Eof do
-          begin
-             fdqryMDPlanPago.Edit;
-             fdqryMDPlanPago.FieldByName('FECHA_ACTUALIZACION').Value := Now;
-             fdqryMDPlanPago.Post;
-             fdqryMDPlanPago.Next;
-          end;
-       fdqryMDPlanPago.ApplyUpdates(0);
-       fdqryMDPlanPago.CommitUpdates;
-       fdqryMDPlanPago.Refresh;
-       Close;
+       GuardoPos := fdqryMDPlanPago.GetBookmark;
+       fdqryMDPlanPago.DisableControls;
+       try
+          fdqryMDPlanPago.First;
+          while not fdqryMDPlanPago.Eof do
+            begin
+              fdqryMDPlanPago.Edit;
+              fdqryMDPlanPago.FieldByName('FECHA_ACTUALIZACION').Value := Now;
+              fdqryMDPlanPago.Post;
+              fdqryMDPlanPago.Next;
+            end;
+       finally
+          fdqryMDPlanPago.GotoBookmark(GuardoPos);
+          fdqryMDPlanPago.EnableControls;
+          fdqryMDPlanPago.FreeBookmark(GuardoPos);
+          fdqryMDPlanPago.ApplyUpdates(0);
+          fdqryMDPlanPago.CommitUpdates;
+          fdqryMDPlanPago.Refresh;
+          Close;
+       end;
     end;
 end;
-
 end.
